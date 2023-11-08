@@ -1,0 +1,22 @@
+name = "q2"
+stan_file = "q2.stan"
+prepared_data_dir = "q2"
+stan_input_function = "get_stan_input_q2"
+modes = []
+
+[dims]
+a_age = ["age"]
+a_treatment = ["treatment"]
+a_vessel_type = ["age", "vessel_type"]
+a_mouse = ["mouse"]
+tau_vessel_type = ["age"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 1000
+iter_sampling = 1000
+adapt_delta = 0.95
+

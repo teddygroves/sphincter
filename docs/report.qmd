@@ -1,0 +1,189 @@
+---
+title: "Statistical analysis of precapillary sphincter data"
+resource_path: ["../"]
+author: "Teddy Groves"
+bibliography: bibliography.bib
+reference-location: margin
+toc: true
+format:
+  html:
+    embed-resources: true
+    include-in-header: mathjax.html
+  pdf: default
+---
+
+This analysis aims to model measurements of vessel diameter, pressure and
+pulsatility in the brain blood vessels of mice that were subjected to an
+experimental protocol designed to elicit vascular stress responses. The results
+will be used to assess differences in these responses between old and adult
+mice, between mice in general and between different types of brain blood vessels.
+
+# Whisker stimulation data
+
+In order to measure how the vascular responsiveness changed during our
+experimental protocol, the diameters of different vessel types was recorded
+before and during whisker stimulation, at baseline, post-hypertension and
+post-ablation stages. The ratio of the peak compared with the pre-stimulation
+level for each mouse at each stage, on natural logarithmic scale, also known as
+the 'log change', was standardised by subtracting the overall mean and dividing
+by the standard deviation, then treated as a single measurement.
+
+This way of the measurements was chosen to facilitate modelling, as
+log change is a symmetric and additive measure of relative change (see
+@tornqvistHowShouldRelative1985). Note that when the difference between the two
+values $v1$ and $v2$ is far less than 1, the log change $\ln{\frac{v2}{v1}}$is
+approximately the same as the classical relative difference $\frac{v2-v1}{v1}$.
+
+We were interested in two specific questions pertaining to whisker stimulation:
+
+1a) Is there a difference between old and adult mice in the diameter log change
+for different vessels?
+
+1b) Does sphincter ablation affect diameter log change to a different extent for
+adult and old mice?
+
+To answer these questions, we fit a Bayesian multilevel regression model.
+
+## Missing data
+
+[DESCRIBE MISSING DATA]
+
+We assume that all missing measurements were caused by factors that were
+unrelated to our main target process (equivalently that the absent measurements
+were "missing at random"). We therefore did not attempt to model the measurement
+removal process explicitly.
+
+## Implementation
+
+We implemented our model in Stan [@carpenterStanProbabilisticProgramming2017]
+and interfaced with data via the Python library cmdstanpy
+[@standevelopmentteamCmdStanPy2022].  Posterior analysis was facilitated by the
+library arviz [@kumarArviZUnifiedLibrary2019]. The analysis was orchestrated
+using the template package bibat [@bibat].
+
+All the code implementing the analysis, as well as instructions for
+reproduction, can be found at <https://github/teddygroves/sphincter>.
+
+## Statistical Model
+
+The final model is shown below:
+
+\begin{align}
+y_{vtm} &\sim ST(\nu, \hat{y}_{vtm}, \sigma) \label{eq-whisker-model} \\
+\hat{y}_{vtm} &= \mu 
+  + \alpha^{treatment}_{t}
+  + \alpha^{vessel}_v 
+  + \alpha^{protocol}_{vt} 
+  + \beta^{age}_{vt} \cdot old(m) 
+  + \alpha^{mouse}_{vtm}  \nonumber \\
+\alpha^{treatment}_t &\sim N(0, \tau^{treatment}) \nonumber \\
+\alpha^{vessel}_v &\sim N(0, \tau^{vessel}) \nonumber \\
+\alpha^{protocol}_{vt} &\sim N(0, \tau^{protocol}) \nonumber \\
+\alpha^{mouse}_{vtm} &\sim N(0, \tau^{mouse}_{t}) \nonumber \\
+\beta^{age}_{vt} &\sim N(0, \tau^{age}) \nonumber \\
+\nu &\sim Gamma(2, 0.1) \nonumber \\
+\sigma &\sim HN(0, 0.5) \nonumber \\
+\mu &\sim N(0, 0.7) \nonumber \\
+\tau^{treatment} &\sim HN(0, 0.7) \nonumber \\
+\tau^{vessel} &\sim HN(0, 0.7) \nonumber \\
+\tau^{protocol} &\sim HN(0, 0.7) \nonumber 
+\end{align}
+
+In equation \eqref{eq-whisker-model}, the term $ST$ indicates the student t
+distribution, $old$ is an indicator function with value $old(m)=1$ if mouse
+$m$ is old, and zero otherwise, $N$ indicates the normal distribution, $Gamma$
+the gamma distribution and $HN$ the 'half-normal' distribution, i.e. the normal
+distribution with support only for non-negative numbers.
+
+This model was the end result of fitting a series of Bayesian multilevel models,
+following the strategy outlined in @gelmanBayesianWorkflow2020. The prior
+standard deviation 0.7 was chosen because it led to what we judged to be a
+reasonable allocation of prior probability mass over possible data realisations.
+The prior for the student t degrees of freedom parameter $\nu$ was set following
+the recommendation in @juarezModelBasedClusteringNonGaussian2010.
+
+This model is flexible enough to allow age effects that vary depending on
+treatment and vessel type, but also allows these parameters to be shrunk
+towards zero if the data suggests that there is little difference between these
+categories. We can therefore answer our second question by 
+
+
+## Results
+
+@fig-whisker-measurements shows the observed log change measurements with
+colours illustrating the various categorical information. Note that there is
+more variation in the baseline log change values than in the values after either
+treatment.
+
+::: {#fig-whisker-measurements layout-ncol=1}
+
+![](../plots/whisker-measurements-faceted.png)
+
+Raw measurements
+
+:::
+
+@fig-whisker-posterior-check compares the measurements with our model's
+posterior predictive distribution. This shows that our model achieved a
+reasonable fit to the observed data. There is a pattern in the model's bad
+predictions, in that these tend to be for higher baseline measurements. However,
+we judged that this pattern was small enough that for our purposes we could
+disregard it.
+
+::: {#fig-whisker-posterior-check layout-ncol=1}
+
+![](../plots/whisker-posterior-check.png)
+
+Graphical posterior predictive check
+:::
+
+@fig-whisker-age-effects answers our questions 1a) and 1b): we found no
+significant age effects for any vessel or treatment.
+
+::: {#fig-whisker-age-effects layout-ncol=1}
+
+![](../plots/whisker-age-effects.png)
+
+Marginal 2.5%-97.5% posterior intervals for age effects
+:::
+
+This does not mean that there were no significant treatment effects, but just
+that these effects did not depend on age or vessel type. @fig-whisker-treatment-effects
+shows the marginal posterior distributions for hypertension and ablation effects
+relative to the baseline, showing a clear effect in both cases.
+
+::: {#fig-whisker-treatment-effects layout-ncol=1}
+
+![](../plots/whisker-treatment-effects.png)
+
+Marginal posterior intervals for treatment effects, relative to the baseline
+treatment.
+
+ :::
+
+These effects were the same for all vessel types, as can be seen from
+@fig-whisker-protocol-effects, which shows that these were largely irrelevant.
+
+::: {#fig-whisker-protocol-effects layout-ncol=1}
+
+![](../plots/whisker-protocol-effects.png)
+
+Marginal 2.5%-97.5% posterior intervals for protocol effects
+
+:::
+
+There was also a significant distributional effect of treatment. This is
+captured by @fig-whisker-tau-mouse, which shows marginal posterior distributions
+for the parameters $\tau^{mouse}$. It was higher for the baseline treatment
+than for either of the interventions, reflecting the pattern noted above in the
+raw data.
+
+::: {#fig-whisker-tau-mouse layout-ncol=1}
+
+![](../plots/whisker-tau-mouse.png)
+
+Marginal 2.5%-97.5% posterior intervals for $\tau^{mouse}$ parameters.
+
+:::
+
+

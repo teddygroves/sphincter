@@ -1,0 +1,169 @@
+---
+title: Blood vessel modelling 
+author: Teddy Groves
+resource_path: ["../"]
+bibliography: bibliography.bib
+csl: ieee.csl
+format:
+  beamer:
+    include-in-header:
+      text: |
+        \linespread{1.5}\selectfont
+        \setbeamertemplate{itemize item}{$\rightarrow$}
+        \setbeamertemplate{itemize subitem}{$○$}
+    aspectratio: 169
+    colortheme: seahorse
+    linkcolor: magenta
+  html:
+    embed-resources: true
+---
+
+# The problem in my words
+
+## Big picture questions
+
+- How do age and disease affect brain vessel health? 
+- What are precapillary sphincters for?
+
+## Experimental protocol
+
+Baseline → Hypertension → Recovery → Ablation → Hypertension 2
+
+## Measurements
+
+- Diameter before & after whisker stimulation (slow, measures responsiveness)
+- Diameter and center point (fast, FTed to measure pulsatility)
+- Blood pressure at femoral artery
+- Speed (measures velocity and total flux) 
+
+## Specific questions 1: whisker stimulation
+
+How do ageing and sphincter ablation affect whisker stimulation response?
+
+a) Does the response depend on age and/or vessel type?
+
+b) Does the effect of sphincter ablation on the response depend on age?
+
+## Specific questions 2: pulsatility
+
+How do age, treatment, pressure and vessel type affect pulsatility of diameter
+(Pd) and center position (Pc)?
+
+a) Is there an overall age difference? If so, is it explained by pressure?
+
+b) Does the effect of sphincter ablation depend on age?
+
+c) What is the effect of pressure?
+
+d) Does the effect of treatment (also on diameters) vary by vessel type?
+
+# Modelling approach
+
+## Bayesian multilevel regression modelling
+
+1. A generative model expressing topologically how measurables $\hat{y}$ depend
+   on parameters $\theta$. i.e. $f$ s.t. $\hat{y} = f(\theta)$
+
+2. A measurement model probabilistically connecting measurables with
+   measurements $y$. i.e. $p(y\mid\hat{y})$
+
+3. A prior model probabilistically expressing non-experimental information about
+   parameters. i.e. $p(\theta)$
+
+## Multilevel models
+
+In a multilevel model, some parameters express second or higher order
+information.  
+
+For example, in this model $\tau$ represents information about the parameters
+$\alpha$.
+
+\begin{align*}
+y_i &\sim N(\hat{y_i}, \sigma) \\
+\hat{y_i} &= \mu + \alpha_{mouse(i)} \\
+\alpha &\sim N(0, \tau)
+\end{align*}
+
+Multilevel models generalise random/mixed effect models.
+
+## Representing Bayesian multilevel models with graphs
+:::: {.columns}
+
+::: {.column width="60%"}
+- Node = parameter (orange) or measurement (blue)
+- Edge = full dependence (pink) or probabilistic dependence (white)
+
+- N.B. **Not** the same as "Bayesian networks"
+
+- See @spiegelhalterBayesianGraphicalModelling1998 for more about graphical
+models.
+
+:::
+
+::: {.column width="40%"}
+![](./img/graph-example.png){width=200}
+:::
+
+::::
+
+## Reading about this area
+
+@spiegelhalterBayesianGraphicalModelling1998 Bayesian graphical models case
+study with general introduction/discussion.
+
+@gelmanBayesianWorkflow2020 Paper about "Bayesian workflow".
+
+<https://betanalpha.github.io/assets/case_studies/hierarchical_modeling.html>
+Abstract mathemtical discussion of multilevel modelling in general.
+
+## Why is this approach appropriate here?
+
+- We are interested in group-level effects (treatment, mouse, vessel type) and
+don't know the population parameters (e.g. how much to expect mouse effects
+to vary).
+
+- We have ample but not massive data, so regularisation from priors is useful.
+
+- We need a fairly complex model; Bayesian multilevel models scale better with
+complexity.
+
+# Plan
+
+## Whisker stimulation model
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+- Measurable: $\ln\frac{diam after}{diam before}$
+- Measurement model: linear regression
+- Parameters: Note that $\alpha_{age:vessel\ type}$ depends on age
+:::
+
+::: {.column width="40%"}
+![](./img/whisker.png){width=200}
+:::
+
+::::
+
+## Whisker stimulation log ratios
+
+![](./img/whisker-log-ratios.png){height=250}
+
+## Model fit
+
+![](./img/ppc.png){height=250}
+
+## Non-mouse effects
+
+![](./img/non-mouse-effects.png){height=250}
+
+## Age effect
+
+![](./img/age-effect.png){height=250}
+
+## Vessel type effect by age
+
+![](./img/vt-by-age.png){height=250}
+
+## References
