@@ -104,9 +104,13 @@ the recommendation in @juarezModelBasedClusteringNonGaussian2010.
 
 This model is flexible enough to allow age effects that vary depending on
 treatment and vessel type, but also allows these parameters to be shrunk
-towards zero if the data suggests that there is little difference between these
-categories. We can therefore answer our second question by 
-
+towards zero if the data suggests that there is little difference between
+these categories. Our questions can be answered by inspecting the parameters
+$ \beta^{age}$. If, for a particular vessel type, our model allocates low
+probability mass to small values of this parameter, this indicates a difference
+between old and adult mice with respect to this vessel type. In particular, if
+the values for the sphincter vessel type tend to be far from zero, that would
+show an age difference for this vessel type.
 
 ## Results
 
