@@ -1,4 +1,4 @@
-Laserbrain
+Sphincter
 ==============================
 
 What happens when you burn a mouse's brain with a laser?
