@@ -147,10 +147,11 @@ significant age effects for any vessel or treatment.
 Marginal 2.5%-97.5% posterior intervals for age effects
 :::
 
-This does not mean that there were no significant treatment effects, but just
-that these effects did not depend on age or vessel type. @fig-whisker-treatment-effects
-shows the marginal posterior distributions for hypertension and ablation effects
-relative to the baseline, showing a clear effect in both cases.
+This does not mean that there were no significant treatment effects,
+but just that these effects did not depend on age or vessel type.
+@fig-whisker-treatment-effects shows the marginal posterior distributions for
+hypertension and ablation effects relative to the baseline, showing a clear
+effect in both cases.
 
 ::: {#fig-whisker-treatment-effects layout-ncol=1}
 
@@ -159,7 +160,7 @@ relative to the baseline, showing a clear effect in both cases.
 Marginal posterior intervals for treatment effects, relative to the baseline
 treatment.
 
- :::
+:::
 
 These effects were the same for all vessel types, as can be seen from
 @fig-whisker-protocol-effects, which shows that these were largely irrelevant.
