@@ -1,0 +1,29 @@
+name = "q2-big"
+stan_file = "q2-big.stan"
+prepared_data_dir = "q2"
+stan_input_function = "get_stan_input_q2"
+modes = ["prior", "posterior"]
+
+[dims]
+mu = ["measurement_type"]
+mu_b_pressure = ["measurement_type", "vessel_type"]
+tau_b_pressure = ["measurement_type", "vessel_type"]
+b_pressure = ["measurement_type", "vessel_type", "treatment", "age"]
+tau_age = ["measurement_type"]
+tau_treatment = ["measurement_type"]
+tau_vessel_type = ["measurement_type"]
+a_treatment = ["measurement_type", "treatment"]
+a_vessel_type = ["measurement_type", "vessel_type"]
+b_age = ["measurement_type", "vessel_type", "treatment"]
+yrep = ["measurement_type", "observation"]
+y = ["measurement_type", "observation"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 1000
+iter_sampling = 1000
+adapt_delta = 0.95
+

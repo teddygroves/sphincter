@@ -85,7 +85,7 @@ class Q2MeasurementDF(pa.SchemaModel):
     pc3: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
     pc_sum: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
     pc_ratio: Series[float] = pa.Field(coerce=True, ge=0, nullable=False)
-    pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
+    pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
 
 
 class PreparedData(BaseModel):
@@ -218,6 +218,7 @@ def prepare_data_q2(raw: pd.DataFrame) -> Q2Dataset:
         measurements=measurements,
         coords=util.CoordDict(
             {
+                "measurement_type": ["diameter", "center"],
                 "mouse": measurements["mouse"].cat.categories,
                 "vessel_type": measurements["vessel_type"].cat.categories,
                 "age": measurements["age"].cat.categories,
@@ -232,7 +233,11 @@ def process_measurements_q2(raw: pd.DataFrame) -> DataFrame[Q2MeasurementDF]:
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
-        return df["power_diam_h1"].notnull() & df["power_center_h1"].notnull()
+        return (
+            df["power_diam_h1"].notnull()
+            & df["power_center_h1"].notnull()
+            & df["pressure_d"].notnull()
+        )
 
     new_names = {
         "vessel": "vessel_type",

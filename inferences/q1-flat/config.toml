@@ -2,7 +2,7 @@ name = "q1-flat"
 stan_file = "q1-flat.stan"
 prepared_data_dir = "q1"
 stan_input_function = "get_stan_input_q1_log_ratio"
-modes = ["prior", "posterior"]
+modes = []
 
 [dims]
 a_vessel_type = ["vessel_type"]

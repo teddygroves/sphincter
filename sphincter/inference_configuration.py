@@ -9,7 +9,10 @@ from sphincter import fitting_mode, stan_input_functions
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STAN_DIR = os.path.join(HERE, "stan")
-DEFAULT_DIMS = {"llik": ["observation"], "yrep": ["observation"]}
+DEFAULT_DIMS = {
+    "llik": ["observation"],
+    "yrep": ["measurement_type", "observation"],
+}
 DEFAULT_SAMPLE_KWARGS = {"show_progress": False}
 
 
@@ -77,9 +80,13 @@ class InferenceConfiguration(BaseModel):
         """Check that there is a number of folds if required."""
         if any(m == "kfold" for m in m.fitting_mode_names):
             if m.mode_options is None:
-                raise ValueError("Mode 'kfold' requires a mode_options.kfold table.")
+                raise ValueError(
+                    "Mode 'kfold' requires a mode_options.kfold table."
+                )
             if "kfold" not in m.mode_options.keys():
-                raise ValueError("Mode 'kfold' requires a mode_options.kfold table.")
+                raise ValueError(
+                    "Mode 'kfold' requires a mode_options.kfold table."
+                )
             elif "n_folds" not in m.mode_options["kfold"].keys():
                 raise ValueError("Set 'n_folds' field in kfold mode options.")
             else:

@@ -106,7 +106,7 @@ This model is flexible enough to allow age effects that vary depending on
 treatment and vessel type, but also allows these parameters to be shrunk
 towards zero if the data suggests that there is little difference between
 these categories. Our questions can be answered by inspecting the parameters
-$ \beta^{age}$. If, for a particular vessel type, our model allocates low
+$\beta^{age}$. If, for a particular vessel type, our model allocates low
 probability mass to small values of this parameter, this indicates a difference
 between old and adult mice with respect to this vessel type. In particular, if
 the values for the sphincter vessel type tend to be far from zero, that would
@@ -191,4 +191,39 @@ Marginal 2.5%-97.5% posterior intervals for $\tau^{mouse}$ parameters.
 
 :::
 
+# Pulsatility data
 
+The pulsatility data consisted of 
+
+## Missing data
+
+[DESCRIBE]
+
+Again we assumed that all absent measurements were missing at random. 
+
+## Statistical model
+
+We knew from XXX that the power harmonics should individually follow exponential
+distributions [REFERENCE FOR THIS]. The sum of two different power harmonics
+with exponential rate parameters $\lambda_1$ and $\lambda_2$ should follow the
+hypoexponential distribution with the probability density function shown in equation \eqref{}
+
+\begin{equation}
+f(x, \lambda_1, \lambda_2) = \frac{\lambda_1\cdot\lambda_2}{\lambda_1-lambda_2}(\exp^{-x\lambda_2}-\exp^{-x\lambda_1})
+\end{equation}
+
+
+
+This {.content-hidden}
+
+## Notes and Comments
+
+- [] Statistical testing in general: in normal case we would do multiple
+hypothesis testing correction. Explain why it is OK to have a separate model for
+each question (because we assume the modelled processes are independent)
+
+- [] Add an explanatory section at the start.
+
+- [] Change parameter names to be more explicit about interaction terms
+
+:::

@@ -120,7 +120,7 @@
         },
         "observed_data/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-08T13:57:23.936095",
+            "created_at": "2023-11-15T16:19:01.861373",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },

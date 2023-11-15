@@ -44,6 +44,7 @@ def get_stan_input_q1_log_ratio(prepared_data: Q1Dataset) -> Dict:
 
 def get_stan_input_q2(prepared_data: Q2Dataset) -> Dict:
     mts = prepared_data.measurements
+    age = mts.groupby("mouse")["age"].first().map({"adult": 1, "old": 2}.get)
     return {
         "N": len(mts),
         "N_age": mts["age"].nunique(),
@@ -52,11 +53,12 @@ def get_stan_input_q2(prepared_data: Q2Dataset) -> Dict:
         "N_vessel_type": mts["vessel_type"].nunique(),
         "N_train": len(mts),
         "N_test": len(mts),
-        "age": one_encode(mts["age"]),
+        "age": age,
         "mouse": one_encode(mts["mouse"]),
         "treatment": one_encode(mts["treatment"]),
         "vessel_type": one_encode(mts["vessel_type"]),
         "ix_train": [i + 1 for i in range(len(mts))],
         "ix_test": [i + 1 for i in range(len(mts))],
-        "y": mts["pd1"],
+        "y": mts[["pd_sum", "pc_sum"]].T.values,
+        "pressure": mts["pressure_d"],
     }
