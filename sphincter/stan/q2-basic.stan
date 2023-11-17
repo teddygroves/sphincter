@@ -100,8 +100,8 @@ model {
       a_vessel_type
     );
     for (n in 1:N_train){
-      y_std[1, ix_train[n]] ~ exponential(exp(eta.1[ix_train[n]]));
-      y_std[2, ix_train[n]] ~ exponential(exp(eta.2[ix_train[n]]));
+      y_std[1, ix_train[n]] ~ exponential(exp(-eta.1[ix_train[n]]));
+      y_std[2, ix_train[n]] ~ exponential(exp(-eta.2[ix_train[n]]));
     }
   }
 }
@@ -121,10 +121,10 @@ generated quantities {
       a_vessel_type
     );
     for (n in 1:N_test){
-      yrep[1, n] = 1000 * exponential_rng(exp(eta.1[ix_test[n]]));
-      yrep[2, n] = 1000 * exponential_rng(exp(eta.2[ix_test[n]]));
-      llik[n] = exponential_lpdf(y_std[1, ix_test[n]] | exp(eta.1[ix_test[n]]))
-      + exponential_lpdf(y_std[2, ix_test[n]] | exp(eta.2[ix_test[n]])); 
+      yrep[1, n] = 1000 * exponential_rng(exp(-eta.1[ix_test[n]]));
+      yrep[2, n] = 1000 * exponential_rng(exp(-eta.2[ix_test[n]]));
+      llik[n] = exponential_lpdf(y_std[1, ix_test[n]] | exp(-eta.1[ix_test[n]]))
+      + exponential_lpdf(y_std[2, ix_test[n]] | exp(-eta.2[ix_test[n]])); 
     }
   }
 }
