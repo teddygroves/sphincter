@@ -48,6 +48,10 @@ data {
   int<lower=0,upper=1> likelihood;
 }
 transformed data {
+  array[2] int<lower=0> N_predictor = {
+    N_treatment + N_vessel_type + N_vessel_type * N_treatment * N_age,
+    N_age + N_treatment + N_vessel_type * N_treatment * N_age
+  };
   vector[N] pressure_std = standardise_vector(pressure, mean(pressure), sd(pressure));
   array[2, N] real<lower=0> y_std;
   for (n in 1:N){
@@ -58,12 +62,12 @@ transformed data {
 parameters {
   array[2] real mu;
   array[N_age] real a_age;
-  array[2, N_vessel_type] real mu_b_pressure;
+  array[2, N_treatment] real mu_b_pressure;
   array[2, N_age] real a_age_b_pressure;
   array[2, N_vessel_type, N_treatment, N_age] real b_pressure_z;
   array[2] real<lower=0> tau_treatment;
   real<lower=0> tau_vessel_type;
-  array[2, N_vessel_type] real<lower=0> tau_b_pressure;
+  array[2, N_treatment] real<lower=0> tau_b_pressure;
   array[2, N_treatment] real a_treatment_z;
   array[N_vessel_type] real a_vessel_type_z;
 }
@@ -80,33 +84,35 @@ transformed parameters {
       for (t in 1:N_treatment){
         for (a in 1:N_age)
           b_pressure[i, v, t, a] = 
-            mu_b_pressure[i, v] 
+            mu_b_pressure[i, t] 
             + a_age_b_pressure[i, a]
-            + b_pressure_z[i, v, t, a] * tau_b_pressure[i, v];
+            + b_pressure_z[i, v, t, a] * tau_b_pressure[i, t];
         }
     }
   }
 }
 model {
   for (a in 1:N_age)
-    a_age ~ normal(0, 1);
+    a_age ~ student_t(4, 0, 0.5);
   for (v in 1:N_vessel_type)
-      a_vessel_type_z[v] ~ normal(0, 1);
-  tau_vessel_type ~ normal(0, 1);
+      a_vessel_type_z[v] ~ student_t(4, 0, 1);
+  tau_vessel_type ~ normal(0, 0.5);
   for (i in 1:2){
     mu[i] ~ normal(0, 1);
-    tau_treatment[i] ~ normal(0, 1);
+    tau_treatment[i] ~ normal(0, 0.5);
+    tau_b_pressure[i] ~ normal(0, 0.5);
     for (a in 1:N_age)
-      a_age_b_pressure[i, a] ~ normal(0, 1);
-    for (t in 1:N_treatment)
-      a_treatment_z[i, t] ~ normal(0, 1);
+      a_age_b_pressure[i, a] ~ student_t(4, 0, 0.5);
+    for (t in 1:N_treatment){
+      a_treatment_z[i, t] ~ student_t(4, 0, 1);
+      mu_b_pressure[i, t] ~ student_t(4, 0, 0.5);
+      tau_b_pressure[i, t] ~ student_t(4, 0, 0.5);
+    }
     for (v in 1:N_vessel_type){
-      mu_b_pressure[i, v] ~ normal(0, 1);
-      tau_b_pressure[i, v] ~ normal(0, 1);
       for (t in 1:N_treatment){
         for (a in 1:N_age)
-          b_pressure_z[i, v, t, a] ~ normal(0, 1);
-        }
+          b_pressure_z[i, v, t, a] ~ student_t(4, 0, 1);
+      }
     }
   }
   if (likelihood){

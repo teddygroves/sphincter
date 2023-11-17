@@ -3,6 +3,6 @@
         "chain",
         "draw",
         "measurement_type",
-        "vessel_type"
+        "treatment"
     ]
 }

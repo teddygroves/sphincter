@@ -2,7 +2,7 @@ name = "q2-big"
 stan_file = "q2-big.stan"
 prepared_data_dir = "q2"
 stan_input_function = "get_stan_input_q2"
-modes = ["prior", "posterior"]
+modes = []
 
 [dims]
 mu = ["measurement_type"]

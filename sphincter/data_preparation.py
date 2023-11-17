@@ -4,17 +4,32 @@ These functions should take in a dataframe of measurements and return a
 PreparedData object.
 
 """
+from io import StringIO
 import json
 import os
+from typing import Any, Dict, Union
 
 import numpy as np
 import pandas as pd
 import pandera as pa
 from pandera.typing import DataFrame, Series
 from pandera.dtypes import Category
-from pydantic import BaseModel, ConfigDict
+from pandera.typing.common import DataFrameBase
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    GetCoreSchemaHandler,
+    field_serializer,
+    field_validator,
+)
+from pydantic_core import CoreSchema, core_schema
 
 from sphincter import util
+from sphincter.stan_input_functions import (
+    get_stan_input_q1_base,
+    get_stan_input_q2,
+)
 
 NAME_FILE = "name.txt"
 COORDS_FILE = "coords.json"
@@ -47,7 +62,7 @@ VesselTypeQ2 = pd.CategoricalDtype(
 )
 
 
-class Q1MeasurementDF(pa.SchemaModel):
+class Q1MeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer question 1
 
     Other columns are also allowed!
@@ -65,7 +80,7 @@ class Q1MeasurementDF(pa.SchemaModel):
     diam_rel_change: Series[float] = pa.Field(coerce=True, nullable=False)
 
 
-class Q2MeasurementDF(pa.SchemaModel):
+class Q2MeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer question 1
 
     Other columns are also allowed!
@@ -88,29 +103,50 @@ class Q2MeasurementDF(pa.SchemaModel):
     pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
 
 
-class PreparedData(BaseModel):
-    """A prepared dataset."""
-
-    name: str
-    coords: util.CoordDict
-    measurements: pd.DataFrame
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-
-class Q1Dataset(PreparedData):
+class Q1Dataset(BaseModel):
     """A dataset that can answer question 1."""
 
     name: str
     coords: util.CoordDict
-    measurements: DataFrame[Q1MeasurementDF]
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[Q1MeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return Q1MeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[Q1MeasurementSchema], _info
+    ):
+        return measurements.to_json()
 
 
-class Q2Dataset(PreparedData):
+class Q2Dataset(BaseModel):
     """A dataset that can answer question 1."""
 
     name: str
     coords: util.CoordDict
-    measurements: DataFrame[Q2MeasurementDF]
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[Q2MeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return Q2MeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[Q2MeasurementSchema], _info
+    ):
+        return measurements.to_json()
 
 
 def prepare_data():
@@ -119,49 +155,27 @@ def prepare_data():
     raw_data = {
         k: pd.read_csv(v, index_col=None) for k, v in RAW_DATA_FILES.items()
     }
-    data_preparation_functions_to_run = [prepare_data_q1, prepare_data_q2]
+    data_preparation_functions_to_run = [
+        prepare_data_q1,
+        prepare_data_q2,
+        prepare_data_q2_no_hyper,
+    ]
     print("Preparing data...")
     for dpf in data_preparation_functions_to_run:
         print(f"Running data preparation function {dpf.__name__}...")
         prepared_data = dpf(raw_data["measurements"])
-        output_dir = os.path.join(PREPARED_DIR, prepared_data.name)
-        print(f"\twriting files to {output_dir}")
+        output_file = os.path.join(PREPARED_DIR, prepared_data.name + ".json")
+        print(f"\twriting prepared_data to {output_file}")
         if not os.path.exists(PREPARED_DIR):
             os.mkdir(PREPARED_DIR)
-        write_prepared_data(prepared_data, output_dir)
-
-
-def load_prepared_data(directory: str) -> PreparedData:
-    """Load prepared data from files in directory."""
-    with open(os.path.join(directory, COORDS_FILE), "r") as f:
-        coords = json.load(f)
-    with open(os.path.join(directory, NAME_FILE), "r") as f:
-        name = f.read()
-    measurements = pd.read_csv(
-        os.path.join(directory, MEASUREMENTS_FILE), index_col=0
-    )
-    dftype = Q1MeasurementDF if name == "q1" else Q2MeasurementDF
-    return PreparedData(
-        name=name,
-        coords=coords,
-        measurements=DataFrame[dftype](measurements),
-    )
-
-
-def write_prepared_data(prepped: PreparedData, directory):
-    """Write prepared data files to a directory."""
-    if not os.path.exists(directory):
-        os.mkdir(directory)
-        prepped.measurements.to_csv(os.path.join(directory, MEASUREMENTS_FILE))
-    with open(os.path.join(directory, COORDS_FILE), "w") as f:
-        json.dump(prepped.coords, f)
-    with open(os.path.join(directory, NAME_FILE), "w") as f:
-        f.write(prepped.name)
+        with open(output_file, "w") as f:
+            f.write(prepared_data.model_dump_json())
 
 
 def prepare_data_q1(raw: pd.DataFrame) -> Q1Dataset:
     """Prepare data for question 1."""
     measurements = process_measurements_q1(raw)
+    stan_input = get_stan_input_q1_base(measurements)
     return Q1Dataset(
         name="q1",
         measurements=measurements,
@@ -174,10 +188,13 @@ def prepare_data_q1(raw: pd.DataFrame) -> Q1Dataset:
                 "observation": measurements.index.map(str).tolist(),
             }
         ),
+        stan_input=stan_input,
     )
 
 
-def process_measurements_q1(raw: pd.DataFrame) -> DataFrame[Q1MeasurementDF]:
+def process_measurements_q1(
+    raw: pd.DataFrame,
+) -> DataFrameBase[Q1MeasurementSchema]:
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
@@ -192,9 +209,11 @@ def process_measurements_q1(raw: pd.DataFrame) -> DataFrame[Q1MeasurementDF]:
         "vessel": "vessel_type",
     }
     cols = list(
-        Q1MeasurementDF.get_metadata()["Q1MeasurementDF"]["columns"].keys()
+        Q1MeasurementSchema.get_metadata()["Q1MeasurementSchema"][
+            "columns"
+        ].keys()
     )
-    return DataFrame[Q1MeasurementDF](
+    return Q1MeasurementSchema.validate(
         raw.loc[filter]
         .rename(columns=new_names)
         .assign(
@@ -213,6 +232,7 @@ def process_measurements_q1(raw: pd.DataFrame) -> DataFrame[Q1MeasurementDF]:
 def prepare_data_q2(raw: pd.DataFrame) -> Q2Dataset:
     """Prepare data for question 1."""
     measurements = process_measurements_q2(raw)
+    stan_input = get_stan_input_q2(measurements)
     return Q2Dataset(
         name="q2",
         measurements=measurements,
@@ -226,10 +246,40 @@ def prepare_data_q2(raw: pd.DataFrame) -> Q2Dataset:
                 "observation": measurements.index.map(str).tolist(),
             }
         ),
+        stan_input=stan_input,
     )
 
 
-def process_measurements_q2(raw: pd.DataFrame) -> DataFrame[Q2MeasurementDF]:
+def prepare_data_q2_no_hyper(raw: pd.DataFrame) -> Q2Dataset:
+    """Prepare data for question 2."""
+    measurements = (
+        process_measurements_q2(raw)
+        .loc[lambda df: ~df["treatment"].isin(["hyper", "hyper2"])]
+        .assign(
+            treatment=lambda df: df["treatment"].cat.remove_unused_categories()
+        )
+    )
+    stan_input = get_stan_input_q2(measurements)
+    return Q2Dataset(
+        name="q2-no-hyper",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "measurement_type": ["diameter", "center"],
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def process_measurements_q2(
+    raw: pd.DataFrame,
+) -> DataFrameBase[Q2MeasurementSchema]:
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
@@ -249,9 +299,11 @@ def process_measurements_q2(raw: pd.DataFrame) -> DataFrame[Q2MeasurementDF]:
         "power_center_h3": "pc3",
     }
     cols = list(
-        Q2MeasurementDF.get_metadata()["Q2MeasurementDF"]["columns"].keys()
+        Q2MeasurementSchema.get_metadata()["Q2MeasurementSchema"][
+            "columns"
+        ].keys()
     )
-    return DataFrame[Q2MeasurementDF](
+    return Q2MeasurementSchema.validate(
         raw.loc[filter]
         .rename(columns=new_names)
         .assign(
@@ -263,3 +315,14 @@ def process_measurements_q2(raw: pd.DataFrame) -> DataFrame[Q2MeasurementDF]:
         )[cols]
         .sort_values(["age", "mouse", "vessel_type", "treatment"])
     )
+
+
+def load_prepared_data(path_to_data: str) -> Union[Q1Dataset, Q2Dataset]:
+    with open(path_to_data) as f:
+        raw = json.load(f)
+    if raw["name"].startswith("q1"):
+        return Q1Dataset(**raw)
+    elif raw["name"].startswith("q2"):
+        return Q2Dataset(**raw)
+    else:
+        raise ValueError(f"Unexpected name {raw['name']}.")

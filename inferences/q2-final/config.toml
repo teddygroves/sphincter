@@ -2,7 +2,7 @@ name = "q2-final"
 stan_file = "q2-final.stan"
 prepared_data_dir = "q2"
 stan_input_function = "get_stan_input_q2"
-modes = ["prior", "posterior"]
+modes = []
 
 [dims]
 mu = ["measurement_type"]
@@ -10,8 +10,8 @@ a_age_b_pressure = ["measurement_type", "age"]
 b_pressure = ["measurement_type", "vessel_type", "treatment", "age"]
 tau_age = ["measurement_type"]
 tau_treatment = ["measurement_type"]
-mu_b_pressure = ["measurement_type", "vessel_type"]
-tau_b_pressure = ["measurement_type", "vessel_type"]
+mu_b_pressure = ["measurement_type", "treatment"]
+tau_b_pressure = ["measurement_type", "treatment"]
 a_treatment = ["measurement_type", "treatment"]
 a_vessel_type = ["vessel_type"]
 a_age = ["age"]

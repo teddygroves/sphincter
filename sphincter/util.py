@@ -15,7 +15,7 @@ def one_encode(s: pd.Series) -> pd.Series:
     :param s: a pandas Series that you want to factorise.
 
     """
-    return pd.Series(pd.factorize(s)[0] + 1, index=s.index)
+    return pd.Series(pd.factorize(s, sort=True)[0] + 1, index=s.index)
 
 
 def make_columns_lower_case(df: pd.DataFrame) -> pd.DataFrame:
