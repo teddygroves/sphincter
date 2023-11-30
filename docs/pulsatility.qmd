@@ -30,7 +30,7 @@ in adult and old mice?
 How does blood pressure affect diameter and centre pulsatility?
 :::
 
-::: {thm-qd}
+::: {#thm-qd}
 Do hypertension and sphincter ablation influence diameters, Pd, and Pc
 differently for different vessels?
 :::
@@ -139,10 +139,10 @@ $\eta^{basic}_{d}$ and $\eta^{basic}_{c}$ are the sums of these random variables
 		\label{eq:basic}
     \eta^{basic}_{d,n} &= \mu_{d, age(mouse(n))}
       + \alpha^{treatment}_{d,treatment(n)} 
-      + \alpha^{vessel\ type}_{d,vessel\ type(n)} \nonumber \\
+      + \alpha^{vessel\ type}_{d,vessel\ type(n)} \\
       &+ \beta^{diameter}_{d} \cdot diameter(n) \nonumber \\
     \eta^{basic}_{c,n} &= \mu_{c, age(mouse(n))}
-      + \alpha^{treatment}_{c,treatment(n)} 
+      + \alpha^{treatment}_{c,treatment(n)}
       + \alpha^{vessel\ type}_{c,vessel\ type(n)} \nonumber \\
       &+ \beta^{diameter}_{c} \cdot diameter(n) \nonumber
 \end{align}
