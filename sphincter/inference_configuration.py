@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 STAN_DIR = os.path.join(HERE, "stan")
 DEFAULT_DIMS = {
     "llik": ["observation"],
-    "yrep": ["measurement_type", "observation"],
+    "yrep": ["observation"],
 }
 DEFAULT_SAMPLE_KWARGS = {"show_progress": False}
 

@@ -22,10 +22,7 @@ from pydantic import (
 )
 
 from sphincter import util
-from sphincter.stan_input_functions import (
-    get_stan_input_q1_base,
-    get_stan_input_q2,
-)
+from sphincter.stan_input_functions import get_stan_input_q1, get_stan_input_q2
 
 NAME_FILE = "name.txt"
 COORDS_FILE = "coords.json"
@@ -175,7 +172,7 @@ def prepare_data():
 def prepare_data_q1(raw: pd.DataFrame) -> Q1Dataset:
     """Prepare data for question 1."""
     measurements = process_measurements_q1(raw)
-    stan_input = get_stan_input_q1_base(measurements)
+    stan_input = get_stan_input_q1(measurements)
     return Q1Dataset(
         name="q1",
         measurements=measurements,

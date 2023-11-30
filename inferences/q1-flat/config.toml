@@ -1,8 +1,8 @@
 name = "q1-flat"
 stan_file = "q1-flat.stan"
 prepared_data_dir = "q1"
-stan_input_function = "get_stan_input_q1_log_ratio"
-modes = []
+stan_input_function = "get_stan_input_q1"
+modes = ["prior", "posterior"]
 
 [dims]
 a_vessel_type = ["vessel_type"]
@@ -21,5 +21,4 @@ save_warmup = false
 iter_warmup = 3000
 iter_sampling = 1000
 adapt_delta = 0.99
-output_dir = "output"
 

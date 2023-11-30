@@ -7,7 +7,7 @@ that the extra effects didn't add anything."""
 stan_file = "q2-interaction.stan"
 prepared_data_dir = "q2-no-hyper"
 stan_input_function = "get_stan_input_q2"
-modes = ["prior", "posterior"]
+modes = []
 
 [dims]
 mu = ["measurement_type", "age"]

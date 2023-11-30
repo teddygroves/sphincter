@@ -19,7 +19,7 @@ def returns_stan_input(func: Callable[[Any], Dict]) -> Callable[[Any], Dict]:
 
 
 @returns_stan_input
-def get_stan_input_q1_base(mts: pd.DataFrame) -> Dict:
+def get_stan_input_q1(mts: pd.DataFrame) -> Dict:
     """Get Stan input for q1a."""
     age = mts.groupby("mouse")["age"].first().map({"adult": 1, "old": 2}.get)
     return {
@@ -36,19 +36,8 @@ def get_stan_input_q1_base(mts: pd.DataFrame) -> Dict:
         "vessel_type": one_encode(mts["vessel_type"]),
         "ix_train": [i + 1 for i in range(len(mts))],
         "ix_test": [i + 1 for i in range(len(mts))],
+        "y": mts["diam_log_ratio"],
     }
-
-
-def get_stan_input_q1_rel(mts: pd.DataFrame) -> Dict:
-    out = get_stan_input_q1_base(mts)
-    out["y"] = mts["diam_rel_change"].tolist()
-    return out
-
-
-def get_stan_input_q1_log_ratio(mts: pd.DataFrame) -> Dict:
-    out = get_stan_input_q1_base(mts)
-    out["y"] = mts["diam_log_ratio"].tolist()
-    return out
 
 
 @returns_stan_input
