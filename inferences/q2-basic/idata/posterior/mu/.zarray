@@ -2,6 +2,7 @@
     "chunks": [
         4,
         1000,
+        2,
         2
     ],
     "compressor": {
@@ -18,6 +19,7 @@
     "shape": [
         4,
         1000,
+        2,
         2
     ],
     "zarr_format": 2

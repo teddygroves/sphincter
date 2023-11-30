@@ -5,11 +5,10 @@ stan_input_function = "get_stan_input_q2"
 modes = ["prior", "posterior"]
 
 [dims]
-mu = ["measurement_type"]
-b_pressure = ["measurement_type"]
+mu = ["measurement_type", "age"]
+b_diameter = ["measurement_type"]
 tau_treatment = ["measurement_type"]
 tau_vessel_type = ["measurement_type"]
-a_age = ["measurement_type", "age"]
 a_treatment = ["measurement_type", "treatment"]
 a_vessel_type = ["measurement_type", "vessel_type"]
 yrep = ["measurement_type", "observation"]
@@ -20,8 +19,8 @@ warn-pedantic = true
 
 [sample_kwargs]
 save_warmup = false
-iter_warmup = 1000
+iter_warmup = 2000
 iter_sampling = 1000
-adapt_delta = 0.95
+adapt_delta = 0.99
 
 

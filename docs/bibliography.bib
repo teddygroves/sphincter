@@ -123,3 +123,43 @@
   author = {Teddy Groves},
   title = {Bibat: batteries-included Bayesian analysis template},
 }
+
+@article{vehtariRankNormalizationFoldingLocalization2021,
+  title = {Rank-{{Normalization}}, {{Folding}}, and {{Localization}}: {{An Improved R\textasciicircum}} for {{Assessing Convergence}} of {{MCMC}} (with {{Discussion}})},
+  shorttitle = {Rank-{{Normalization}}, {{Folding}}, and {{Localization}}},
+  author = {Vehtari, Aki and Gelman, Andrew and Simpson, Daniel and Carpenter, Bob and B{\"u}rkner, Paul-Christian},
+  year = {2021},
+  month = jun,
+  journal = {Bayesian Analysis},
+  volume = {16},
+  number = {2},
+  pages = {667--718},
+  publisher = {{International Society for Bayesian Analysis}},
+  issn = {1936-0975, 1931-6690},
+  doi = {10.1214/20-BA1221},
+  url = {https://projecteuclid.org/journals/bayesian-analysis/volume-16/issue-2/Rank-Normalization-Folding-and-Localization--An-Improved-R%cb%86-for/10.1214/20-BA1221.full},
+  urldate = {2022-01-03},
+  abstract = {Markov chain Monte Carlo is a key computational tool in Bayesian statistics, but it can be challenging to monitor the convergence of an iterative stochastic algorithm. In this paper we show that the convergence diagnostic R\textasciicircum{} of Gelman and Rubin (1992) has serious flaws. Traditional R\textasciicircum{} will fail to correctly diagnose convergence failures when the chain has a heavy tail or when the variance varies across the chains. In this paper we propose an alternative rank-based diagnostic that fixes these problems. We also introduce a collection of quantile-based local efficiency measures, along with a practical approach for computing Monte Carlo error estimates for quantiles. We suggest that common trace plots should be replaced with rank plots from multiple chains. Finally, we give recommendations for how these methods should be used in practice.},
+  file = {/Users/tedgro/Zotero/storage/FPRAEFHZ/Vehtari et al. - 2021 - Rank-Normalization, Folding, and Localization An .pdf;/Users/tedgro/Zotero/storage/ST53UIWZ/20-BA1221.html}
+}
+
+@article{vehtariPracticalBayesianModel2017,
+  title = {Practical {{Bayesian}} Model Evaluation Using Leave-One-out Cross-Validation and {{WAIC}}},
+  author = {Vehtari, Aki and Gelman, Andrew and Gabry, Jonah},
+  year = {2017},
+  month = sep,
+  journal = {Statistics and Computing},
+  volume = {27},
+  number = {5},
+  eprint = {1507.04544},
+  pages = {1413--1432},
+  issn = {0960-3174, 1573-1375},
+  doi = {10.1007/s11222-016-9696-4},
+  url = {http://arxiv.org/abs/1507.04544},
+  urldate = {2021-02-23},
+  abstract = {Leave-one-out cross-validation (LOO) and the widely applicable information criterion (WAIC) are methods for estimating pointwise out-of-sample prediction accuracy from a fitted Bayesian model using the log-likelihood evaluated at the posterior simulations of the parameter values. LOO and WAIC have various advantages over simpler estimates of predictive error such as AIC and DIC but are less used in practice because they involve additional computational steps. Here we lay out fast and stable computations for LOO and WAIC that can be performed using existing simulation draws. We introduce an efficient computation of LOO using Pareto-smoothed importance sampling (PSIS), a new procedure for regularizing importance weights. Although WAIC is asymptotically equal to LOO, we demonstrate that PSIS-LOO is more robust in the finite case with weak priors or influential observations. As a byproduct of our calculations, we also obtain approximate standard errors for estimated predictive errors and for comparison of predictive errors between two models. We implement the computations in an R package called loo and demonstrate using models fit with the Bayesian inference package Stan.},
+  archiveprefix = {arxiv},
+  langid = {english},
+  keywords = {Statistics - Computation,Statistics - Methodology},
+  file = {/Users/tedgro/Zotero/storage/554NNNS2/Vehtari et al. - 2017 - Practical Bayesian model evaluation using leave-on.pdf}
+}

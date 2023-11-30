@@ -1,0 +1,357 @@
+---
+title: "Statistical analysis of precapillary sphincter pulsatility data"
+crossref:
+  thm-prefix: "Question"
+  thm-title: "Question"
+  thm-labels: alpha a
+---
+
+The pulsatility data consisted of fast measurements of diameter and center
+point for the same mice. These measurements were Fourier-transformed, and
+the harmonics of the transformed data were interpreted as representing the
+pulsatility of the measured quantities.
+
+# Questions
+
+We aimed to answer the following questions:
+
+::: {#thm-qa}
+Do diameter or centre pulsatility depend on age? If so, is this dependency
+mediated by the higher average blood pressure of adult mice compared with old
+mice?
+:::
+
+::: {#thm-qb}
+Does sphincter ablation affect diameter and/or centre pulsatility differently
+in adult and old mice?
+:::
+
+::: {#thm-qc}
+How does blood pressure affect diameter and centre pulsatility?
+:::
+
+::: {thm-qd}
+Do hypertension and sphincter ablation influence diameters, Pd, and Pc
+differently for different vessels?
+:::
+
+To answer these questions we created a pulsatility dataset and fit a series of
+statistical models to it.
+
+## Description of the dataset
+
+We used the first harmonic of each transformed time series as a dependent
+variable. It might have been preferable to aggregate all the available power
+harmonics, but this would have complicated our measurement model, and in any
+case power at the subsequent harmonics was typically negligible compared with
+the first.
+
+For each measurement the following information was available:
+
+- the identity of the mouse, and that mouse's age (adult or old)
+- the vessel type (penetrating artery, bulb and first three capillary orders)
+- the treatment (baseline, after hypertension and after ablation)
+- the mouse's blood pressure, measured at the femoral artery
+
+The final dataset included 514 joint measurements of diameter and centre
+pulsatility, calculated as described above. These measurements are shown in
+@fig-pulsatility-dataset.
+
+::: {#fig-pulsatility-dataset layout-nrow=2}
+![](../plots/pulsatility-diameter-measurements.png)
+
+![](../plots/pulsatility-center-measurements.png)
+
+The modelled measurements, shown in order of the coloured categories. 
+:::
+
+@fig-pressure-data shows the relationship between pressure and the measurements
+in our dataset for both age categories. The light dots show raw measurements and
+the darker dots show averages within evenly sized bins.
+
+
+::: {#fig-pressure-data}
+![](../plots/pressure-data.png)
+
+Pulsatility measurements plotted against the corresponding pressure measurements
+and coloured according to age. Darker dots indicate averages within evenly sized
+pressure bins.
+
+:::
+
+@fig-diameter-data shows the relationship between diameter and the measurements
+in our dataset for all vessel type categories. The light dots show raw
+measurements and the darker dots show averages within evenly sized bins. There
+is a clear positive relationship between measured absolute diameter and diameter
+pulsatility, and it is approximately the same for all vessel types.
+
+
+::: {#fig-diameter-data}
+![](../plots/q2-diameter-data.png)
+
+Pulsatility measurements plotted against the corresponding diameter measurements
+and coloured according to vessel type. Darker dots indicate averages within
+evenly sized pressure bins.
+
+:::
+
+## Missing data
+
+Data from one mouse (index 310321) were excluded after some extreme measurements
+were observed:
+
+::: {callout-note}
+310321 is a mouse where we did not see any whisker response, it reacted to
+angiotensin II, but the BP increase was abrupted for a short while and then
+re-established. Perhaps due to a clot or a bubble in the venous catheter. This
+resulted in a biphasic and slow BP increase
+:::
+
+As with the whisker stimulation data we assumed that all absent measurements
+were missing at random.
+
+## Statistical model
+
+We knew from prior studies that the power harmonics should individually follow
+exponential distributions [REFERENCE FOR THIS]. This consideration motivated the
+use of exponential generalised linear models for both the centre and diameter
+pulsatility measurements. In this model, given measurement $y$ and linear
+predictor $\eta$ the measurement probability density is given by this equation:
+
+\begin{align}
+  p(y\mid\eta) &= Exponential(y, \lambda) = \lambda e^{-\lambda y} \label{eq:q2-measurement-model} \\
+  \ln{\frac{1}{\lambda}} &= \eta \label{eq:link-function}
+\end{align}
+
+The log link function \eqref{eq:link-function} was chosen so that linear
+changes in the term $\eta$ induce multiplicative changes in the mean $\frac{1}
+{\lambda}$ of the measurement distribution, as we believed the effects we wanted
+to model would be multiplicative.
+
+We compared four different ways of parameterising $\eta$ based on the
+information available about a given measurement, corresponding to three
+hypotheses about the way the data were generated. 
+
+The simplest, or "basic", model postulates that the linear predictors 
+$\eta^{basic}_{d}$ and $\eta^{basic}_{c}$ are the sums of these random variables:
+
+\begin{align}
+		\label{eq:basic}
+    \eta^{basic}_{d,n} &= \mu_{d, age(mouse(n))}
+      + \alpha^{treatment}_{d,treatment(n)} 
+      + \alpha^{vessel\ type}_{d,vessel\ type(n)} \nonumber \\
+      &+ \beta^{diameter}_{d} \cdot diameter(n) \nonumber \\
+    \eta^{basic}_{c,n} &= \mu_{c, age(mouse(n))}
+      + \alpha^{treatment}_{c,treatment(n)} 
+      + \alpha^{vessel\ type}_{c,vessel\ type(n)} \nonumber \\
+      &+ \beta^{diameter}_{c} \cdot diameter(n) \nonumber
+\end{align}
+
+The basic model provided a plausible baseline against which to compare the
+other models.
+
+The "interaction" model was developed to explore whether there were any
+important interaction effects that the basic model does not consider. For
+example, question b) can be interpreted as asking whether there is are any
+significant effects corresponding to the interaction between age and treatment.
+Our interaction model calculates the value of the linear predictors  
+$\eta^{interaction}_{d}$ and $\eta^{interaction}_{c}$ as depending on
+age-treatment and age-treatment-vessel type interaction effects as follows:
+
+\begin{align}
+		\label{eq:interaction}
+    \eta^{interaction}_{d,n} &= \mu_{d, age(mouse(n))} 
+      + \alpha^{treatment}_{d,treatment(n)}
+      + \alpha^{vessel\ type}_{d,vessel\ type(n)} \\
+    &+ \alpha^{age:treatment}_{d, age(mouse(n)), treatment(n)} \nonumber \\
+    &+ \alpha^{age:treatment:vessel\ type}_{d, age(mouse(n)), treatment(n), vessel\ type(n)} \nonumber \\
+    &+ \beta^{diameter}_{d} \cdot diameter(n) \nonumber \\
+    \eta^{interaction}_{c,n} &= \mu_{c, age(mouse(n))} 
+      + \alpha^{treatment}_{c,treatment(n)} \nonumber
+      + \alpha^{vessel\ type}_{c,vessel\ type(n)} \\
+    &+ \alpha^{age:treatment}_{c, age(mouse(n)), treatment(n)} \nonumber \\
+    &+ \alpha^{age:treatment:vessel\ type}_{c, age(mouse(n)), treatment(n), vessel\ type(n)} \nonumber \\
+    &+ \beta^{diameter}_{c} \cdot diameter(n) \nonumber
+\end{align}
+
+Next, we constructed a model that adds to the basic model parameters
+that aim to capture possible effects corresponding to the blood pressure
+measurements. To compensate for collinearity between age and pressure, our
+"pressure" model does not use the observed pressure as a predictor, but rather
+the age-normalised pressure, calculated by subtracting the mean for each age
+category from the observed pressure measurement. The model for the linear predictors  
+$\eta^{pressure}_{d}$ and $\eta^{pressure}_{c}$ is then as follows:
+
+\begin{align}
+		\label{eq:pressure-model}
+    \eta^{pressure}_{d,n} &= \mu_{d, age(mouse(n))} 
+      + \alpha^{treatment}_{d,treatment(n)}
+      + \alpha^{vessel\ type}_{d,vessel\ type(n)} \\
+    &+ \beta^{diameter}_{d} \cdot diameter(n) \nonumber \\
+    &+ \beta^{pressure}_{d, age(mouse(n))} \cdot norm\ pressure_{n} \nonumber \\
+    \eta^{pressure}_{c,n} &= \mu_{c, age(mouse(n))} 
+      + \alpha^{treatment}_{c,treatment(n)} \nonumber
+      + \alpha^{vessel\ type}_{c,vessel\ type(n)} \\
+    &+ \beta^{diameter}_{c} \cdot diameter(n) \nonumber \\
+    &+ \beta^{pressure}_{c, age(mouse(n))} \cdot norm\ pressure_{n} \nonumber
+\end{align}
+
+Finally, we made a model that includes a pressure effect but no age-specific
+parameters from the pressure model. This is to test whether any age effects are
+due to the collinearity between age and pressure. The pressure-no-age model's
+linear predictors $\eta^{pressure\ no\ age}_{d}$ and $\eta^{pressure\ no\ age}_{c}$
+are calculated as shown in equation \eqref{eq:pressure-no-age-model}. Note that,
+unlike in equation \eqref{eq:pressure-model}, the $\mu$ and $\beta^{pressure}$
+parameters in equation \eqref{eq:pressure-no-age-model} have no age indexes.
+
+\begin{align}
+		\label{eq:pressure-no-age-model}
+    \eta^{pressure\ no\ age}_{d,n} &= \mu_{d} 
+      + \alpha^{treatment}_{d,treatment(n)}
+      + \alpha^{vessel\ type}_{d,vessel\ type(n)} \\
+    &+ \beta^{diameter}_{d} \cdot diameter(n) \nonumber \\
+    &+ \beta^{pressure}_{d} \cdot norm\ pressure_{n} \nonumber \\
+    \eta^{pressure\ no\ age}_{c,n} &= \mu_{c} 
+      + \alpha^{treatment}_{c,treatment(n)} \nonumber
+      + \alpha^{vessel\ type}_{c,vessel\ type(n)} \\
+    &+ \beta^{diameter}_{c} \cdot diameter(n) \nonumber \\
+    &+ \beta^{pressure}_{c} \cdot norm\ pressure_{n} \nonumber
+\end{align}
+
+In all of our models the $\alpha$ parameters were given independent,
+semi-informative, hierarchical prior distributions to allow for appropriate
+information sharing. The $\beta^{pressure}$ parameters were given
+independent, semi-informative, non-hierarchical prior distributions.
+
+## Results
+
+We estimated the leave-one-out log predictive density for each model using
+the method described in @vehtariPracticalBayesianModel2017 and implemented in
+@kumarArviZUnifiedLibrary2019. The results of the comparison are shown below in
+@fig-q2-elpd-comparison.
+
+::: {#fig-q2-elpd-comparison}
+![](../plots/q2-elpd-comparison.png)
+
+Comparison of estimated leave-one-out log predictive density (ELPD) for our
+pulsatility models. The main result is that the pressure-no-age and interaction
+models are clearly worse than the pressure model, as shown by the separation of
+the relevant grey and dotted lines.
+
+:::
+
+We evaluated our models' fit to data using prior and posterior predictive
+checking, with the results for the pressure model shown in @fig-pressure-ppc.
+
+::: {#fig-pressure-ppc layout-nrow=4}
+
+![](../plots/q2-prior-check-diameter.png)
+![](../plots/q2-posterior-check-diameter.png)
+![](../plots/q2-prior-check-center.png)
+![](../plots/q2-posterior-check-center.png)
+
+Prior and posterior predictive checks for the pressure model.
+:::
+
+Inspecting of the interaction model output showed that none of the interaction
+effect parameters that differed substantially from zero, as can be seen in
+@fig-q2-interaction-effects.
+
+::: {#fig-q2-interaction-effects}
+![](../plots/q2-interaction-effects.png)
+
+Marginal posterior quantiles for the unique effects in the interaction model.
+:::
+
+From this result, together with the worse estimated out of sample predictive
+performance as shown in @fig-q2-elpd-comparison, we concluded that there were
+no important interaction effects, so that we could essentially discard the
+interaction model.
+
+@fig-q2-effects shows the marginal posterior distributions for other effect
+parameters in all three models. Note that the parameters `b_diameter` are
+strongly positive for diameter pulsatility in all models and also mostly
+positive for centre pulsatility. There is also a strong trend for diameter
+pulsatility to decrease with the order of the vessel and no particular vessel
+type trend for centre pulsatility.
+
+::: {#fig-q2-effects}
+
+![](../plots/q2-effects.png)
+
+Marginal posterior quantiles for shared model effects.
+:::
+
+### Answers to specific questions
+
+To address @thm-qa, i.e. whether there are important age effects,
+@fig-q2-age-effects plots the distribution of age effect differences (adult
+minus old) for each measurement type in the pressure model.
+
+This graph shows that, in this model, the mean parameter for diameter
+pulsatility in adult mice was higher than for old mice in every single posterior
+sample: in other words there is a clear trend for older mice to have lower
+diameter pulsatility. There is a smaller opposite trend for centre pulsatility
+measurements, but it is not clearly separated from zero, indicating that the
+direction of the effect is not fully settled.
+
+::: {#fig-q2-age-effects}
+![](../plots/q2-age-effects.png)
+
+Posterior distribution of age effect differences for each measurement type.
+
+:::
+
+@thm-qb is whether the age effects are explained by the generally higher
+blood pressure of the adult mice. This is mostly answered by the poorer
+estimated out of sample predictive performance of the pressure-no-age model
+compared with the other models as shown in @fig-q2-elpd-comparison. This shows
+that there is information in the age labels beyond what is contained in the
+pressure measurements. It is nonetheless possible that different pressure
+explains the difference between old and adult mice, but that the pressure
+measurements did not reflect the true pressure at the measured vessels. This is
+plausible since the pressure measurements were taken at a different location.
+
+@fig-q2-pressure-effects shows the difference in $\beta^{pressure}$ parameters
+for old and adult mice in the pressure model in order to answer @thm-qc. This
+shows a weak tendency of the pressure effect on diameter pulsatility to be
+more positive for adult mice than for old mice, and a strong opposite tendency
+for centre pulsatility. Taking the absolute values into account, the analysis
+suggests that greater measured pressure is not strongly related to diameter
+pulsatility and correlates with reduced centre pulsatility for adult mice but
+not for old mice.
+
+::: {#fig-q2-pressure-effects}
+![](../plots/q2-pressure-effects.png)
+
+Posterior distribution of pressure effect differences for each measurement type.
+
+:::
+
+To illustrate the effect of treatments, and specifically sphincter ablation
+relative to hypertension (i.e. to answer @thm-qd) @fig-q2-treatment-effects shows the difference
+between the effect for each treatment and the baseline treatment effect. There
+is a clear effect of ablation to increase diameter pulsatility and no clear
+effects of hypertension on diameter pulsatility or of either treatment on centre
+pulsatility.
+
+::: {#fig-q2-treatment-effects}
+![](../plots/q2-treatment-effects.png)
+
+Posterior distribution of treatment effect differences for each measurement type.
+
+:::
+
+::: {.content-hidden}
+
+## Notes and Comments
+
+- [] Statistical testing in general: in normal case we would do multiple
+hypothesis testing correction. Explain why it is OK to have a separate model for
+each question (because we assume the modelled processes are independent)
+
+- [] Add an explanatory section at the start.
+
+- [] Change parameter names to be more explicit about interaction terms
+
+:::

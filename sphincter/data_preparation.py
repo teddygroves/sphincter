@@ -17,13 +17,9 @@ from pandera.dtypes import Category
 from pandera.typing.common import DataFrameBase
 from pydantic import (
     BaseModel,
-    ConfigDict,
-    Field,
-    GetCoreSchemaHandler,
     field_serializer,
     field_validator,
 )
-from pydantic_core import CoreSchema, core_schema
 
 from sphincter import util
 from sphincter.stan_input_functions import (
@@ -42,6 +38,7 @@ PREPARED_DIR = os.path.join(DATA_DIR, "prepared")
 RAW_DATA_FILES = {
     "measurements": os.path.join(RAW_DIR, "data_sphincter_paper.csv")
 }
+BAD_MICE = [310321]
 
 Age = pd.CategoricalDtype(categories=["adult", "old"], ordered=True)
 TreatmentQ1 = pd.CategoricalDtype(
@@ -101,6 +98,9 @@ class Q2MeasurementSchema(pa.DataFrameModel):
     pc_sum: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
     pc_ratio: Series[float] = pa.Field(coerce=True, ge=0, nullable=False)
     pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
+    pressure_norm: Series[float] = pa.Field(coerce=True, nullable=False)
+    diameter: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
+    diameter_norm: Series[float] = pa.Field(coerce=True, nullable=False)
 
 
 class Q1Dataset(BaseModel):
@@ -201,6 +201,7 @@ def process_measurements_q1(
         return (
             df["diam_max_after_stim"].notnull()
             & df["diam_mean_before_stim"].notnull()
+            & ~df["mouse"].isin(BAD_MICE)
         )
 
     new_names = {
@@ -287,6 +288,7 @@ def process_measurements_q2(
             df["power_diam_h1"].notnull()
             & df["power_center_h1"].notnull()
             & df["pressure_d"].notnull()
+            & ~df["mouse"].isin(BAD_MICE)
         )
 
     new_names = {
@@ -297,6 +299,7 @@ def process_measurements_q2(
         "power_center_h1": "pc1",
         "power_center_h2": "pc2",
         "power_center_h3": "pc3",
+        "diam_mean": "diameter",
     }
     cols = list(
         Q2MeasurementSchema.get_metadata()["Q2MeasurementSchema"][
@@ -312,6 +315,10 @@ def process_measurements_q2(
             pc_sum=lambda df: df[["pc1", "pc2", "pc3"]].sum(axis=1).fillna(0),
             pd_ratio=lambda df: df["pd2"].fillna(0.0) / df["pd_sum"],
             pc_ratio=lambda df: df["pc2"].fillna(0.0) / df["pc_sum"],
+            pressure_norm=lambda df: df["pressure_d"]
+            - df.groupby(["age"])["pressure_d"].transform("mean"),
+            diameter_norm=lambda df: df["diameter"]
+            - df.groupby(["vessel_type"])["diameter"].transform("mean"),
         )[cols]
         .sort_values(["age", "mouse", "vessel_type", "treatment"])
     )

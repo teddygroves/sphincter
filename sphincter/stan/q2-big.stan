@@ -44,7 +44,7 @@ data {
   array[N] int<lower=1,upper=N_treatment> treatment;
   array[N] int<lower=1,upper=N_vessel_type> vessel_type;
   array[2, N] real<lower=0> y;
-  vector<lower=0>[N] pressure;
+  vector[N] pressure;
   array[N_train] int<lower=1,upper=N> ix_train;
   array[N_test] int<lower=1,upper=N> ix_test;
   int<lower=0,upper=1> likelihood;

@@ -1,0 +1,10 @@
+{
+    "_ARRAY_DIMENSIONS": [
+        "chain",
+        "draw",
+        "measurement_type",
+        "age",
+        "treatment",
+        "vessel_type"
+    ]
+}

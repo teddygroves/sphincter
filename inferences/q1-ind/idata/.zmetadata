@@ -120,7 +120,7 @@
         },
         "observed_data/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-17T15:27:26.165004",
+            "created_at": "2023-11-30T10:05:54.385882",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -479,7 +479,7 @@
         },
         "observed_data/age/.zarray": {
             "chunks": [
-                43
+                42
             ],
             "compressor": {
                 "blocksize": 0,
@@ -493,7 +493,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                43
+                42
             ],
             "zarr_format": 2
         },
@@ -504,7 +504,7 @@
         },
         "observed_data/age_dim_0/.zarray": {
             "chunks": [
-                43
+                42
             ],
             "compressor": {
                 "blocksize": 0,
@@ -518,7 +518,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                43
+                42
             ],
             "zarr_format": 2
         },
@@ -529,7 +529,7 @@
         },
         "observed_data/ix_test/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -543,7 +543,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -554,7 +554,7 @@
         },
         "observed_data/ix_test_dim_0/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -568,7 +568,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -579,7 +579,7 @@
         },
         "observed_data/ix_train/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -593,7 +593,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -604,7 +604,7 @@
         },
         "observed_data/ix_train_dim_0/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -618,7 +618,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -629,7 +629,7 @@
         },
         "observed_data/mouse/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -643,7 +643,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -654,7 +654,7 @@
         },
         "observed_data/mouse_dim_0/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -668,7 +668,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -679,7 +679,7 @@
         },
         "observed_data/treatment/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -693,7 +693,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -704,7 +704,7 @@
         },
         "observed_data/treatment_dim_0/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -718,7 +718,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -729,7 +729,7 @@
         },
         "observed_data/vessel_type/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -743,7 +743,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },
@@ -754,7 +754,7 @@
         },
         "observed_data/vessel_type_dim_0/.zarray": {
             "chunks": [
-                490
+                475
             ],
             "compressor": {
                 "blocksize": 0,
@@ -768,7 +768,7 @@
             "filters": null,
             "order": "C",
             "shape": [
-                490
+                475
             ],
             "zarr_format": 2
         },

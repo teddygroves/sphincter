@@ -1,0 +1,15 @@
+resource_path: ["../"]
+author: "Teddy Groves"
+bibliography: bibliography.bib
+reference-location: margin
+toc: true
+format:
+  html:
+    embed-resources: true
+    include-in-header: mathjax.html
+  pdf: default
+
+project:
+  render:
+    - whisker.qmd
+    - pulsatility.qmd
