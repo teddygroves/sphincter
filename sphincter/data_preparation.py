@@ -4,16 +4,16 @@ These functions should take in a dataframe of measurements and return a
 PreparedData object.
 
 """
-from io import StringIO
 import json
 import os
+from io import StringIO
 from typing import Any, Dict, Union
 
 import numpy as np
 import pandas as pd
 import pandera as pa
-from pandera.typing import DataFrame, Series
 from pandera.dtypes import Category
+from pandera.typing import DataFrame, Series
 from pandera.typing.common import DataFrameBase
 from pydantic import (
     BaseModel,
@@ -22,7 +22,11 @@ from pydantic import (
 )
 
 from sphincter import util
-from sphincter.stan_input_functions import get_stan_input_q1, get_stan_input_q2
+from sphincter.stan_input_functions import (
+    get_stan_input_whisker,
+    get_stan_input_pulsatility,
+    get_stan_input_flow,
+)
 
 NAME_FILE = "name.txt"
 COORDS_FILE = "coords.json"
@@ -38,25 +42,33 @@ RAW_DATA_FILES = {
 BAD_MICE = [310321]
 
 Age = pd.CategoricalDtype(categories=["adult", "old"], ordered=True)
-TreatmentQ1 = pd.CategoricalDtype(
+TreatmentWhisker = pd.CategoricalDtype(
     categories=["baseline", "after_hyper", "after_ablation"],
     ordered=True,
 )
-TreatmentQ2 = pd.CategoricalDtype(
+TreatmentPulsatility = pd.CategoricalDtype(
     categories=["baseline", "hyper", "after_hyper", "after_ablation", "hyper2"],
     ordered=True,
 )
-VesselTypeQ1 = pd.CategoricalDtype(
+VesselTypeWhisker = pd.CategoricalDtype(
     categories=["pen_art", "sphincter", "bulb", "cap1", "cap2"],
     ordered=True,
 )
-VesselTypeQ2 = pd.CategoricalDtype(
+VesselTypePulsatility = pd.CategoricalDtype(
     categories=["pen_art", "bulb", "cap1", "cap2", "cap3", "cap4", "cap5"],
+    ordered=True,
+)
+VesselTypeFlow = pd.CategoricalDtype(
+    categories=["bulb", "sphincter", "cap1", "cap2", "cap3", "cap4", "cap5"],
+    ordered=True,
+)
+TreatmentFlow = pd.CategoricalDtype(
+    categories=["baseline", "hyper", "after_hyper", "after_ablation", "hyper2"],
     ordered=True,
 )
 
 
-class Q1MeasurementSchema(pa.DataFrameModel):
+class WhiskerMeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer question 1
 
     Other columns are also allowed!
@@ -64,8 +76,10 @@ class Q1MeasurementSchema(pa.DataFrameModel):
 
     age: Series[Age] = pa.Field(coerce=True, nullable=False)
     mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
-    vessel_type: Series[VesselTypeQ1] = pa.Field(coerce=True, nullable=False)
-    treatment: Series[TreatmentQ1] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypeWhisker] = pa.Field(
+        coerce=True, nullable=False
+    )
+    treatment: Series[TreatmentWhisker] = pa.Field(coerce=True, nullable=False)
     pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
     diam_before: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
     diam_after: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
@@ -74,7 +88,7 @@ class Q1MeasurementSchema(pa.DataFrameModel):
     diam_rel_change: Series[float] = pa.Field(coerce=True, nullable=False)
 
 
-class Q2MeasurementSchema(pa.DataFrameModel):
+class PulsatilityMeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer question 1
 
     Other columns are also allowed!
@@ -82,8 +96,12 @@ class Q2MeasurementSchema(pa.DataFrameModel):
 
     age: Series[Age] = pa.Field(coerce=True, nullable=False)
     mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
-    vessel_type: Series[VesselTypeQ2] = pa.Field(coerce=True, nullable=False)
-    treatment: Series[TreatmentQ2] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypePulsatility] = pa.Field(
+        coerce=True, nullable=False
+    )
+    treatment: Series[TreatmentPulsatility] = pa.Field(
+        coerce=True, nullable=False
+    )
     pd1: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
     pd2: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
     pd3: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
@@ -98,10 +116,24 @@ class Q2MeasurementSchema(pa.DataFrameModel):
     pressure_norm: Series[float] = pa.Field(coerce=True, nullable=False)
     diameter: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
     diameter_norm: Series[float] = pa.Field(coerce=True, nullable=False)
+    speed: Series[float] = pa.Field(coerce=True, nullable=True)
 
 
-class Q1Dataset(BaseModel):
-    """A dataset that can answer question 1."""
+class FlowMeasurementSchema(pa.DataFrameModel):
+    """A dataframe that can be used to answer questions about flow."""
+
+    age: Series[Age] = pa.Field(coerce=True, nullable=False)
+    mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypeFlow] = pa.Field(coerce=True, nullable=False)
+    treatment: Series[TreatmentFlow] = pa.Field(coerce=True, nullable=False)
+    pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
+    diameter: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
+    speed: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
+    flux: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
+
+
+class WhiskerDataset(BaseModel):
+    """A dataset that can answer questions about whisker stimulation."""
 
     name: str
     coords: util.CoordDict
@@ -111,20 +143,20 @@ class Q1Dataset(BaseModel):
     @field_validator("measurements")
     def validate_measurements(
         cls, v: Any
-    ) -> DataFrameBase[Q1MeasurementSchema]:
+    ) -> DataFrameBase[WhiskerMeasurementSchema]:
         if isinstance(v, str):
             v = pd.read_json(StringIO(v))
-        return Q1MeasurementSchema.validate(v)
+        return WhiskerMeasurementSchema.validate(v)
 
     @field_serializer("measurements")
     def serialize_measurements(
-        self, measurements: DataFrame[Q1MeasurementSchema], _info
+        self, measurements: DataFrame[WhiskerMeasurementSchema], _info
     ):
         return measurements.to_json()
 
 
-class Q2Dataset(BaseModel):
-    """A dataset that can answer question 1."""
+class PulsatilityDataset(BaseModel):
+    """A dataset that can answer questions about pulsatility."""
 
     name: str
     coords: util.CoordDict
@@ -134,14 +166,37 @@ class Q2Dataset(BaseModel):
     @field_validator("measurements")
     def validate_measurements(
         cls, v: Any
-    ) -> DataFrameBase[Q2MeasurementSchema]:
+    ) -> DataFrameBase[PulsatilityMeasurementSchema]:
         if isinstance(v, str):
             v = pd.read_json(StringIO(v))
-        return Q2MeasurementSchema.validate(v)
+        return PulsatilityMeasurementSchema.validate(v)
 
     @field_serializer("measurements")
     def serialize_measurements(
-        self, measurements: DataFrame[Q2MeasurementSchema], _info
+        self, measurements: DataFrame[PulsatilityMeasurementSchema], _info
+    ):
+        return measurements.to_json()
+
+
+class FlowDataset(BaseModel):
+    """A dataset that can answer questions about red blood cell flow."""
+
+    name: str
+    coords: util.CoordDict
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[FlowMeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return FlowMeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[FlowMeasurementSchema], _info
     ):
         return measurements.to_json()
 
@@ -153,9 +208,10 @@ def prepare_data():
         k: pd.read_csv(v, index_col=None) for k, v in RAW_DATA_FILES.items()
     }
     data_preparation_functions_to_run = [
-        prepare_data_q1,
-        prepare_data_q2,
-        prepare_data_q2_no_hyper,
+        prepare_data_whisker,
+        prepare_data_pulsatility,
+        prepare_data_pulsatility_no_hyper,
+        prepare_data_flow,
     ]
     print("Preparing data...")
     for dpf in data_preparation_functions_to_run:
@@ -169,12 +225,12 @@ def prepare_data():
             f.write(prepared_data.model_dump_json())
 
 
-def prepare_data_q1(raw: pd.DataFrame) -> Q1Dataset:
+def prepare_data_whisker(raw: pd.DataFrame) -> WhiskerDataset:
     """Prepare data for question 1."""
-    measurements = process_measurements_q1(raw)
-    stan_input = get_stan_input_q1(measurements)
-    return Q1Dataset(
-        name="q1",
+    measurements = process_measurements_whisker(raw)
+    stan_input = get_stan_input_whisker(measurements)
+    return WhiskerDataset(
+        name="whisker",
         measurements=measurements,
         coords=util.CoordDict(
             {
@@ -189,9 +245,9 @@ def prepare_data_q1(raw: pd.DataFrame) -> Q1Dataset:
     )
 
 
-def process_measurements_q1(
+def process_measurements_whisker(
     raw: pd.DataFrame,
-) -> DataFrameBase[Q1MeasurementSchema]:
+) -> DataFrameBase[WhiskerMeasurementSchema]:
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
@@ -207,11 +263,11 @@ def process_measurements_q1(
         "vessel": "vessel_type",
     }
     cols = list(
-        Q1MeasurementSchema.get_metadata()["Q1MeasurementSchema"][
+        WhiskerMeasurementSchema.get_metadata()["WhiskerMeasurementSchema"][
             "columns"
         ].keys()
     )
-    return Q1MeasurementSchema.validate(
+    return WhiskerMeasurementSchema.validate(
         raw.loc[filter]
         .rename(columns=new_names)
         .assign(
@@ -227,12 +283,12 @@ def process_measurements_q1(
     )
 
 
-def prepare_data_q2(raw: pd.DataFrame) -> Q2Dataset:
+def prepare_data_pulsatility(raw: pd.DataFrame) -> PulsatilityDataset:
     """Prepare data for question 1."""
-    measurements = process_measurements_q2(raw)
-    stan_input = get_stan_input_q2(measurements)
-    return Q2Dataset(
-        name="q2",
+    measurements = process_measurements_pulsatility(raw)
+    stan_input = get_stan_input_pulsatility(measurements)
+    return PulsatilityDataset(
+        name="pulsatility",
         measurements=measurements,
         coords=util.CoordDict(
             {
@@ -248,18 +304,18 @@ def prepare_data_q2(raw: pd.DataFrame) -> Q2Dataset:
     )
 
 
-def prepare_data_q2_no_hyper(raw: pd.DataFrame) -> Q2Dataset:
-    """Prepare data for question 2."""
+def prepare_data_pulsatility_no_hyper(raw: pd.DataFrame) -> PulsatilityDataset:
+    """Prepare pulsatility data, excluding hypertension treatments."""
     measurements = (
-        process_measurements_q2(raw)
+        process_measurements_pulsatility(raw)
         .loc[lambda df: ~df["treatment"].isin(["hyper", "hyper2"])]
         .assign(
             treatment=lambda df: df["treatment"].cat.remove_unused_categories()
         )
     )
-    stan_input = get_stan_input_q2(measurements)
-    return Q2Dataset(
-        name="q2-no-hyper",
+    stan_input = get_stan_input_pulsatility(measurements)
+    return PulsatilityDataset(
+        name="pulsatility-no-hyper",
         measurements=measurements,
         coords=util.CoordDict(
             {
@@ -275,9 +331,9 @@ def prepare_data_q2_no_hyper(raw: pd.DataFrame) -> Q2Dataset:
     )
 
 
-def process_measurements_q2(
+def process_measurements_pulsatility(
     raw: pd.DataFrame,
-) -> DataFrameBase[Q2MeasurementSchema]:
+) -> DataFrameBase[PulsatilityMeasurementSchema]:
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
@@ -299,11 +355,11 @@ def process_measurements_q2(
         "diam_mean": "diameter",
     }
     cols = list(
-        Q2MeasurementSchema.get_metadata()["Q2MeasurementSchema"][
-            "columns"
-        ].keys()
+        PulsatilityMeasurementSchema.get_metadata()[
+            "PulsatilityMeasurementSchema"
+        ]["columns"].keys()
     )
-    return Q2MeasurementSchema.validate(
+    return PulsatilityMeasurementSchema.validate(
         raw.loc[filter]
         .rename(columns=new_names)
         .assign(
@@ -321,12 +377,61 @@ def process_measurements_q2(
     )
 
 
-def load_prepared_data(path_to_data: str) -> Union[Q1Dataset, Q2Dataset]:
+def process_measurements_flow(
+    raw: pd.DataFrame,
+) -> DataFrameBase[PulsatilityMeasurementSchema]:
+    """Process the measurements dataframe."""
+
+    def filter(df: pd.DataFrame) -> pd.Series:
+        return df["speed"].notnull()
+
+    new_names = {
+        "vessel": "vessel_type",
+        "diam_mean": "diameter",
+    }
+    cols = list(
+        FlowMeasurementSchema.get_metadata()["FlowMeasurementSchema"][
+            "columns"
+        ].keys()
+    )
+    return FlowMeasurementSchema.validate(
+        raw.loc[filter]
+        .assign(mouse=lambda df: df["mouse"].astype(str))
+        .rename(columns=new_names)[cols]
+        .sort_values(["age", "mouse", "vessel_type", "treatment"])
+    )
+
+
+def prepare_data_flow(raw: pd.DataFrame) -> FlowDataset:
+    """Prepare data for question 1."""
+    measurements = process_measurements_flow(raw)
+    stan_input = get_stan_input_flow(measurements)
+    return FlowDataset(
+        name="flow",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def load_prepared_data(
+    path_to_data: str,
+) -> Union[WhiskerDataset, PulsatilityDataset]:
     with open(path_to_data) as f:
         raw = json.load(f)
-    if raw["name"].startswith("q1"):
-        return Q1Dataset(**raw)
-    elif raw["name"].startswith("q2"):
-        return Q2Dataset(**raw)
+    if raw["name"].startswith("whisker"):
+        return WhiskerDataset(**raw)
+    elif raw["name"].startswith("pulsatility"):
+        return PulsatilityDataset(**raw)
+    elif raw["name"].startswith("flow"):
+        return PulsatilityDataset(**raw)
     else:
         raise ValueError(f"Unexpected name {raw['name']}.")

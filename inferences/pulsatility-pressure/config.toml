@@ -1,0 +1,26 @@
+name = "pulsatility-pressure"
+stan_file = "pulsatility-pressure.stan"
+prepared_data_dir = "pulsatility-no-hyper"
+stan_input_function = "get_stan_input_pulsatility"
+modes = []
+
+[dims]
+mu = ["measurement_type", "age"]
+b_pressure = ["measurement_type", "age"]
+b_diameter = ["measurement_type"]
+tau_treatment = ["measurement_type"]
+tau_vessel_type = ["measurement_type"]
+a_treatment = ["measurement_type", "treatment"]
+a_vessel_type = ["measurement_type", "vessel_type"]
+yrep = ["measurement_type", "observation"]
+y = ["measurement_type", "observation"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 2000
+iter_sampling = 1000
+adapt_delta = 0.99
+

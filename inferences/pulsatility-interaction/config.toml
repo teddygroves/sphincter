@@ -1,0 +1,38 @@
+name = "pulsatility-interaction"
+notes = """This inference fits a model with effects for age:treatment,
+age:vesseltype and age:treatment:vesseltype to the pulsatility dataset pulsatility.
+Check the actual results, but I didn't find any interesting effects and the loo
+performance was worse than the basic model, so I took these results as showing
+that the extra effects didn't add anything."""
+stan_file = "pulsatility-interaction.stan"
+prepared_data_dir = "pulsatility-no-hyper"
+stan_input_function = "get_stan_input_pulsatility"
+modes = []
+
+[dims]
+mu = ["measurement_type", "age"]
+b_diameter = ["measurement_type"]
+tau_treatment = ["measurement_type"]
+tau_vessel_type = ["measurement_type"]
+tau_age_treatment = ["measurement_type"]
+tau_age_vessel_type = ["measurement_type"]
+tau_age_treatment_vessel_type = ["measurement_type"]
+a_treatment = ["measurement_type", "treatment"]
+a_vessel_type = ["measurement_type", "vessel_type"]
+a_age_treatment = ["measurement_type", "age", "treatment"]
+a_age_vessel_type = ["measurement_type", "age", "vessel_type"]
+a_age_treatment_vessel_type = ["measurement_type", "age", "treatment", "vessel_type"]
+yrep = ["measurement_type", "observation"]
+y = ["measurement_type", "observation"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 2000
+iter_sampling = 1000
+adapt_delta = 0.99
+
+
+
