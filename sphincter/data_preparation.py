@@ -432,6 +432,6 @@ def load_prepared_data(
     elif raw["name"].startswith("pulsatility"):
         return PulsatilityDataset(**raw)
     elif raw["name"].startswith("flow"):
-        return PulsatilityDataset(**raw)
+        return FlowDataset(**raw)
     else:
         raise ValueError(f"Unexpected name {raw['name']}.")
