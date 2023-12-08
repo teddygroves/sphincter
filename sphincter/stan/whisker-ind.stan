@@ -2,6 +2,26 @@
 
 functions {
 #include custom_functions.stan
+  vector get_eta(
+    array[] int vessel_type,
+    array[] int treatment,
+    array[] int mouse,
+    array[] real a_treatment,
+    array[] real a_vessel_type,
+    array[,] real a_treatment
+  ){
+    int N = rows(vessel_type);
+    for (n in 1:N){
+      int v = vessel_type[n];
+      int t = treatment[n];
+      int m = mouse[n];
+      eta[n] = a_age[age[mouse[n]]]
+      + a_mouse[mouse[n]]
+      + a_vessel_type[vessel_type[n]]
+      + a_treatment[treatment[n]];
+    }
+    return eta;
+  }
 }
 data {
   int<lower=1> N;
@@ -50,29 +70,30 @@ model {
   tau_treatment ~ normal(0, 0.5);
   sigma ~ lognormal(0, 0.5);
   if (likelihood){
-    vector[N] eta;
-    for (n in 1:N){
-      eta[n] = 
-        a_age[age[mouse[n]]]
-        + a_mouse[mouse[n]]
-        + a_vessel_type[vessel_type[n]]
-        + a_treatment[treatment[n]];
-    }
-    y_std[ix_train] ~ student_t(nu, eta[ix_train], sigma);
+    vector[N] eta_std = get_eta(
+      vessel_type,
+      treatment,
+      mouse,
+      a_treatment,
+      a_vessel_type,
+      a_treatment
+    );
+    y_std[ix_train] ~ student_t(nu, eta_std[ix_train], sigma);
   }
 }
 generated quantities {
   vector[N_test] yrep;
   vector[N_test] llik;
   {
-    vector[N] eta;
-    for (n in 1:N)
-      eta[n] = 
-        a_age[age[mouse[n]]]
-        + a_mouse[mouse[n]]
-        + a_vessel_type[vessel_type[n]]
-        + a_treatment[treatment[n]];
-    eta = unstandardise_vector(eta, mean(y), sd(y));
+    vector[N] eta_std = get_eta(
+      vessel_type,
+      treatment,
+      mouse,
+      a_treatment,
+      a_vessel_type,
+      a_treatment
+    );
+    eta = unstandardise_vector(eta_std, mean(y), sd(y));
     for (n in 1:N_test){
       yrep[n] = student_t_rng(nu, eta[ix_test[n]], sigma * sd(y));
       llik[n] = student_t_lpdf(y[ix_test[n]] | nu, eta[ix_test[n]], sigma * sd(y));
