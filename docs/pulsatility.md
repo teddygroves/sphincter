@@ -370,7 +370,7 @@ each question (because we assume the modelled processes are independent)
 
 - [] Add an explanatory section at the start.
 
-- [] Change parameter names to be more explicit about interaction terms
+- [x] Change parameter names to be more explicit about interaction terms
 
 - [] Add an inference of the basic model with a dataset including the
 hypertension treatment and the ablation
