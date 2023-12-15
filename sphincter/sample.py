@@ -4,6 +4,8 @@ import os
 
 import arviz as az
 import cmdstanpy
+import toml
+
 from sphincter.data_preparation import load_prepared_data
 from sphincter.inference_configuration import (
     load_inference_configuration,
@@ -12,15 +14,23 @@ from sphincter.inference_configuration import (
 HERE = os.path.dirname(__file__)
 RUNS_DIR = os.path.join(HERE, "..", "inferences")
 STAN_DIR = os.path.join(HERE, "stan")
+INFERENCES_CONFIG_FILE = os.path.join(RUNS_DIR, "inferences.toml")
 
 
 def main():
     """Fit all inferences in all modes."""
-    run_dirs = [
-        os.path.join(RUNS_DIR, d)
-        for d in os.listdir(RUNS_DIR)
-        if os.path.isdir(os.path.join(RUNS_DIR, d))
-    ]
+    if os.path.exists(INFERENCES_CONFIG_FILE):
+        inferences_input = toml.load(INFERENCES_CONFIG_FILE)
+        run_dirs = [
+            os.path.join(RUNS_DIR, i)
+            for i in inferences_input["inferences_to_run"]
+        ]
+    else:
+        run_dirs = [
+            os.path.join(RUNS_DIR, d)
+            for d in os.listdir(RUNS_DIR)
+            if os.path.isdir(os.path.join(RUNS_DIR, d))
+        ]
     for run_dir in sorted(run_dirs):
         ic = load_inference_configuration(os.path.join(run_dir, "config.toml"))
         stan_file = os.path.join(STAN_DIR, ic.stan_file)

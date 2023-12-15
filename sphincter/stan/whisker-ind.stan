@@ -5,17 +5,17 @@ functions {
   vector get_eta(
     array[] int vessel_type,
     array[] int treatment,
+    array[] int age,
     array[] int mouse,
-    array[] real a_treatment,
-    array[] real a_vessel_type,
-    array[,] real a_treatment
+    vector mu,
+    vector a_mouse,
+    vector a_treatment,
+    vector a_vessel_type
   ){
-    int N = rows(vessel_type);
+    int N = size(vessel_type);
+    vector[N] eta;
     for (n in 1:N){
-      int v = vessel_type[n];
-      int t = treatment[n];
-      int m = mouse[n];
-      eta[n] = a_age[age[mouse[n]]]
+      eta[n] = mu[age[mouse[n]]]
       + a_mouse[mouse[n]]
       + a_vessel_type[vessel_type[n]]
       + a_treatment[treatment[n]];
@@ -45,7 +45,7 @@ transformed data {
 }
 parameters {
   real<lower=1> nu;
-  vector[N_age] a_age;
+  vector[N_age] mu;
   vector[N_mouse] a_mouse_z;
   vector[N_vessel_type] a_vessel_type_z;
   vector[N_treatment] a_treatment_z;
@@ -61,7 +61,7 @@ transformed parameters {
 }
 model {
   nu ~ gamma(2, 0.1);
-  a_age ~ normal(0, 1);
+  mu ~ normal(0, 1);
   a_mouse_z ~ normal(0, 1);
   a_vessel_type_z ~ normal(0, 1);
   a_treatment_z ~ normal(0, 1);
@@ -73,8 +73,10 @@ model {
     vector[N] eta_std = get_eta(
       vessel_type,
       treatment,
+      age,
       mouse,
-      a_treatment,
+      mu,
+      a_mouse,
       a_vessel_type,
       a_treatment
     );
@@ -88,12 +90,14 @@ generated quantities {
     vector[N] eta_std = get_eta(
       vessel_type,
       treatment,
+      age,
       mouse,
-      a_treatment,
+      mu,
+      a_mouse,
       a_vessel_type,
       a_treatment
     );
-    eta = unstandardise_vector(eta_std, mean(y), sd(y));
+    vector[N] eta = unstandardise_vector(eta_std, mean(y), sd(y));
     for (n in 1:N_test){
       yrep[n] = student_t_rng(nu, eta[ix_test[n]], sigma * sd(y));
       llik[n] = student_t_lpdf(y[ix_test[n]] | nu, eta[ix_test[n]], sigma * sd(y));

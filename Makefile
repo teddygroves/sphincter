@@ -42,6 +42,7 @@ analysis: $(ENV_MARKER)
 	  python $(SRC)/sample.py || exit 1; \
 	  jupyter execute $(SRC)/whisker.ipynb || exit 1; \
 	  jupyter execute $(SRC)/pulsatility.ipynb || exit 1; \
+	  jupyter execute $(SRC)/flow.ipynb || exit 1; \
 	)
 
 clean-docs:

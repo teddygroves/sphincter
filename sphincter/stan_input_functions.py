@@ -117,7 +117,6 @@ def get_stan_input_flow(mts: pd.DataFrame) -> Dict:
         "age": age,
         "mouse": mouse,
         "treatment": one_encode(mts["treatment"]),
-        "hyper": mts["treatment"].isin(["hyper", "hyper2"]).astype(int),
         "vessel_type": one_encode(mts["vessel_type"]),
         "ix_train": [i + 1 for i in range(len(mts))],
         "ix_test": [i + 1 for i in range(len(mts))],

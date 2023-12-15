@@ -1,6 +1,6 @@
 {
     "arviz_version": "0.17.0.dev0",
-    "created_at": "2023-12-04T14:09:13.920055",
+    "created_at": "2023-12-15T08:40:27.956480",
     "inference_library": "cmdstanpy",
     "inference_library_version": "1.2.0"
 }

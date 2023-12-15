@@ -59,7 +59,7 @@ VesselTypePulsatility = pd.CategoricalDtype(
     ordered=True,
 )
 VesselTypeFlow = pd.CategoricalDtype(
-    categories=["bulb", "sphincter", "cap1", "cap2", "cap3", "cap4", "cap5"],
+    categories=["sphincter", "bulb", "cap1", "cap2", "cap3", "cap4", "cap5"],
     ordered=True,
 )
 TreatmentFlow = pd.CategoricalDtype(
@@ -383,7 +383,7 @@ def process_measurements_flow(
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
-        return df["speed"].notnull()
+        return df["speed"].notnull() & ~df["mouse"].isin(BAD_MICE)
 
     new_names = {
         "vessel": "vessel_type",

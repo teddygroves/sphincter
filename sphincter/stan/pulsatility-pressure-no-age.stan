@@ -89,6 +89,7 @@ model {
     a_vessel_type_z[i] ~ normal(0, 1);
     a_treatment_z[i] ~ normal(0, 1);
     b_pressure[i] ~ normal(0, 0.5);
+    b_diameter[i] ~ normal(0, 0.5);
   }
   if (likelihood){
     tuple(vector[N], vector[N]) eta = get_eta(
