@@ -495,6 +495,11 @@ each question (because we assume the modelled processes are independent)
 
 - [] Change parameter names to be more explicit about interaction terms
 
+- [] Check that all interaction effect combinations have been included.
+
+- [] Next week update for Martin and Søren: explain what are the main results
+with graphs. 
+
 
 The sum of two different power
 harmonics with exponential rate parameters $\lambda_1$ and $\lambda_2$ should

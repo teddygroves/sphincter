@@ -5,7 +5,7 @@
         },
         "log_likelihood/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.957747",
+            "created_at": "2023-12-18T11:17:06.629116",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -120,7 +120,7 @@
         },
         "observed_data/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:40:28.125799",
+            "created_at": "2023-12-18T11:17:06.625711",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -829,43 +829,12 @@
         },
         "posterior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.497913",
+            "created_at": "2023-12-18T11:17:06.181972",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
         "posterior/.zgroup": {
             "zarr_format": 2
-        },
-        "posterior/a_age/.zarray": {
-            "chunks": [
-                4,
-                1000,
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "age"
-            ]
         },
         "posterior/a_mouse/.zarray": {
             "chunks": [
@@ -1228,6 +1197,37 @@
                 "mouse"
             ]
         },
+        "posterior/mu/.zarray": {
+            "chunks": [
+                4,
+                1000,
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2
+            ],
+            "zarr_format": 2
+        },
+        "posterior/mu/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "age"
+            ]
+        },
         "posterior/nu/.zarray": {
             "chunks": [
                 4,
@@ -1420,7 +1420,7 @@
         },
         "posterior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.505061",
+            "created_at": "2023-12-18T11:17:06.189057",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -1535,43 +1535,12 @@
         },
         "prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.943964",
+            "created_at": "2023-12-18T11:17:06.616139",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
         "prior/.zgroup": {
             "zarr_format": 2
-        },
-        "prior/a_age/.zarray": {
-            "chunks": [
-                4,
-                1000,
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "age"
-            ]
         },
         "prior/a_mouse/.zarray": {
             "chunks": [
@@ -1965,6 +1934,37 @@
                 "mouse"
             ]
         },
+        "prior/mu/.zarray": {
+            "chunks": [
+                4,
+                1000,
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2
+            ],
+            "zarr_format": 2
+        },
+        "prior/mu/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "age"
+            ]
+        },
         "prior/nu/.zarray": {
             "chunks": [
                 4,
@@ -2182,7 +2182,7 @@
         },
         "prior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.951533",
+            "created_at": "2023-12-18T11:17:06.622797",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -2297,7 +2297,7 @@
         },
         "sample_stats/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.501895",
+            "created_at": "2023-12-18T11:17:06.186047",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -2553,7 +2553,7 @@
         },
         "sample_stats_prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-11-30T12:15:06.947884",
+            "created_at": "2023-12-18T11:17:06.619876",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },

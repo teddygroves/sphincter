@@ -77,8 +77,8 @@ model {
       mouse,
       mu,
       a_mouse,
-      a_vessel_type,
-      a_treatment
+      a_treatment,
+      a_vessel_type
     );
     y_std[ix_train] ~ student_t(nu, eta_std[ix_train], sigma);
   }
@@ -94,8 +94,8 @@ generated quantities {
       mouse,
       mu,
       a_mouse,
-      a_vessel_type,
-      a_treatment
+      a_treatment,
+      a_vessel_type
     );
     vector[N] eta = unstandardise_vector(eta_std, mean(y), sd(y));
     for (n in 1:N_test){

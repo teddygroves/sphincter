@@ -2,10 +2,10 @@ name = "whisker-ind"
 stan_file = "whisker-ind.stan"
 prepared_data_dir = "whisker"
 stan_input_function = "get_stan_input_whisker"
-modes = []
+modes = ["prior", "posterior"]
 
 [dims]
-a_age = ["age"]
+mu = ["age"]
 a_treatment = ["treatment"]
 a_vessel_type = ["vessel_type"]
 a_mouse = ["mouse"]
