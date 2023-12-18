@@ -372,8 +372,11 @@ each question (because we assume the modelled processes are independent)
 
 - [x] Change parameter names to be more explicit about interaction terms
 
-- [] Add an inference of the basic model with a dataset including the
+- [x] Add an inference of the basic model with a dataset including the
 hypertension treatment and the ablation
+
+- [] Compare basic and interaction models on dataset with hypertension. Raw data
+shows very large effect of hyper/cap1.
 
 - [] Next: part 3, autoregulation, what is going on during the hypertension?
 
