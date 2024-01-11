@@ -122,3 +122,29 @@ def get_stan_input_flow(mts: pd.DataFrame) -> Dict:
         "ix_test": [i + 1 for i in range(len(mts))],
         "y": mts["speed"].values,
     }
+
+
+@returns_stan_input
+def get_stan_input_hypertension(mts: pd.DataFrame) -> Dict:
+    mouse = one_encode(mts["mouse"])
+    age = (
+        mts.groupby(mouse, sort=True)["age"]
+        .first()
+        .map({"adult": 1, "old": 2}.get)
+    )
+    return {
+        "N": len(mts),
+        "N_age": mts["age"].nunique(),
+        "N_mouse": mts["mouse"].nunique(),
+        "N_treatment": mts["treatment"].nunique(),
+        "N_vessel_type": mts["vessel_type"].nunique(),
+        "N_train": len(mts),
+        "N_test": len(mts),
+        "age": age,
+        "mouse": mouse,
+        "treatment": one_encode(mts["treatment"]),
+        "vessel_type": one_encode(mts["vessel_type"]),
+        "ix_train": [i + 1 for i in range(len(mts))],
+        "ix_test": [i + 1 for i in range(len(mts))],
+        "y": mts["atanh_corr_bp_diam"].values,
+    }

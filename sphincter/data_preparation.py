@@ -26,6 +26,7 @@ from sphincter.stan_input_functions import (
     get_stan_input_whisker,
     get_stan_input_pulsatility,
     get_stan_input_flow,
+    get_stan_input_hypertension,
 )
 
 NAME_FILE = "name.txt"
@@ -37,7 +38,8 @@ DATA_DIR = os.path.join(HERE, "..", "data")
 RAW_DIR = os.path.join(DATA_DIR, "raw")
 PREPARED_DIR = os.path.join(DATA_DIR, "prepared")
 RAW_DATA_FILES = {
-    "measurements": os.path.join(RAW_DIR, "data_sphincter_paper.csv")
+    "measurements": os.path.join(RAW_DIR, "data_sphincter_paper.csv"),
+    "measurements_hypertension": os.path.join(RAW_DIR, "hyper_challenge.csv"),
 }
 BAD_MICE = [310321]
 
@@ -49,6 +51,13 @@ TreatmentWhisker = pd.CategoricalDtype(
 TreatmentPulsatility = pd.CategoricalDtype(
     categories=["baseline", "hyper", "after_hyper", "after_ablation", "hyper2"],
     ordered=True,
+)
+TreatmentFlow = pd.CategoricalDtype(
+    categories=["baseline", "hyper", "after_hyper", "after_ablation", "hyper2"],
+    ordered=True,
+)
+TreatmentHypertension = pd.CategoricalDtype(
+    categories=["hyper1", "hyper2"], ordered=True
 )
 VesselTypeWhisker = pd.CategoricalDtype(
     categories=["pen_art", "sphincter", "bulb", "cap1", "cap2"],
@@ -62,9 +71,8 @@ VesselTypeFlow = pd.CategoricalDtype(
     categories=["sphincter", "bulb", "cap1", "cap2", "cap3", "cap4", "cap5"],
     ordered=True,
 )
-TreatmentFlow = pd.CategoricalDtype(
-    categories=["baseline", "hyper", "after_hyper", "after_ablation", "hyper2"],
-    ordered=True,
+VesselTypeHypertension = pd.CategoricalDtype(
+    categories=["pa", "sphincter", "bulb", "cap1", "cap2"], ordered=True
 )
 
 
@@ -130,6 +138,21 @@ class FlowMeasurementSchema(pa.DataFrameModel):
     diameter: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
     speed: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
     flux: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
+
+
+class HypertensionMeasurementSchema(pa.DataFrameModel):
+    """A dataframe that can be used to answer questions about flow."""
+
+    age: Series[Age] = pa.Field(coerce=True, nullable=False)
+    treatment: Series[TreatmentHypertension] = pa.Field(
+        coerce=True, nullable=False
+    )
+    mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypeHypertension] = pa.Field(
+        coerce=True, nullable=False
+    )
+    corr_bp_diam: Series[float] = pa.Field(coerce=True, ge=-1, le=1)
+    atanh_corr_bp_diam: Series[float] = pa.Field(coerce=True)
 
 
 class WhiskerDataset(BaseModel):
@@ -201,6 +224,29 @@ class FlowDataset(BaseModel):
         return measurements.to_json()
 
 
+class HypertensionDataset(BaseModel):
+    """A dataset that can answer questions about red blood cell flow."""
+
+    name: str
+    coords: util.CoordDict
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[HypertensionMeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return HypertensionMeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[HypertensionMeasurementSchema], _info
+    ):
+        return measurements.to_json()
+
+
 def prepare_data():
     """Run main function."""
     print("Reading raw data...")
@@ -212,11 +258,17 @@ def prepare_data():
         prepare_data_pulsatility,
         prepare_data_pulsatility_no_hyper,
         prepare_data_flow,
+        prepare_data_hypertension,
     ]
     print("Preparing data...")
     for dpf in data_preparation_functions_to_run:
         print(f"Running data preparation function {dpf.__name__}...")
-        prepared_data = dpf(raw_data["measurements"])
+        raw = (
+            raw_data["measurements"]
+            if dpf != prepare_data_hypertension
+            else raw_data["measurements_hypertension"]
+        )
+        prepared_data = dpf(raw)
         output_file = os.path.join(PREPARED_DIR, prepared_data.name + ".json")
         print(f"\twriting prepared_data to {output_file}")
         if not os.path.exists(PREPARED_DIR):
@@ -331,6 +383,47 @@ def prepare_data_pulsatility_no_hyper(raw: pd.DataFrame) -> PulsatilityDataset:
     )
 
 
+def prepare_data_flow(raw: pd.DataFrame) -> FlowDataset:
+    """Prepare data for question 1."""
+    measurements = process_measurements_flow(raw)
+    stan_input = get_stan_input_flow(measurements)
+    return FlowDataset(
+        name="flow",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def prepare_data_hypertension(raw: pd.DataFrame) -> HypertensionDataset:
+    """Prepare hypertension challenge data."""
+    measurements = process_measurements_hypertension(raw)
+    stan_input = get_stan_input_hypertension(measurements)
+    return HypertensionDataset(
+        name="hypertension",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "measurement_type": ["diameter", "center"],
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
 def process_measurements_pulsatility(
     raw: pd.DataFrame,
 ) -> DataFrameBase[PulsatilityMeasurementSchema]:
@@ -402,24 +495,27 @@ def process_measurements_flow(
     )
 
 
-def prepare_data_flow(raw: pd.DataFrame) -> FlowDataset:
-    """Prepare data for question 1."""
-    measurements = process_measurements_flow(raw)
-    stan_input = get_stan_input_flow(measurements)
-    return FlowDataset(
-        name="flow",
-        measurements=measurements,
-        coords=util.CoordDict(
-            {
-                "mouse": measurements["mouse"].cat.categories,
-                "vessel_type": measurements["vessel_type"].cat.categories,
-                "age": measurements["age"].cat.categories,
-                "treatment": measurements["treatment"].cat.categories,
-                "observation": measurements.index.map(str).tolist(),
-            }
-        ),
-        stan_input=stan_input,
+def process_measurements_hypertension(
+    raw: pd.DataFrame,
+) -> DataFrameBase[HypertensionMeasurementSchema]:
+    """Process hypertension data."""
+    out = (
+        raw.melt(
+            id_vars=["age", "treatment", "mouse"],
+            value_vars=["pa", "sphincter", "bulb", "cap1", "cap2"],
+            var_name="vessel_type",
+            value_name="corr_bp_diam",
+        )
+        .dropna(subset=["corr_bp_diam"])
+        .assign(
+            mouse=lambda df: df["mouse"].astype(str),
+            atanh_corr_bp_diam=lambda df: np.arctanh(df["corr_bp_diam"]),
+        )
+        .loc[lambda df: ~df["mouse"].astype(int).isin(BAD_MICE)]
+        .sort_values(["age", "treatment", "vessel_type", "mouse"])
     )
+
+    return HypertensionMeasurementSchema.validate(out)
 
 
 def load_prepared_data(
@@ -433,5 +529,7 @@ def load_prepared_data(
         return PulsatilityDataset(**raw)
     elif raw["name"].startswith("flow"):
         return FlowDataset(**raw)
+    elif raw["name"].startswith("hypertension"):
+        return HypertensionDataset(**raw)
     else:
         raise ValueError(f"Unexpected name {raw['name']}.")
