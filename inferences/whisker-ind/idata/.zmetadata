@@ -5,7 +5,7 @@
         },
         "log_likelihood/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.629116",
+            "created_at": "2024-01-16T14:51:24.440496",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -120,7 +120,7 @@
         },
         "observed_data/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.625711",
+            "created_at": "2024-01-16T14:51:24.436842",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -829,99 +829,12 @@
         },
         "posterior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.181972",
+            "created_at": "2024-01-16T14:51:24.008127",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
         "posterior/.zgroup": {
             "zarr_format": 2
-        },
-        "posterior/a_mouse/.zarray": {
-            "chunks": [
-                2,
-                500,
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                42
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_mouse/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "mouse"
-            ]
-        },
-        "posterior/a_mouse_z/.zarray": {
-            "chunks": [
-                2,
-                500,
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                42
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_mouse_z/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "a_mouse_z_dim_0"
-            ]
-        },
-        "posterior/a_mouse_z_dim_0/.zarray": {
-            "chunks": [
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                42
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_mouse_z_dim_0/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_mouse_z_dim_0"
-            ]
         },
         "posterior/a_treatment/.zarray": {
             "chunks": [
@@ -1172,31 +1085,6 @@
                 "draw"
             ]
         },
-        "posterior/mouse/.zarray": {
-            "chunks": [
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<U6",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                42
-            ],
-            "zarr_format": 2
-        },
-        "posterior/mouse/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "mouse"
-            ]
-        },
         "posterior/mu/.zarray": {
             "chunks": [
                 4,
@@ -1259,7 +1147,8 @@
         "posterior/sigma/.zarray": {
             "chunks": [
                 4,
-                1000
+                1000,
+                3
             ],
             "compressor": {
                 "blocksize": 0,
@@ -1274,42 +1163,16 @@
             "order": "C",
             "shape": [
                 4,
-                1000
+                1000,
+                3
             ],
             "zarr_format": 2
         },
         "posterior/sigma/.zattrs": {
             "_ARRAY_DIMENSIONS": [
                 "chain",
-                "draw"
-            ]
-        },
-        "posterior/tau_mouse/.zarray": {
-            "chunks": [
-                4,
-                1000
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000
-            ],
-            "zarr_format": 2
-        },
-        "posterior/tau_mouse/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw"
+                "draw",
+                "treatment"
             ]
         },
         "posterior/tau_treatment/.zarray": {
@@ -1420,7 +1283,7 @@
         },
         "posterior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.189057",
+            "created_at": "2024-01-16T14:51:24.016531",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -1535,99 +1398,12 @@
         },
         "prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.616139",
+            "created_at": "2024-01-16T14:51:24.425856",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
         "prior/.zgroup": {
             "zarr_format": 2
-        },
-        "prior/a_mouse/.zarray": {
-            "chunks": [
-                2,
-                500,
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                42
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_mouse/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "mouse"
-            ]
-        },
-        "prior/a_mouse_z/.zarray": {
-            "chunks": [
-                2,
-                500,
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                42
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_mouse_z/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "a_mouse_z_dim_0"
-            ]
-        },
-        "prior/a_mouse_z_dim_0/.zarray": {
-            "chunks": [
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                42
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_mouse_z_dim_0/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_mouse_z_dim_0"
-            ]
         },
         "prior/a_treatment/.zarray": {
             "chunks": [
@@ -1909,31 +1685,6 @@
                 "observation"
             ]
         },
-        "prior/mouse/.zarray": {
-            "chunks": [
-                42
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<U6",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                42
-            ],
-            "zarr_format": 2
-        },
-        "prior/mouse/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "mouse"
-            ]
-        },
         "prior/mu/.zarray": {
             "chunks": [
                 4,
@@ -2021,7 +1772,8 @@
         "prior/sigma/.zarray": {
             "chunks": [
                 4,
-                1000
+                1000,
+                3
             ],
             "compressor": {
                 "blocksize": 0,
@@ -2036,42 +1788,16 @@
             "order": "C",
             "shape": [
                 4,
-                1000
+                1000,
+                3
             ],
             "zarr_format": 2
         },
         "prior/sigma/.zattrs": {
             "_ARRAY_DIMENSIONS": [
                 "chain",
-                "draw"
-            ]
-        },
-        "prior/tau_mouse/.zarray": {
-            "chunks": [
-                4,
-                1000
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000
-            ],
-            "zarr_format": 2
-        },
-        "prior/tau_mouse/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw"
+                "draw",
+                "treatment"
             ]
         },
         "prior/tau_treatment/.zarray": {
@@ -2182,7 +1908,7 @@
         },
         "prior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.622797",
+            "created_at": "2024-01-16T14:51:24.433750",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -2297,7 +2023,7 @@
         },
         "sample_stats/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.186047",
+            "created_at": "2024-01-16T14:51:24.013384",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },
@@ -2553,7 +2279,7 @@
         },
         "sample_stats_prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-18T11:17:06.619876",
+            "created_at": "2024-01-16T14:51:24.430296",
             "inference_library": "cmdstanpy",
             "inference_library_version": "1.2.0"
         },

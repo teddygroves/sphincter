@@ -1,15 +1,24 @@
 resource_path: ["../"]
-author: "Teddy Groves"
 bibliography: bibliography.bib
+citestyle: ieee.csl
 reference-location: margin
 toc: true
+
+crossref:
+  thm-prefix: "Question"
+  thm-title: "Question"
+  thm-labels: alpha a
+
 format:
   html:
     embed-resources: true
     include-in-header: mathjax.html
-  pdf: default
+#  pdf: default
 
 project:
-  render:
-    - whisker.qmd
-    - pulsatility.qmd
+  type: manuscript
+
+manuscript:
+  article: index.md
+  notebooks: []
+

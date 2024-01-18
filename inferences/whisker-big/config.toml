@@ -1,0 +1,25 @@
+name = "whisker-big"
+stan_file = "whisker-big.stan"
+prepared_data_dir = "whisker"
+stan_input_function = "get_stan_input_whisker"
+modes = ["prior", "posterior"]
+
+[dims]
+a_vessel_type = ["vessel_type"]
+b_age = ["vessel_type", "treatment"]
+b_age_pred = ["vessel_type"]
+a_vessel_type_treatment = ["vessel_type", "treatment"]
+a_age_treatment = ["age", "treatment"]
+a_treatment = ["treatment"]
+sigma = ["treatment"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 3000
+iter_sampling = 1000
+adapt_delta = 0.99
+show_console = true
+

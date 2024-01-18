@@ -1,6 +1,6 @@
 inferences_to_run = [
-  #"whisker-flat",
-  #"whisker-ind",
+  # "whisker-big",
+  "whisker-ind",
   #"flow-basic",
   #"pulsatility-basic",
   #"pulsatility-basic-full",
@@ -9,5 +9,5 @@ inferences_to_run = [
   #"pulsatility-interaction-lognormal-full"
   #"pulsatility-pressure",
   #"pulsatility-pressure-no-age",
-  "hypertension"
+  #"hypertension"
 ]
