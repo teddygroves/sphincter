@@ -69,7 +69,7 @@ transformed parameters {
   }
 }
 model {
-  mu ~ normal(0, 1);
+  mu ~ normal(0, 0.5);
   tau_treatment ~ normal(0, 0.5);
   tau_vessel_type ~ normal(0, 0.5);
   tau_vessel_type_treatment ~ normal(0, 0.3);

@@ -11,21 +11,20 @@ functions {
     array[] real a_treatment,
     array[] real a_vessel_type,
     array[,] real a_vessel_type_treatment,
-    array[,] real a_age_treatment,
-    array[,,] real a_mouse
+    array[,] real a_age_treatment
   ){
     int N = size(vessel_type);
     vector[N] eta;
     for (n in 1:N){
+      int a = age[mouse[n]];
       int v = vessel_type[n];
       int t = treatment[n];
       int m = mouse[n];
-      eta[n] = mu[age[mouse[n]]] 
+      eta[n] = mu[a] 
       + a_treatment[t]
       + a_vessel_type[v] 
       + a_vessel_type_treatment[v, t]
-      + a_age_treatment[age[mouse[n]], t]
-      + a_mouse[v, t, m];
+      + a_age_treatment[a, t];
     }
     return eta;
   }
@@ -53,11 +52,9 @@ transformed data {
 parameters {
   real<lower=1> nu;
   array[N_age] real mu;
-  array[N_age, N_treatment] real a_age_treatment;
+  array[N_age, N_treatment] real a_age_treatment_z;
   array[N_vessel_type, N_treatment] real a_vessel_type_treatment_z;
-  array[N_vessel_type, N_treatment, N_mouse] real a_mouse_z;
-  real<lower=0> sigma;
-  array[N_treatment] real<lower=0> tau_mouse;
+  array[N_treatment] real<lower=0> sigma;
   array[N_treatment] real a_treatment_z;
   array[N_vessel_type] real a_vessel_type_z;
   real<lower=0> tau_age;
@@ -66,21 +63,20 @@ parameters {
   real<lower=0> tau_vessel_type;
 }
 transformed parameters {
-  array[N_vessel_type, N_treatment, N_mouse] real a_mouse;
   array[N_vessel_type, N_treatment] real a_vessel_type_treatment;
-  array[N_vessel_type, N_treatment] real b_age;
+  array[N_age, N_treatment] real a_age_treatment;
   array[N_vessel_type] real a_vessel_type;
   array[N_treatment] real a_treatment;
-  for (t in 1:N_treatment)
+  for (t in 1:N_treatment){
     a_treatment[t] = a_treatment_z[t] * tau_treatment;
+    for (a in 1:N_age){
+      a_age_treatment[a, t] = a_age_treatment_z[a, t] * tau_age;
+    }
+  }
   for (v in 1:N_vessel_type){
     a_vessel_type[v] = a_vessel_type_z[v] * tau_vessel_type;
     for (t in 1:N_treatment){
-      b_age[v, t] = b_age_z[v, t] * tau_age;
       a_vessel_type_treatment[v, t] = a_vessel_type_treatment_z[v, t] * tau_vessel_type_treatment;
-      for (m in 1:N_mouse){
-        a_mouse[v, t, m] = a_mouse_z[v, t, m] * tau_mouse[t];
-      }
     }
   }
 }
@@ -93,17 +89,15 @@ model {
   tau_age ~ normal(0, 0.7);
   a_vessel_type_z ~ normal(0, 1);
   a_treatment_z ~ normal(0, 1);
-  for (t in 1:N_treatment) tau_mouse[t] ~ normal(0, 0.7);
+  sigma ~ normal(0, 0.5);
   for (v in 1:N_vessel_type){
     for (t in 1:N_treatment){
       a_vessel_type_treatment_z[v, t] ~ normal(0, 1);
-      b_age_z[v, t] ~ normal(0, 1);
-      for(m in 1:N_mouse){
-        a_mouse_z[v, t, m] ~ normal(0, 1);
-      }
     }
   }
-  sigma ~ normal(0, 0.5);
+  for (a in 1:N_age){
+    a_age_treatment_z[a] ~ normal(0, 1);
+  }
   if (likelihood){
     vector[N] eta_std = get_eta(
       vessel_type,
@@ -111,13 +105,12 @@ model {
       age,
       mouse,
       mu,
-      a_vessel_type,
       a_treatment,
+      a_vessel_type,
       a_vessel_type_treatment,
-      b_age,
-      a_mouse
+      a_age_treatment
     );
-    y_std[ix_train] ~ student_t(nu, eta_std[ix_train], sigma);
+    y_std[ix_train] ~ student_t(nu, eta_std[ix_train], sigma[treatment[ix_train]]);
   }
 }
 generated quantities {
@@ -130,18 +123,18 @@ generated quantities {
       age,
       mouse,
       mu,
-      a_vessel_type,
       a_treatment,
+      a_vessel_type,
       a_vessel_type_treatment,
-      b_age,
-      a_mouse
+      a_age_treatment
     );
     vector[N] eta = unstandardise_vector(eta_std, mean(y), sd(y));
     for (n in 1:N_test){
-      yrep[n] = student_t_rng(nu, eta[ix_test[n]], sigma * sd(y));
-      llik[n] = student_t_lpdf(y[ix_test[n]] | nu, eta[ix_test[n]], sigma * sd(y));
+      yrep[n] = student_t_rng(nu, eta[ix_test[n]], sigma[treatment[ix_test[n]]] * sd(y));
+      llik[n] = student_t_lpdf(y[ix_test[n]] | nu, eta[ix_test[n]], sigma[treatment[ix_test[n]]]* sd(y));
     }
   }
 }
+
 
 
