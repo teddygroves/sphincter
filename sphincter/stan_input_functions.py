@@ -99,7 +99,7 @@ def get_stan_input_pulsatility_no_age(mts: pd.DataFrame) -> Dict:
 
 
 @returns_stan_input
-def get_stan_input_flow(mts: pd.DataFrame) -> Dict:
+def get_stan_input_flow_core(mts: pd.DataFrame) -> Dict:
     mouse = one_encode(mts["mouse"])
     age = (
         mts.groupby(mouse, sort=True)["age"]
@@ -120,8 +120,17 @@ def get_stan_input_flow(mts: pd.DataFrame) -> Dict:
         "vessel_type": one_encode(mts["vessel_type"]),
         "ix_train": [i + 1 for i in range(len(mts))],
         "ix_test": [i + 1 for i in range(len(mts))],
-        "y": mts["speed"].values,
     }
+
+
+@returns_stan_input
+def get_stan_input_flow_speed(mts: pd.DataFrame) -> Dict:
+    return get_stan_input_flow_core(mts) | {"y": mts["speed"]}
+
+
+@returns_stan_input
+def get_stan_input_flow_flux(mts: pd.DataFrame) -> Dict:
+    return get_stan_input_flow_core(mts) | {"y": mts["flux"]}
 
 
 @returns_stan_input

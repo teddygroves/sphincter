@@ -25,7 +25,8 @@ from sphincter import util
 from sphincter.stan_input_functions import (
     get_stan_input_whisker,
     get_stan_input_pulsatility,
-    get_stan_input_flow,
+    get_stan_input_flow_speed,
+    get_stan_input_flow_flux,
     get_stan_input_hypertension,
 )
 
@@ -136,7 +137,7 @@ class FlowMeasurementSchema(pa.DataFrameModel):
     treatment: Series[TreatmentFlow] = pa.Field(coerce=True, nullable=False)
     pressure_d: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
     diameter: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
-    speed: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
+    speed: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
     flux: Series[float] = pa.Field(coerce=True, gt=0, nullable=True)
 
 
@@ -257,7 +258,8 @@ def prepare_data():
         prepare_data_whisker,
         prepare_data_pulsatility,
         prepare_data_pulsatility_no_hyper,
-        prepare_data_flow,
+        prepare_data_flow_speed,
+        prepare_data_flow_flux,
         prepare_data_hypertension,
     ]
     print("Preparing data...")
@@ -383,17 +385,37 @@ def prepare_data_pulsatility_no_hyper(raw: pd.DataFrame) -> PulsatilityDataset:
     )
 
 
-def prepare_data_flow(raw: pd.DataFrame) -> FlowDataset:
+def prepare_data_flow_speed(raw: pd.DataFrame) -> FlowDataset:
     """Prepare data for question 1."""
-    measurements = process_measurements_flow(raw)
-    stan_input = get_stan_input_flow(measurements)
+    measurements = process_measurements_flow(raw, ycol="speed")
+    stan_input = get_stan_input_flow_speed(measurements)
     return FlowDataset(
-        name="flow",
+        name="flow-speed",
         measurements=measurements,
         coords=util.CoordDict(
             {
                 "mouse": measurements["mouse"].cat.categories,
-                "vessel_type": measurements["vessel_type"].cat.categories,
+                "vessel_type": measurements["vessel_type"].unique(),
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def prepare_data_flow_flux(raw: pd.DataFrame) -> FlowDataset:
+    """Prepare data for question 1."""
+    measurements = process_measurements_flow(raw, ycol="flux")
+    stan_input = get_stan_input_flow_flux(measurements)
+    return FlowDataset(
+        name="flow-flux",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].unique(),
                 "age": measurements["age"].cat.categories,
                 "treatment": measurements["treatment"].cat.categories,
                 "observation": measurements.index.map(str).tolist(),
@@ -471,12 +493,12 @@ def process_measurements_pulsatility(
 
 
 def process_measurements_flow(
-    raw: pd.DataFrame,
+    raw: pd.DataFrame, ycol: str
 ) -> DataFrameBase[PulsatilityMeasurementSchema]:
     """Process the measurements dataframe."""
 
     def filter(df: pd.DataFrame) -> pd.Series:
-        return df["speed"].notnull() & ~df["mouse"].isin(BAD_MICE)
+        return df[ycol].notnull() & ~df["mouse"].isin(BAD_MICE)
 
     new_names = {
         "vessel": "vessel_type",
