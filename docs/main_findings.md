@@ -89,7 +89,42 @@ Posterior distribution of treatment effect differences for each measurement type
 
 ## Red blood cell flow
 
-Our main result regarding red blood cell speed is that this is higher in adult
-mice compared with old mice.
+Our main result regarding red blood cell flow is that both RBC speed
+and flux tend to be higher in adult mice compared with old mice. Figure
+@fig-flow-age-effects illustrates this finding by plotting the relevant marginal
+posterior histograms.
+
+::: {#fig-flow-age-effects}
+![](../plots/flow-age-effects.png)
+
+Posterior distributions of age effects on red blood cell speed and flux.
+
+:::
+
+We also quantified treatment effects on red blood cell flow, as shown in
+@fig-flow-treatment-effects:
+
+::: {#fig-flow-treatment-effects}
+![](../plots/flow-treatment-effects.png)
+
+Posterior distributions of treatment effects on red blood cell speed and flux.
+The nearest baseline for treatment `hyper` is `baseline`, and for treatments
+`after_ablation` and `hyper2` it is `after_hyper`.
+
+:::
 
 ## Hypertensive challenge
+
+Our hypertensive challenge data also showed pronounced age and treatment
+differences, as shown in figure @fig-hypertension-effects. Specifically, we
+found that, for adult mice, blood pressure and vessel diameter tended to be less
+correlated, and that the `hyper2` treatment tended to increase pressure-diameter
+correlation compared with the `hyper1` treatment.
+
+::: {#fig-hypertension-effects}
+![](../plots/hypertension-age-and-treatment.png)
+
+Posterior distributions of relative age and treatment effects for hypertensive
+challenge data.
+
+:::

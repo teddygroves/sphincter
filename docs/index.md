@@ -8,3 +8,5 @@ author: Teddy Groves
 {{< include main_findings.md >}}
 {{< include whisker.md >}}
 {{< include pulsatility.md >}}
+{{< include flow.md >}}
+{{< include hypertension.md >}}

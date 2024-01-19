@@ -83,7 +83,8 @@ pulsatility measurements. In this model, given measurement $y$ and linear
 predictor $\eta$ the measurement probability density is given by this equation:
 
 \begin{align}
-  p(y\mid\eta) &= Exponential(y, \lambda) = \lambda e^{-\lambda y} \label{eq:pulsatility-measurement-model} \\
+  p(y\mid\eta) &= Exponential(y, \lambda) \label{eq:pulsatility-measurement-model}  \\
+  &= \lambda e^{-\lambda y}  \nonumber \\
   \ln{\frac{1}{\lambda}} &= \eta \label{eq:link-function}
 \end{align}
 
@@ -96,96 +97,71 @@ We compared four different ways of parameterising $\eta$ based on the
 information available about a given measurement, corresponding to three
 hypotheses about the way the data were generated. 
 
-The simplest, or "basic", model postulates that the linear predictors 
-$\eta^{basic}_{d}$ and $\eta^{basic}_{c}$ are the sums of these random variables:
+The simplest model, which we labelled "basic", calculates the linear predictor $
+\eta^{basic}_{vtad}$ for an observation with vessel type $v$, treatment $t$, age
+$a$ and diameter $d$ as follows:
 
 \begin{align}
 		\label{eq:basic}
-    \eta^{basic}_{d,n} &= \mu_{d, age(mouse(n))}
-      + \alpha^{treatment}_{d,treatment(n)} 
-      + \alpha^{vesseltype}_{d,vesseltype(n)} \\
-      &+ \beta^{diameter}_{d} \cdot \ln{diameter(n)} \nonumber \\
-    \eta^{basic}_{c,n} &= \mu_{c, age(mouse(n))}
-      + \alpha^{treatment}_{c,treatment(n)}
-      + \alpha^{vesseltype}_{c,vesseltype(n)} \nonumber \\
-      &+ \beta^{diameter}_{c} \cdot \ln{diameter(n)} \nonumber
+    \eta^{basic}_{vtad} &= \mu_{a} \\
+      &+ \alpha^{treatment}_{t} \nonumber \\
+      &+ \alpha^{vesseltype}_{v} \nonumber \\
+      &+ \beta^{diameter} \cdot \ln{d} \nonumber
 \end{align}
 
 The basic model provided a plausible baseline against which to compare the
 other models.
 
-The "interaction" model was developed to explore whether there were any
-important interaction effects that the basic model does not consider. For
-example, question b) can be interpreted as asking whether there is are any
-significant effects corresponding to the interaction between age and treatment.
-Our interaction model calculates the value of the linear predictors  
-$\eta^{interaction}_{d}$ and $\eta^{interaction}_{c}$ as depending on
-age-treatment and age-treatment-vessel type interaction effects as follows:
+Next we constructed a more complex model by extending the basic model with
+interaction effects, resulting in the following linear predictor:
 
 \begin{align}
 		\label{eq:interaction}
-    \eta^{interaction}_{d,n} &= \mu_{d, age(mouse(n))} 
-      + \alpha^{treatment}_{d,treatment(n)}
-      + \alpha^{vesseltype}_{d,vesseltype(n)} \\
-    &+ \alpha^{age:treatment}_{d, age(mouse(n)), treatment(n)} \nonumber \\
-    &+ \alpha^{age:treatment:vesseltype}_{d, age(mouse(n)), treatment(n), vesseltype(n)} \nonumber \\
-    &+ \beta^{diameter}_{d} \cdot \ln{diameter(n)} \nonumber \\
-    \eta^{interaction}_{c,n} &= \mu_{c, age(mouse(n))} 
-      + \alpha^{treatment}_{c,treatment(n)} \nonumber
-      + \alpha^{vesseltype}_{c,vesseltype(n)} \\
-    &+ \alpha^{age:treatment}_{c, age(mouse(n)), treatment(n)} \nonumber \\
-    &+ \alpha^{age:treatment:vesseltype}_{c, age(mouse(n)), treatment(n), vesseltype(n)} \nonumber \\
-    &+ \beta^{diameter}_{c} \cdot \ln{diameter(n)} \nonumber
+    \eta^{interaction}_{vtad} &= \mu_{a} \\
+      &+ \alpha^{treatment}_{t} \nonumber  \\
+      &+ \alpha^{vesseltype}_{d,vesseltype(n)} \\
+      &+ \alpha^{age:treatment}_{at} \nonumber \\
+      &+ \alpha^{age:treatment:vesseltype}_{tv} \nonumber \\
+    &+ \beta^{diameter}_{d} \cdot \ln{d} \nonumber
 \end{align}
 
-Next, we constructed a model that adds to the basic model parameters
-that aim to capture possible effects corresponding to the blood pressure
-measurements. To compensate for collinearity between age and pressure, our
-"pressure" model does not use the observed pressure as a predictor, but rather
-the age-normalised pressure, calculated by subtracting the mean for each age
-category from the observed pressure measurement. The model for the linear predictors  
-$\eta^{pressure}_{d}$ and $\eta^{pressure}_{c}$ is then as follows:
+Next we constructed a model that adds to the basic model parameters that aim
+to capture possible effects corresponding to the blood pressure measurements.
+To compensate for collinearity between age and pressure, our "pressure" model
+does not use the observed pressure as a predictor, but rather the age-normalised
+pressure, calculated by subtracting the mean for each age category from
+the observed pressure measurement. The model for the linear predictors   $
+\eta^{pressure}_{vatdp}$ with age-normalised pressure measurement $p$ is then
 
 \begin{align}
 		\label{eq:pressure-model}
-    \eta^{pressure}_{d,n} &= \mu_{d, age(mouse(n))} 
-      + \alpha^{treatment}_{d,treatment(n)}
-      + \alpha^{vesseltype}_{d,vesseltype(n)} \\
-    &+ \beta^{diameter}_{d} \cdot \ln{diameter(n)} \nonumber \\
-    &+ \beta^{pressure}_{d, age(mouse(n))} \cdot norm\ pressure_{n} \nonumber \\
-    \eta^{pressure}_{c,n} &= \mu_{c, age(mouse(n))} 
-      + \alpha^{treatment}_{c,treatment(n)} \nonumber
-      + \alpha^{vesseltype}_{c,vesseltype(n)} \\
-    &+ \beta^{diameter}_{c} \cdot \ln{diameter(n)} \nonumber \\
-    &+ \beta^{pressure}_{c, age(mouse(n))} \cdot norm\ pressure_{n} \nonumber
+    \eta^{pressure}_{vatdp} &= \mu_{a} \\
+      &+ \alpha^{treatment}_{t} \nonumber \\
+      &+ \alpha^{vesseltype}_{v} \nonumber \\
+      &+ \beta^{diameter}_{d} \cdot \ln{d} \nonumber \\
+      &+ \beta^{pressure}_{a} \cdot p \nonumber
 \end{align}
 
 Finally, we made a model that includes a pressure effect but no age-specific
-parameters from the pressure model. This is to test whether any age effects are
+parameters from the pressure model. This was to test whether any age effects are
 due to the collinearity between age and pressure. The pressure-no-age model's
-linear predictors $\eta^{pressure\ no\ age}_{d}$ and $\eta^{pressure\ no\ age}_{c}$
-are calculated as shown in equation \eqref{eq:pressure-no-age-model}. Note that,
+linear predictors $\eta^{pressure\ no\ age}_{vatdp}$ are calculated as shown in equation \eqref{eq:pressure-no-age-model}. Note that,
 unlike in equation \eqref{eq:pressure-model}, the $\mu$ and $\beta^{pressure}$
 parameters in equation \eqref{eq:pressure-no-age-model} have no age indexes.
 
 \begin{align}
 		\label{eq:pressure-no-age-model}
-    \eta^{pressure\ no\ age}_{d,n} &= \mu_{d} 
-      + \alpha^{treatment}_{d,treatment(n)}
-      + \alpha^{vesseltype}_{d,vesseltype(n)} \\
-    &+ \beta^{diameter}_{d} \cdot \ln{diameter(n)} \nonumber \\
-    &+ \beta^{pressure}_{d} \cdot norm\ pressure_{n} \nonumber \\
-    \eta^{pressure\ no\ age}_{c,n} &= \mu_{c} 
-      + \alpha^{treatment}_{c,treatment(n)} \nonumber
-      + \alpha^{vesseltype}_{c,vesseltype(n)} \\
-    &+ \beta^{diameter}_{c} \cdot \ln{diameter(n)} \nonumber \\
-    &+ \beta^{pressure}_{c} \cdot norm\ pressure_{n} \nonumber
+    \eta^{pressure\ no\ age}_{vatdp} &= \mu \\
+      &+ \alpha^{treatment}_{t} \nonumber \\
+      &+ \alpha^{vesseltype}_{v} \nonumber  \\
+      &+ \beta^{diameter}_{d} \cdot \ln{d} \nonumber \\
+      &+ \beta^{pressure} \cdot p \nonumber
 \end{align}
 
 In all of our models the $\alpha$ parameters were given independent,
 semi-informative, hierarchical prior distributions to allow for appropriate
-information sharing. The $\beta^{pressure}$ parameters were given
-independent, semi-informative, non-hierarchical prior distributions.
+information sharing. The $\beta$ and $\mu$ parameters were given independent,
+semi-informative, non-hierarchical prior distributions.
 
 ## Results
 
