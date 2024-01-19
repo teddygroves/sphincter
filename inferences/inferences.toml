@@ -1,13 +1,17 @@
 inferences_to_run = [
-  # "whisker-big",
+  "whisker-big",
   "whisker-ind",
-  #"flow-basic",
-  #"pulsatility-basic",
-  #"pulsatility-basic-full",
-  #"pulsatility-interaction",
-  #"pulsatility-interaction-full"
-  #"pulsatility-interaction-lognormal-full"
-  #"pulsatility-pressure",
-  #"pulsatility-pressure-no-age",
-  #"hypertension"
+  "flow-basic-speed",
+  "flow-basic-flux",
+  "flow-big-speed",
+  "flow-big-flux",
+  "pulsatility-basic",
+  "pulsatility-basic-full",
+  "pulsatility-interaction",
+  "pulsatility-interaction-full",
+  "pulsatility-interaction-lognormal-full",
+  "pulsatility-pressure",
+  "pulsatility-pressure-no-age",
+  "hypertension-big",
+  "hypertension-basic"
 ]
