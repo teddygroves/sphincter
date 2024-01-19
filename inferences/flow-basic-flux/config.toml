@@ -1,0 +1,26 @@
+name = "flow-basic-flux"
+stan_file = "flow-basic.stan"
+prepared_data_dir = "flow-flux"
+stan_input_function = "get_stan_input_flow_flux"
+modes = ["prior", "posterior"]
+
+[dims]
+mu = ["age"]
+a_treatment = ["treatment"]
+a_vessel_type = ["vessel_type"]
+a_vessel_type_treatment = ["vessel_type", "treatment"]
+yrep = ["observation"]
+y = ["observation"]
+sigma = ["treatment"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 2000
+iter_sampling = 1000
+adapt_delta = 0.99
+
+
+

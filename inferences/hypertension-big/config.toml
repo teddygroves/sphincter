@@ -1,0 +1,27 @@
+name = "hypertension-big"
+stan_file = "hypertension-big.stan"
+prepared_data_dir = "hypertension"
+stan_input_function = "get_stan_input_hypertension"
+modes = ["prior", "posterior"]
+
+[dims]
+mu = ["age"]
+a_treatment = ["treatment"]
+a_vessel_type = ["vessel_type"]
+a_vessel_type_treatment = ["vessel_type", "treatment"]
+yrep = ["observation"]
+y = ["observation"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 2000
+iter_sampling = 1000
+adapt_delta = 0.99
+
+
+
+
+
