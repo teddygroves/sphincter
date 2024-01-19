@@ -50,7 +50,6 @@ interaction effect as follows:
   &+ \alpha^{vesseltype:treatment}_{vt} \nonumber \\
 \alpha^{vesseltype:treatment}_v &\sim N(0, \tau^{vesseltype:treatment}) \nonumber \\
 \tau^{vesseltype:treatment} &\sim HN(0, 0.5) \nonumber
-
 \end{align}
 
 
