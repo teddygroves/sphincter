@@ -1,3 +1,6 @@
+inferences/**/idata/**
+
+
 .venv/
 *.egg-info/
 # Keep non-raw data out of version control by default
