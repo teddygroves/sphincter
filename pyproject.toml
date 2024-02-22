@@ -16,6 +16,7 @@ dependencies = [
     "cmdstanpy",
     "jupyter",
     "numpy",
+    "openpyxl",
     "pandas",
     "pandera@git+https://github.com/unionai-oss/pandera.git@main",
     "pydantic >= 2.0.0",

@@ -13,5 +13,6 @@ inferences_to_run = [
   "pulsatility-pressure",
   "pulsatility-pressure-no-age",
   "hypertension-big",
-  "hypertension-basic"
+  "hypertension-basic",
+  "density",
 ]

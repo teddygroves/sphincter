@@ -28,6 +28,7 @@ from sphincter.stan_input_functions import (
     get_stan_input_flow_speed,
     get_stan_input_flow_flux,
     get_stan_input_hypertension,
+    get_stan_input_density,
 )
 
 NAME_FILE = "name.txt"
@@ -41,6 +42,9 @@ PREPARED_DIR = os.path.join(DATA_DIR, "prepared")
 RAW_DATA_FILES = {
     "measurements": os.path.join(RAW_DIR, "data_sphincter_paper.csv"),
     "measurements_hypertension": os.path.join(RAW_DIR, "hyper_challenge.csv"),
+    "measurements_density": os.path.join(
+        RAW_DIR, "angio-architecture", "CapillarySummary_Allcount3.xlsx"
+    )
 }
 BAD_MICE = [310321]
 
@@ -74,6 +78,26 @@ VesselTypeFlow = pd.CategoricalDtype(
 )
 VesselTypeHypertension = pd.CategoricalDtype(
     categories=["pa", "sphincter", "bulb", "cap1", "cap2"], ordered=True
+)
+VesselTypeDensity = pd.CategoricalDtype(
+    categories=[
+        "pial_artery",
+        "pa",
+        "cap1",
+        "cap2",
+        "cap3",
+        "cap4",
+        "cap5",
+        "cap6",
+        "cap7",
+        "cap8",
+        "cap9",
+        "cap10",
+        "cap11",
+        "cap12",
+        "av",
+        "pv",
+    ], ordered=True
 )
 
 
@@ -154,6 +178,19 @@ class HypertensionMeasurementSchema(pa.DataFrameModel):
     )
     corr_bp_diam: Series[float] = pa.Field(coerce=True, ge=-1, le=1)
     atanh_corr_bp_diam: Series[float] = pa.Field(coerce=True)
+
+
+class DensityMeasurementSchema(pa.DataFrameModel):
+    """A dataframe that can be used to answer questions about density."""
+
+    age: Series[Age] = pa.Field(coerce=True, nullable=False)
+    mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypeDensity] = pa.Field(
+        coerce=True, nullable=False
+    )
+    length_mm: Series[float]
+    volume_mm3: Series[float]
+    density_mm_per_mm3: Series[float]
 
 
 class WhiskerDataset(BaseModel):
@@ -248,28 +285,48 @@ class HypertensionDataset(BaseModel):
         return measurements.to_json()
 
 
+class DensityDataset(BaseModel):
+    name: str
+    coords: util.CoordDict
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[DensityMeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return DensityMeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[DensityMeasurementSchema], _info
+    ):
+        return measurements.to_json()
+
+
 def prepare_data():
     """Run main function."""
     print("Reading raw data...")
     raw_data = {
-        k: pd.read_csv(v, index_col=None) for k, v in RAW_DATA_FILES.items()
+        k: pd.read_csv(v, index_col=None) 
+        if k not in ["measurements_density"]
+        else pd.read_excel(v)
+        for k, v in RAW_DATA_FILES.items()
     }
     data_preparation_functions_to_run = [
-        prepare_data_whisker,
-        prepare_data_pulsatility,
-        prepare_data_pulsatility_no_hyper,
-        prepare_data_flow_speed,
-        prepare_data_flow_flux,
-        prepare_data_hypertension,
+        (prepare_data_whisker, raw_data["measurements"]),
+        (prepare_data_pulsatility, raw_data["measurements"]),
+        (prepare_data_pulsatility_no_hyper, raw_data["measurements"]),
+        (prepare_data_flow_speed, raw_data["measurements"]),
+        (prepare_data_flow_flux, raw_data["measurements"]),
+        (prepare_data_hypertension, raw_data["measurements_hypertension"]),
+        (prepare_data_density, raw_data["measurements_density"]),
     ]
     print("Preparing data...")
-    for dpf in data_preparation_functions_to_run:
+    for dpf, raw in data_preparation_functions_to_run:
         print(f"Running data preparation function {dpf.__name__}...")
-        raw = (
-            raw_data["measurements"]
-            if dpf != prepare_data_hypertension
-            else raw_data["measurements_hypertension"]
-        )
         prepared_data = dpf(raw)
         output_file = os.path.join(PREPARED_DIR, prepared_data.name + ".json")
         print(f"\twriting prepared_data to {output_file}")
@@ -444,6 +501,25 @@ def prepare_data_hypertension(raw: pd.DataFrame) -> HypertensionDataset:
         ),
         stan_input=stan_input,
     )
+    
+def prepare_data_density(raw: pd.DataFrame) -> DensityDataset:
+    """Prepare hypertension challenge data."""
+    measurements = process_measurements_density(raw)
+    stan_input = get_stan_input_density(measurements)
+    return DensityDataset(
+        name="density",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "measurement_type": ["diameter", "center"],
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
 
 
 def process_measurements_pulsatility(
@@ -540,9 +616,47 @@ def process_measurements_hypertension(
     return HypertensionMeasurementSchema.validate(out)
 
 
+def process_measurements_density(raw: pd.DataFrame) -> DataFrameBase[DensityMeasurementSchema]:
+    """Process density data."""
+    vessel_type_names = {
+        "PialArtery": "pial_artery",
+        "pa": "pa",
+        "1stCap": "cap1",
+        "2ndCap": "cap2",
+        "3rdCap": "cap3",
+        "4thCap": "cap4",
+        "5thCap": "cap5",
+        "6thCap": "cap6",
+        "7thCap": "cap7",
+        "8thCap": "cap8",
+        "9thCap": "cap9",
+        "10thCap": "cap10",
+        "11thCap": "cap11",
+        "12thCap": "cap12",
+        "AscVenule": "av",
+        "PialVein": "pv",
+    }
+    out = (
+        pd.DataFrame({
+            "mouse": raw["MouseID"].astype(str),
+            "age": raw["Condition"].str.lower(),
+            "vessel_type": raw["CapOrder"].map(vessel_type_names.get).astype(VesselTypeDensity),
+            "length_mm": raw["CapVesLL"] * 10e6,
+            "volume_mm3": raw["Volume"] * 10e-9,
+        })
+        .assign(density_mm_per_mm3=lambda df: df["length_mm"] / df["volume_mm3"])
+    )
+    return DensityMeasurementSchema.validate(out)
+
 def load_prepared_data(
     path_to_data: str,
-) -> Union[WhiskerDataset, PulsatilityDataset]:
+) -> Union[
+    WhiskerDataset, 
+    PulsatilityDataset,
+    FlowDataset,
+    HypertensionDataset,
+    DensityDataset,
+]:
     with open(path_to_data) as f:
         raw = json.load(f)
     if raw["name"].startswith("whisker"):
@@ -553,5 +667,7 @@ def load_prepared_data(
         return FlowDataset(**raw)
     elif raw["name"].startswith("hypertension"):
         return HypertensionDataset(**raw)
+    elif raw["name"].startswith("density"):
+        return DensityDataset(**raw)
     else:
         raise ValueError(f"Unexpected name {raw['name']}.")

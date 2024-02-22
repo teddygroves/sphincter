@@ -128,3 +128,25 @@ Posterior distributions of relative age and treatment effects for hypertensive
 challenge data.
 
 :::
+
+## Vessel density
+
+The vessel density dataset had a somewhat different structure to the other
+data, with no treatments, more vessel types, with clear correlation between
+measurements corresponding to adjacent vessel types. We therefore used a
+different statistical approach, with smoothing components for parameters of
+adjacent vessel types. See REF for more about this model.
+
+Our analysis indicated that the old mice tended to have lower density
+than the adult mice for capillaries of order 1 to 3 and higher density for
+capillaries of order 9 to 12, and for ascending venules, as shown in figure
+@fig-density-effects.
+
+::: {#fig-density-effects}
+![](../plots/density-effects.png)
+
+Posterior distributions of differences in age-dependent parameters by vessel
+type.
+
+:::
+

@@ -1,0 +1,30 @@
+name = "density"
+notes = "First density model"
+stan_file = "density.stan"
+prepared_data_dir = "density"
+stan_input_function = "get_stan_input_density"
+modes = ["prior", "posterior"]
+
+[dims]
+mu = ["age"]
+a_age_vessel_type = ["age", "vessel_type"]
+lambda_a_age_vessel_type = ["age"]
+yrep = ["observation"]
+y = ["observation"]
+yhat = ["observation"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 3000
+iter_sampling = 1000
+adapt_delta = 0.99
+show_progress = true
+
+
+
+
+
+
