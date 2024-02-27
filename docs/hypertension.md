@@ -1,4 +1,4 @@
-# Hypertensive challenge
+# Details of the hypertensive challenge analysis
 
 ## Dependent variable
 
