@@ -13,7 +13,7 @@ format:
   html:
     embed-resources: true
     include-in-header: mathjax.html
-  pdf: default
+  # pdf: default
 
 project:
   type: manuscript

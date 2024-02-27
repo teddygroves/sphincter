@@ -81,8 +81,6 @@ VesselTypeHypertension = pd.CategoricalDtype(
 )
 VesselTypeDensity = pd.CategoricalDtype(
     categories=[
-        "pial_artery",
-        "pa",
         "cap1",
         "cap2",
         "cap3",
@@ -95,8 +93,6 @@ VesselTypeDensity = pd.CategoricalDtype(
         "cap10",
         "cap11",
         "cap12",
-        "av",
-        "pv",
     ], ordered=True
 )
 
@@ -636,13 +632,14 @@ def process_measurements_density(raw: pd.DataFrame) -> DataFrameBase[DensityMeas
         "AscVenule": "av",
         "PialVein": "pv",
     }
+    filt = raw.loc[lambda df: df["CapOrder"].str.endswith("Cap")]
     out = (
         pd.DataFrame({
-            "mouse": raw["MouseID"].astype(str),
-            "age": raw["Condition"].str.lower(),
-            "vessel_type": raw["CapOrder"].map(vessel_type_names.get).astype(VesselTypeDensity),
-            "length_mm": raw["CapVesLL"] * 10e6,
-            "volume_mm3": raw["Volume"] * 10e-9,
+            "mouse": filt["MouseID"].astype(str),
+            "age": filt["Condition"].str.lower(),
+            "vessel_type": filt["CapOrder"].map(vessel_type_names.get).astype(VesselTypeDensity),
+            "length_mm": filt["CapVesLL"] * 10e6,
+            "volume_mm3": filt["Volume"] * 10e-9,
         })
         .assign(density_mm_per_mm3=lambda df: df["length_mm"] / df["volume_mm3"])
     )

@@ -129,17 +129,17 @@ challenge data.
 
 :::
 
-## Vessel density
+## Capillary density
 
-The vessel density dataset had a somewhat different structure to the other
+The capillary density dataset had a somewhat different structure to the other
 data, with no treatments, more vessel types, with clear correlation between
 measurements corresponding to adjacent vessel types. We therefore used a
 different statistical approach, with smoothing components for parameters of
-adjacent vessel types. See REF for more about this model.
+adjacent vessel types. See @sec-density-model for more about this model.
 
 Our analysis indicated that the old mice tended to have lower density
-than the adult mice for capillaries of order 1 to 3 and higher density for
-capillaries of order 9 to 12, and for ascending venules, as shown in figure
+than the adult mice for capillaries of order 1 to 5 and higher density for
+capillaries of order 10 to 12, and for ascending venules, as shown in figure
 @fig-density-effects.
 
 ::: {#fig-density-effects}

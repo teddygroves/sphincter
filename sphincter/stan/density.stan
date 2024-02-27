@@ -4,18 +4,12 @@ functions {
     array[] int age,
     array[] int mouse,
     array[] int vessel_type,
-    array[] real mu,
-    array[,] real a_age_vessel_type,
-    real a_vert
+    array[,] real a_age_vessel_type
   ){
     int N = size(vessel_type);
     vector[N] out;
     for (n in 1:N){
-      out[n] = 
-        mu[age[mouse[n]]] 
-        + a_age_vessel_type[age[mouse[n]], vessel_type[n]];
-      if ((vessel_type[n] == 2) || (vessel_type[n] == 15))
-        out[n] += a_vert;
+      out[n] = a_age_vessel_type[age[mouse[n]], vessel_type[n]];
     }
     return out;
   }
@@ -40,35 +34,34 @@ transformed data {
   vector[N] logy_std = standardise_vector(logy, mean(logy), sd(logy));
 }
 parameters {
-  array[N_age] real mu;
   array[N_age, N_vessel_type] real a_age_vessel_type;
   array[2] real<lower=0> lambda;
-  real<lower=0> sigma_std;
-  real a_vert;
+  real<lower=0> lambda_s;
+  vector[N_vessel_type] log_sigma_std;
+}
+transformed parameters {
+  vector[N_vessel_type] sigma_std = exp(log_sigma_std);
 }
 model {
   a_age_vessel_type[:,1] ~ normal(0, 1);
-  array[N_vessel_type] real age_diff = to_array_1d(to_vector(a_age_vessel_type[2]) - to_vector(a_age_vessel_type[1]));
+  log_sigma_std[1] ~ normal(-1.5, 1);
   for (v in 2:N_vessel_type){
-    a_age_vessel_type[1, v] ~ normal(a_age_vessel_type[1, v-1], lambda[1]);
-    age_diff[v] ~ normal(age_diff[v-1], lambda[2]);
+   log_sigma_std[v] ~ normal(log_sigma_std[v-1], lambda_s);
+   for (a in 1:N_age){
+     a_age_vessel_type[a, v] ~ normal(a_age_vessel_type[a, v-1], lambda[a]);
+   }
   }
-  a_vert ~ normal(0, 0.1);
-  mu ~ normal(0, 1);
-  lambda[1] ~ normal(0, 0.3);
-  lambda[2] ~ normal(0, 0.1);
-  sigma_std ~ normal(0, 1);
+  lambda ~ normal(0, 0.3);
+  lambda_s ~ normal(0, 0.3);
   if (likelihood){
     vector[N] eta_std = get_eta(
       age,
       mouse,
       vessel_type,
-      mu,
-      a_age_vessel_type,
-      a_vert
+      a_age_vessel_type
     );
     for (n in 1:N_train){
-      logy_std[ix_train[n]] ~ normal(eta_std[ix_train[n]], sigma_std);
+      logy_std[ix_train[n]] ~ normal(eta_std[ix_train[n]], sigma_std[vessel_type[ix_train[n]]]);
     }
   }
 }
@@ -76,21 +69,20 @@ generated quantities {
   array[N_test] real yrep;
   vector[N] yhat;
   vector[N_test] llik;
-  real sigma = sigma_std * sd(logy);
+  vector[N_vessel_type] sigma = sigma_std * sd(logy);
   {
     vector[N] eta_std = get_eta(
       age,
       mouse,
       vessel_type,
-      mu,
-      a_age_vessel_type,
-      a_vert
+      a_age_vessel_type
     );
     vector[N] eta = unstandardise_vector(eta_std, mean(logy), sd(logy));
     for (n in 1:N_test){
       yhat[n] = exp(eta[n]);
-      yrep[n] = exp(normal_rng(eta[ix_test[n]], sigma));
-      llik[n] = normal_lpdf(logy_std[ix_test[n]] | eta_std[ix_test[n]], sigma_std);
+      yrep[n] = exp(normal_rng(eta[ix_test[n]], sigma[vessel_type[ix_test[n]]]));
+      llik[n] = normal_lpdf(logy_std[ix_test[n]] | eta_std[ix_test[n]], sigma_std[vessel_type[ix_test[n]]]);
     }
   }
 }
+
