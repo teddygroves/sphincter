@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,10 +7,10 @@ name = "sphincter"
 authors = [
     {name = "Teddy Groves", email = "groves.teddy@gmail.com"},
 ]
-version = "0.0.1"
-description = "What happens when you burn a mouse's brain with a laser?"
+version = "0.1.0"
+description = "Models of measurements of brain blood vessel sphincters"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 dependencies = [
     "arviz@git+https://github.com/OriolAbril/arviz.git@ci",
     "cmdstanpy",
@@ -24,8 +24,9 @@ dependencies = [
     "scipy",
     "scikit-learn",
     "toml",
-    "zarr"
+    "zarr",
 ]
+license = {text = "MIT"}
 
 [tool.setuptools]
 packages = ["sphincter"]
@@ -67,3 +68,6 @@ disable = "C0330, C0326"
 
 [tool.pylint.format]
 max-line-length = "80"
+
+[tool.pdm]
+distribution = true
