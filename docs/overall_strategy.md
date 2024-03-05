@@ -6,7 +6,7 @@ strategy that were common to all of our analyses.
 
 ## Features
 
-All of our analyses involved a common data structure, with real-valued
+Several of our analyses involved a common data structure, with real-valued
 measurements each with multiple categorical features, namely
 
 - age of the measured mouse (adult or young)
@@ -56,8 +56,12 @@ measured by the estimated leave-one-observation-out log predictive density
 [@vehtariPracticalBayesianModel2017] and qualitative agreement between
 predictive and observed observations in graphical checks.
 
-We address these questions below for each analysis in its corresponding section,
-providing model comparisons and illustrative results where appropriate.
+In order to implement graphical predictive checking, we calculated quantiles
+of our models' prior and posterior predictive distributions and plotted these
+alongside the measurements. We then inspected the graphs to ascertain whether
+the measurements were generally consistent with the predictions.
+
+We calculated estimated leave-one-observation-out log predictive desities using the Python package arviz [@kumarArviZUnifiedLibrary2019]. 
 
 ## Software
 
@@ -92,6 +96,18 @@ post-warmup divergent transitions [@betancourtDiagnosingBiasedInference2017],
 problematic EBFI statistics, tree depth or effective sample size to total
 sample size ratios. All reported models had improved $\hat{R}$ close to 1 and no
 divergent transitions or other signs of algorithm failure.
+
+## Reports of findings
+
+In general the findings we report were cases where our best performing model's
+posterior probability distribution gave a high probability to an interesting
+and interpretable quantity having an interesting value. Since most of the
+interpretable parameters in our models are normalised so that zero indicates
+no effect, in practice our main findings are mostly that a parameter, or the
+difference between some parameters, is likely to be substantially different
+from zero according to our best model's posterior distribution. We present
+results with this form using histograms of the relevant marginal posterior
+distributions.
 
 ## Reproducibility
 

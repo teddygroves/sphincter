@@ -99,8 +99,8 @@ related. We conclude from this plot that, given sufficient data, a joint model
 including both measurement types would be a good topic for future analysis.
 
 It is also interesting to note the main area where our flux and speed models
-disagree, namely the effect corresponding the vessel type sphincter. According
-to our model, the sphincter tends to have the lowest RBC speed of all vessels
+disagree, namely the effect corresponding to the vessel type sphincter.
+According to our models, the sphincter has the lowest RBC speed of all vessels
 but the highest flux.
 
 :::{#fig-flow-shared}

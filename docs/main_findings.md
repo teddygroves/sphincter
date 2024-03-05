@@ -60,10 +60,10 @@ no strong interaction effects. On the other hand there is no clear effect of
 sphincter ablation on centre pulsatility.
 
 @fig-pulsatility-age-effects plots the distribution of age effect differences
-(adult minus old) for each measurement type in our final model. This graph shows
-that, in this model, the age effect for adult mice was higher than for old mice
-in every single posterior sample: in other words there is a clear trend for
-older mice to have lower diameter pulsatility. There is a smaller opposite trend
+(adult minus old) for each measurement type in our final model. This graph
+shows that, in this model, the age effect for adult mice was higher than for old
+mice in every single posterior sample: in other words, according to our model
+older mice have lower diameter pulsatility. There is a smaller opposite trend
 for centre pulsatility measurements, but it is not clearly separated from zero,
 indicating that the direction of the effect is not fully settled.
 
@@ -89,8 +89,8 @@ Posterior distribution of treatment effect differences for each measurement type
 
 ## Red blood cell flow
 
-Our main result regarding red blood cell flow is that both RBC speed
-and flux tend to be higher in adult mice compared with old mice. Figure
+Our main result regarding red blood cell flow is that both RBC speed and
+flux were higher in the adult mice compared with the old mice. Figure
 @fig-flow-age-effects illustrates this finding by plotting the relevant marginal
 posterior histograms.
 
@@ -117,9 +117,9 @@ The nearest baseline for treatment `hyper` is `baseline`, and for treatments
 
 Our hypertensive challenge data also showed pronounced age and treatment
 differences, as shown in figure @fig-hypertension-effects. Specifically, we
-found that, for adult mice, blood pressure and vessel diameter tended to be less
-correlated, and that the `hyper2` treatment tended to increase pressure-diameter
-correlation compared with the `hyper1` treatment.
+found that, for the adult mice, blood pressure and vessel diameter were less
+correlated, and that the `hyper2` treatment was associated with increased
+pressure-diameter correlation compared with the `hyper1` treatment.
 
 ::: {#fig-hypertension-effects}
 ![](../plots/hypertension-age-and-treatment.png)

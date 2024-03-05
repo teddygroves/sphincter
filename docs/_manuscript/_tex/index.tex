@@ -217,6 +217,8 @@ Measurements included:
 \item
   Hypertensive challenge response (Correlation between blood pressure
   and diameter under different pressure conditions)
+\item
+  Capillary density
 \end{itemize}
 
 We believed that the mechanisms underlying each kind of measurement were
@@ -233,10 +235,17 @@ feasibility.
 
 We decided to employ a Bayesian modelling approach primarily because of
 the availability of non-experimental information, particularly
-structural information concerning the data making it important to take
-into partially pool information between categories given the relatively
-small number of measurements. In a Bayesian context partial pooling can
-be achieved using a prior distribution on the random effects.
+structural information concerning the data making it important to
+partially pool information between categories given the relatively small
+number of measurements. In a Bayesian context partial pooling can be
+achieved using a prior distribution on the random effects. The capillary
+density dataset also benefitted from a Bayesian approach, as this made
+it straightforward to implement smoothing of adjacent capillary orders.
+
+After verification of computational results, our analyses aimed to
+evaluate whether each of our models adequately captured the information
+contained in the available data and information, and then to interpret
+and present the results of the best models.
 
 \section{Overall strategy}\label{overall-strategy}
 
@@ -246,8 +255,8 @@ aspects of this strategy that were common to all of our analyses.
 
 \subsection{Features}\label{features}
 
-All of our analyses involved a common data structure, with real-valued
-measurements each with multiple categorical features, namely
+Several of our analyses involved a common data structure, with
+real-valued measurements each with multiple categorical features, namely
 
 \begin{itemize}
 \tightlist
@@ -310,9 +319,14 @@ measured by the estimated leave-one-observation-out log predictive
 density (Vehtari, Gelman, and Gabry 2017) and qualitative agreement
 between predictive and observed observations in graphical checks.
 
-We address these questions below for each analysis in its corresponding
-section, providing model comparisons and illustrative results where
-appropriate.
+In order to implement graphical predictive checking, we calculated
+quantiles of our models' prior and posterior predictive distributions
+and plotted these alongside the measurements. We then inspected the
+graphs to ascertain whether the measurements were generally consistent
+with the predictions.
+
+We calculated estimated leave-one-observation-out log predictive
+desities using the Python package arviz (Kumar et al. 2019).
 
 \subsection{Software}\label{software}
 
@@ -353,6 +367,18 @@ transitions (Betancourt 2017), problematic EBFI statistics, tree depth
 or effective sample size to total sample size ratios. All reported
 models had improved \(\hat{R}\) close to 1 and no divergent transitions
 or other signs of algorithm failure.
+
+\subsection{Reports of findings}\label{reports-of-findings}
+
+In general the findings we report were cases where our best performing
+model's posterior probability distribution gave a high probability to an
+interesting and interpretable quantity having an interesting value.
+Since most of the interpretable parameters in our models are normalised
+so that zero indicates no effect, in practice our main findings are
+mostly that a parameter, or the difference between some parameters, is
+likely to be substantially different from zero according to our best
+model's posterior distribution. We present results with this form using
+histograms of the relevant marginal posterior distributions.
 
 \subsection{Reproducibility}\label{reproducibility}
 
@@ -442,8 +468,8 @@ Figure~\ref{fig-pulsatility-age-effects} plots the distribution of age
 effect differences (adult minus old) for each measurement type in our
 final model. This graph shows that, in this model, the age effect for
 adult mice was higher than for old mice in every single posterior
-sample: in other words there is a clear trend for older mice to have
-lower diameter pulsatility. There is a smaller opposite trend for centre
+sample: in other words, according to our model older mice have lower
+diameter pulsatility. There is a smaller opposite trend for centre
 pulsatility measurements, but it is not clearly separated from zero,
 indicating that the direction of the effect is not fully settled.
 
@@ -483,7 +509,7 @@ of treatment effect differences for each measurement type.}
 \subsection{Red blood cell flow}\label{red-blood-cell-flow}
 
 Our main result regarding red blood cell flow is that both RBC speed and
-flux tend to be higher in adult mice compared with old mice. Figure
+flux were higher in the adult mice compared with the old mice. Figure
 Figure~\ref{fig-flow-age-effects} illustrates this finding by plotting
 the relevant marginal posterior histograms.
 
@@ -523,10 +549,10 @@ for treatment \texttt{hyper} is \texttt{baseline}, and for treatments
 
 Our hypertensive challenge data also showed pronounced age and treatment
 differences, as shown in figure Figure~\ref{fig-hypertension-effects}.
-Specifically, we found that, for adult mice, blood pressure and vessel
-diameter tended to be less correlated, and that the \texttt{hyper2}
-treatment tended to increase pressure-diameter correlation compared with
-the \texttt{hyper1} treatment.
+Specifically, we found that, for the adult mice, blood pressure and
+vessel diameter were less correlated, and that the \texttt{hyper2}
+treatment was associated with increased pressure-diameter correlation
+compared with the \texttt{hyper1} treatment.
 
 \begin{figure}
 
@@ -1211,9 +1237,9 @@ this plot that, given sufficient data, a joint model including both
 measurement types would be a good topic for future analysis.
 
 It is also interesting to note the main area where our flux and speed
-models disagree, namely the effect corresponding the vessel type
-sphincter. According to our model, the sphincter tends to have the
-lowest RBC speed of all vessels but the highest flux.
+models disagree, namely the effect corresponding to the vessel type
+sphincter. According to our models, the sphincter has the lowest RBC
+speed of all vessels but the highest flux.
 
 \begin{figure}
 
