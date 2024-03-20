@@ -56,7 +56,12 @@ interaction effect as follows:
 ## Results
 
 @fig-hypertension-loo shows that, as in the other cases, including interaction
-effects did not improve estimated predictive performance.
+effects did not improve estimated predictive performance. The expected
+leave-one-observation-out predictive density is estimated to be higher for the
+model `hypertension-basic`, which did not have any interaction effects, than
+for the interaction model `hypertension-big`. Furthermore, the standard error
+for the difference in these two quantities is much smaller than the difference
+itself, indicating that the ranking is robust.
 
 :::{#fig-hypertension-loo}
 
@@ -69,8 +74,15 @@ is clearly worse.
 
 :::
 
-@fig-hypertension-parameters shows the marginal distributions for the
-non-hierarchical parameters in our final model.
+@fig-hypertension-parameters shows the marginal distributions for
+the non-hierarchical parameters in our final model. As shown in
+@fig-hypertension-effects, there are clear differences between the different
+`mu` and `a_treatment` parameters, indicating that there are important age and
+treatment effects. There is also a difference between parameters corresponding
+to penetrating arterioles and the other vessel type parameters. This reflects
+the fact that the penetrating arterioles had lower pressure vs diameter
+correlation coefficients than other vessels, and that the penetrating arteriole
+measurements were more dispersed.
 
 :::{#fig-hypertension-parameters}
 

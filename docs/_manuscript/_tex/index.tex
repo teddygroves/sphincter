@@ -880,9 +880,8 @@ information available about a given measurement, corresponding to three
 hypotheses about the way the data were generated.
 
 The simplest model, which we labelled ``basic'', calculates the linear
-predictor \$ \eta\^{}\{basic\}\_\{vtad\}\$ for an observation with
-vessel type \(v\), treatment \(t\), age \(a\) and diameter \(d\) as
-follows:
+predictor \(\eta^{basic}_{vtad}\) for an observation with vessel type
+\(v\), treatment \(t\), age \(a\) and diameter \(d\) as follows:
 
 \begin{align}
         \label{eq:basic}
@@ -903,8 +902,7 @@ with interaction effects, resulting in the following linear predictor:
     \eta^{interaction}_{vtad} &= \mu_{a} \\
       &+ \alpha^{treatment}_{t} \nonumber  \\
       &+ \alpha^{vesseltype}_{d,vesseltype(n)} \\
-      &+ \alpha^{age:treatment}_{at} \nonumber \\
-      &+ \alpha^{age:treatment:vesseltype}_{tv} \nonumber \\
+      &+ \alpha^{treatment:vesseltype}_{tv} \nonumber \\
     &+ \beta^{diameter}_{d} \cdot \ln{d} \nonumber
 \end{align}
 
@@ -1363,7 +1361,12 @@ type:treatment interaction effect as follows:
 
 Figure~\ref{fig-hypertension-loo} shows that, as in the other cases,
 including interaction effects did not improve estimated predictive
-performance.
+performance. The expected leave-one-observation-out predictive density
+is estimated to be higher for the model \texttt{hypertension-basic},
+which did not have any interaction effects, than for the interaction
+model \texttt{hypertension-big}. Furthermore, the standard error for the
+difference in these two quantities is much smaller than the difference
+itself, indicating that the ranking is robust.
 
 \begin{figure}
 
@@ -1382,7 +1385,15 @@ model is clearly worse.}
 \end{figure}%
 
 Figure~\ref{fig-hypertension-parameters} shows the marginal
-distributions for the non-hierarchical parameters in our final model.
+distributions for the non-hierarchical parameters in our final model. As
+shown in Figure~\ref{fig-hypertension-effects}, there are clear
+differences between the different \texttt{mu} and \texttt{a\_treatment}
+parameters, indicating that there are important age and treatment
+effects. There is also a difference between parameters corresponding to
+penetrating arterioles and the other vessel type parameters. This
+reflects the fact that the penetrating arterioles had lower pressure vs
+diameter correlation coefficients than other vessels, and that the
+penetrating arteriole measurements were more dispersed.
 
 \begin{figure}
 

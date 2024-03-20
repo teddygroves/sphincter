@@ -97,9 +97,9 @@ We compared four different ways of parameterising $\eta$ based on the
 information available about a given measurement, corresponding to three
 hypotheses about the way the data were generated. 
 
-The simplest model, which we labelled "basic", calculates the linear predictor $
-\eta^{basic}_{vtad}$ for an observation with vessel type $v$, treatment $t$, age
-$a$ and diameter $d$ as follows:
+The simplest model, which we labelled "basic", calculates the linear predictor
+$\eta^{basic}_{vtad}$ for an observation with vessel type $v$, treatment $t$,
+age $a$ and diameter $d$ as follows:
 
 \begin{align}
 		\label{eq:basic}
@@ -120,8 +120,7 @@ interaction effects, resulting in the following linear predictor:
     \eta^{interaction}_{vtad} &= \mu_{a} \\
       &+ \alpha^{treatment}_{t} \nonumber  \\
       &+ \alpha^{vesseltype}_{d,vesseltype(n)} \\
-      &+ \alpha^{age:treatment}_{at} \nonumber \\
-      &+ \alpha^{age:treatment:vesseltype}_{tv} \nonumber \\
+      &+ \alpha^{treatment:vesseltype}_{tv} \nonumber \\
     &+ \beta^{diameter}_{d} \cdot \ln{d} \nonumber
 \end{align}
 
