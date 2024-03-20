@@ -21,5 +21,4 @@ save_warmup = false
 iter_warmup = 3000
 iter_sampling = 1000
 adapt_delta = 0.99
-show_console = true
 

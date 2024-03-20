@@ -5,9 +5,9 @@
         },
         "log_likelihood/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:04.474713",
+            "created_at": "2024-03-20T14:31:36.625286",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "log_likelihood/.zgroup": {
             "zarr_format": 2
@@ -120,9 +120,9 @@
         },
         "observed_data/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:04.471035",
+            "created_at": "2024-03-20T14:31:36.620861",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "observed_data/.zgroup": {
             "zarr_format": 2
@@ -1007,9 +1007,9 @@
         },
         "posterior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:03.807987",
+            "created_at": "2024-03-20T14:31:35.907525",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "posterior/.zgroup": {
             "zarr_format": 2
@@ -1529,9 +1529,9 @@
         },
         "posterior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:03.819211",
+            "created_at": "2024-03-20T14:31:35.918012",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "posterior_predictive/.zgroup": {
             "zarr_format": 2
@@ -1672,9 +1672,9 @@
         },
         "prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:04.455691",
+            "created_at": "2024-03-20T14:31:36.606511",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "prior/.zgroup": {
             "zarr_format": 2
@@ -2250,9 +2250,9 @@
         },
         "prior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:04.466993",
+            "created_at": "2024-03-20T14:31:36.616853",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "prior_predictive/.zgroup": {
             "zarr_format": 2
@@ -2393,9 +2393,9 @@
         },
         "sample_stats/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:03.812043",
+            "created_at": "2024-03-20T14:31:35.911547",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "sample_stats/.zgroup": {
             "zarr_format": 2
@@ -2649,9 +2649,9 @@
         },
         "sample_stats_prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:36:04.459875",
+            "created_at": "2024-03-20T14:31:36.610332",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "sample_stats_prior/.zgroup": {
             "zarr_format": 2

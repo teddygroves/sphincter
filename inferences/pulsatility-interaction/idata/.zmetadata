@@ -5,9 +5,9 @@
         },
         "log_likelihood/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.890210",
+            "created_at": "2024-03-20T14:33:48.487808",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "log_likelihood/.zgroup": {
             "zarr_format": 2
@@ -120,9 +120,9 @@
         },
         "observed_data/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.886013",
+            "created_at": "2024-03-20T14:33:48.483125",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "observed_data/.zgroup": {
             "zarr_format": 2
@@ -1007,341 +1007,12 @@
         },
         "posterior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.133515",
+            "created_at": "2024-03-20T14:33:47.716441",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "posterior/.zgroup": {
             "zarr_format": 2
-        },
-        "posterior/a_age_treatment/.zarray": {
-            "chunks": [
-                2,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type",
-                "age",
-                "treatment"
-            ]
-        },
-        "posterior/a_age_treatment_vessel_type/.zarray": {
-            "chunks": [
-                2,
-                500,
-                1,
-                2,
-                3,
-                7
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3,
-                7
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_vessel_type/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type",
-                "age",
-                "treatment",
-                "vessel_type"
-            ]
-        },
-        "posterior/a_age_treatment_vessel_type_z/.zarray": {
-            "chunks": [
-                2,
-                500,
-                1,
-                2,
-                3,
-                7
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3,
-                7
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_vessel_type_z/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "a_age_treatment_vessel_type_z_dim_0",
-                "a_age_treatment_vessel_type_z_dim_1",
-                "a_age_treatment_vessel_type_z_dim_2",
-                "a_age_treatment_vessel_type_z_dim_3"
-            ]
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_0/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_0/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_0"
-            ]
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_1/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_1/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_1"
-            ]
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_2/.zarray": {
-            "chunks": [
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                3
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_2/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_2"
-            ]
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_3/.zarray": {
-            "chunks": [
-                7
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                7
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_vessel_type_z_dim_3/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_3"
-            ]
-        },
-        "posterior/a_age_treatment_z/.zarray": {
-            "chunks": [
-                2,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_z/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "a_age_treatment_z_dim_0",
-                "a_age_treatment_z_dim_1",
-                "a_age_treatment_z_dim_2"
-            ]
-        },
-        "posterior/a_age_treatment_z_dim_0/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_z_dim_0/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_z_dim_0"
-            ]
-        },
-        "posterior/a_age_treatment_z_dim_1/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_z_dim_1/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_z_dim_1"
-            ]
-        },
-        "posterior/a_age_treatment_z_dim_2/.zarray": {
-            "chunks": [
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                3
-            ],
-            "zarr_format": 2
-        },
-        "posterior/a_age_treatment_z_dim_2/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_z_dim_2"
-            ]
         },
         "posterior/a_treatment/.zarray": {
             "chunks": [
@@ -1375,6 +1046,155 @@
                 "draw",
                 "measurement_type",
                 "treatment"
+            ]
+        },
+        "posterior/a_treatment_vessel_type/.zarray": {
+            "chunks": [
+                2,
+                500,
+                2,
+                3,
+                7
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2,
+                3,
+                7
+            ],
+            "zarr_format": 2
+        },
+        "posterior/a_treatment_vessel_type/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "measurement_type",
+                "treatment",
+                "vessel_type"
+            ]
+        },
+        "posterior/a_treatment_vessel_type_z/.zarray": {
+            "chunks": [
+                2,
+                500,
+                2,
+                3,
+                7
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2,
+                3,
+                7
+            ],
+            "zarr_format": 2
+        },
+        "posterior/a_treatment_vessel_type_z/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "a_treatment_vessel_type_z_dim_0",
+                "a_treatment_vessel_type_z_dim_1",
+                "a_treatment_vessel_type_z_dim_2"
+            ]
+        },
+        "posterior/a_treatment_vessel_type_z_dim_0/.zarray": {
+            "chunks": [
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                2
+            ],
+            "zarr_format": 2
+        },
+        "posterior/a_treatment_vessel_type_z_dim_0/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "a_treatment_vessel_type_z_dim_0"
+            ]
+        },
+        "posterior/a_treatment_vessel_type_z_dim_1/.zarray": {
+            "chunks": [
+                3
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                3
+            ],
+            "zarr_format": 2
+        },
+        "posterior/a_treatment_vessel_type_z_dim_1/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "a_treatment_vessel_type_z_dim_1"
+            ]
+        },
+        "posterior/a_treatment_vessel_type_z_dim_2/.zarray": {
+            "chunks": [
+                7
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                7
+            ],
+            "zarr_format": 2
+        },
+        "posterior/a_treatment_vessel_type_z_dim_2/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "a_treatment_vessel_type_z_dim_2"
             ]
         },
         "posterior/a_treatment_z/.zarray": {
@@ -1744,68 +1564,6 @@
                 "age"
             ]
         },
-        "posterior/tau_age_treatment/.zarray": {
-            "chunks": [
-                4,
-                1000,
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/tau_age_treatment/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type"
-            ]
-        },
-        "posterior/tau_age_treatment_vessel_type/.zarray": {
-            "chunks": [
-                4,
-                1000,
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2
-            ],
-            "zarr_format": 2
-        },
-        "posterior/tau_age_treatment_vessel_type/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type"
-            ]
-        },
         "posterior/tau_treatment/.zarray": {
             "chunks": [
                 4,
@@ -1835,6 +1593,62 @@
                 "chain",
                 "draw",
                 "measurement_type"
+            ]
+        },
+        "posterior/tau_treatment_vessel_type/.zarray": {
+            "chunks": [
+                4,
+                1000,
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2
+            ],
+            "zarr_format": 2
+        },
+        "posterior/tau_treatment_vessel_type/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "tau_treatment_vessel_type_dim_0"
+            ]
+        },
+        "posterior/tau_treatment_vessel_type_dim_0/.zarray": {
+            "chunks": [
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                2
+            ],
+            "zarr_format": 2
+        },
+        "posterior/tau_treatment_vessel_type_dim_0/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "tau_treatment_vessel_type_dim_0"
             ]
         },
         "posterior/tau_vessel_type/.zarray": {
@@ -1920,9 +1734,9 @@
         },
         "posterior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.144791",
+            "created_at": "2024-03-20T14:33:47.727530",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "posterior_predictive/.zgroup": {
             "zarr_format": 2
@@ -2063,341 +1877,12 @@
         },
         "prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.870755",
+            "created_at": "2024-03-20T14:33:48.466560",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "prior/.zgroup": {
             "zarr_format": 2
-        },
-        "prior/a_age_treatment/.zarray": {
-            "chunks": [
-                2,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type",
-                "age",
-                "treatment"
-            ]
-        },
-        "prior/a_age_treatment_vessel_type/.zarray": {
-            "chunks": [
-                2,
-                500,
-                1,
-                2,
-                3,
-                7
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3,
-                7
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_vessel_type/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type",
-                "age",
-                "treatment",
-                "vessel_type"
-            ]
-        },
-        "prior/a_age_treatment_vessel_type_z/.zarray": {
-            "chunks": [
-                2,
-                500,
-                1,
-                2,
-                3,
-                7
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3,
-                7
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_vessel_type_z/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "a_age_treatment_vessel_type_z_dim_0",
-                "a_age_treatment_vessel_type_z_dim_1",
-                "a_age_treatment_vessel_type_z_dim_2",
-                "a_age_treatment_vessel_type_z_dim_3"
-            ]
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_0/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_0/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_0"
-            ]
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_1/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_1/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_1"
-            ]
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_2/.zarray": {
-            "chunks": [
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                3
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_2/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_2"
-            ]
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_3/.zarray": {
-            "chunks": [
-                7
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                7
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_vessel_type_z_dim_3/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_vessel_type_z_dim_3"
-            ]
-        },
-        "prior/a_age_treatment_z/.zarray": {
-            "chunks": [
-                2,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2,
-                2,
-                3
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_z/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "a_age_treatment_z_dim_0",
-                "a_age_treatment_z_dim_1",
-                "a_age_treatment_z_dim_2"
-            ]
-        },
-        "prior/a_age_treatment_z_dim_0/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_z_dim_0/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_z_dim_0"
-            ]
-        },
-        "prior/a_age_treatment_z_dim_1/.zarray": {
-            "chunks": [
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_z_dim_1/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_z_dim_1"
-            ]
-        },
-        "prior/a_age_treatment_z_dim_2/.zarray": {
-            "chunks": [
-                3
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<i8",
-            "fill_value": null,
-            "filters": null,
-            "order": "C",
-            "shape": [
-                3
-            ],
-            "zarr_format": 2
-        },
-        "prior/a_age_treatment_z_dim_2/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "a_age_treatment_z_dim_2"
-            ]
         },
         "prior/a_treatment/.zarray": {
             "chunks": [
@@ -2431,6 +1916,155 @@
                 "draw",
                 "measurement_type",
                 "treatment"
+            ]
+        },
+        "prior/a_treatment_vessel_type/.zarray": {
+            "chunks": [
+                2,
+                500,
+                2,
+                3,
+                7
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2,
+                3,
+                7
+            ],
+            "zarr_format": 2
+        },
+        "prior/a_treatment_vessel_type/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "measurement_type",
+                "treatment",
+                "vessel_type"
+            ]
+        },
+        "prior/a_treatment_vessel_type_z/.zarray": {
+            "chunks": [
+                2,
+                500,
+                2,
+                3,
+                7
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2,
+                3,
+                7
+            ],
+            "zarr_format": 2
+        },
+        "prior/a_treatment_vessel_type_z/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "a_treatment_vessel_type_z_dim_0",
+                "a_treatment_vessel_type_z_dim_1",
+                "a_treatment_vessel_type_z_dim_2"
+            ]
+        },
+        "prior/a_treatment_vessel_type_z_dim_0/.zarray": {
+            "chunks": [
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                2
+            ],
+            "zarr_format": 2
+        },
+        "prior/a_treatment_vessel_type_z_dim_0/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "a_treatment_vessel_type_z_dim_0"
+            ]
+        },
+        "prior/a_treatment_vessel_type_z_dim_1/.zarray": {
+            "chunks": [
+                3
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                3
+            ],
+            "zarr_format": 2
+        },
+        "prior/a_treatment_vessel_type_z_dim_1/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "a_treatment_vessel_type_z_dim_1"
+            ]
+        },
+        "prior/a_treatment_vessel_type_z_dim_2/.zarray": {
+            "chunks": [
+                7
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                7
+            ],
+            "zarr_format": 2
+        },
+        "prior/a_treatment_vessel_type_z_dim_2/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "a_treatment_vessel_type_z_dim_2"
             ]
         },
         "prior/a_treatment_z/.zarray": {
@@ -2856,68 +2490,6 @@
                 "observation"
             ]
         },
-        "prior/tau_age_treatment/.zarray": {
-            "chunks": [
-                4,
-                1000,
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/tau_age_treatment/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type"
-            ]
-        },
-        "prior/tau_age_treatment_vessel_type/.zarray": {
-            "chunks": [
-                4,
-                1000,
-                2
-            ],
-            "compressor": {
-                "blocksize": 0,
-                "clevel": 5,
-                "cname": "lz4",
-                "id": "blosc",
-                "shuffle": 1
-            },
-            "dtype": "<f8",
-            "fill_value": "NaN",
-            "filters": null,
-            "order": "C",
-            "shape": [
-                4,
-                1000,
-                2
-            ],
-            "zarr_format": 2
-        },
-        "prior/tau_age_treatment_vessel_type/.zattrs": {
-            "_ARRAY_DIMENSIONS": [
-                "chain",
-                "draw",
-                "measurement_type"
-            ]
-        },
         "prior/tau_treatment/.zarray": {
             "chunks": [
                 4,
@@ -2947,6 +2519,62 @@
                 "chain",
                 "draw",
                 "measurement_type"
+            ]
+        },
+        "prior/tau_treatment_vessel_type/.zarray": {
+            "chunks": [
+                4,
+                1000,
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<f8",
+            "fill_value": "NaN",
+            "filters": null,
+            "order": "C",
+            "shape": [
+                4,
+                1000,
+                2
+            ],
+            "zarr_format": 2
+        },
+        "prior/tau_treatment_vessel_type/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "chain",
+                "draw",
+                "tau_treatment_vessel_type_dim_0"
+            ]
+        },
+        "prior/tau_treatment_vessel_type_dim_0/.zarray": {
+            "chunks": [
+                2
+            ],
+            "compressor": {
+                "blocksize": 0,
+                "clevel": 5,
+                "cname": "lz4",
+                "id": "blosc",
+                "shuffle": 1
+            },
+            "dtype": "<i8",
+            "fill_value": null,
+            "filters": null,
+            "order": "C",
+            "shape": [
+                2
+            ],
+            "zarr_format": 2
+        },
+        "prior/tau_treatment_vessel_type_dim_0/.zattrs": {
+            "_ARRAY_DIMENSIONS": [
+                "tau_treatment_vessel_type_dim_0"
             ]
         },
         "prior/tau_vessel_type/.zarray": {
@@ -3032,9 +2660,9 @@
         },
         "prior_predictive/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.882219",
+            "created_at": "2024-03-20T14:33:48.478557",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "prior_predictive/.zgroup": {
             "zarr_format": 2
@@ -3175,9 +2803,9 @@
         },
         "sample_stats/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.138493",
+            "created_at": "2024-03-20T14:33:47.720920",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "sample_stats/.zgroup": {
             "zarr_format": 2
@@ -3431,9 +3059,9 @@
         },
         "sample_stats_prior/.zattrs": {
             "arviz_version": "0.17.0.dev0",
-            "created_at": "2023-12-15T08:38:04.875786",
+            "created_at": "2024-03-20T14:33:48.470936",
             "inference_library": "cmdstanpy",
-            "inference_library_version": "1.2.0"
+            "inference_library_version": "1.2.1"
         },
         "sample_stats_prior/.zgroup": {
             "zarr_format": 2
