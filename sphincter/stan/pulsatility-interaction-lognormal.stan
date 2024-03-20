@@ -1,6 +1,3 @@
-/* Model for answering question 2. Version with age:treatment and
-   age:vessel_type interaction effects */
-
 functions {
 #include custom_functions.stan
   tuple(vector, vector) get_eta(
