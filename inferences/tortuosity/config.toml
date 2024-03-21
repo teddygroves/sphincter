@@ -1,0 +1,27 @@
+name = "tortuosity"
+notes = "First tortuosity model"
+stan_file = "tortuosity.stan"
+prepared_data_dir = "tortuosity"
+stan_input_function = "get_stan_input_tortuosity"
+modes = ["prior", "posterior"]
+
+[dims]
+mu = ["age"]
+a_age_vessel_type = ["age", "vessel_type"]
+lambda_a_age_vessel_type = ["age"]
+yrep = ["observation"]
+y = ["observation"]
+yhat = ["observation"]
+a_big = ["age"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+max_treedepth = 12
+iter_warmup = 3000
+iter_sampling = 1000
+adapt_delta = 0.99
+show_progress = true
+

@@ -181,3 +181,33 @@ def get_stan_input_density(mts: pd.DataFrame) -> Dict:
         "ix_test": [i + 1 for i in range(len(mts))],
         "y": mts["density_mm_per_mm3"].values,
     }
+
+
+@returns_stan_input
+def get_stan_input_tortuosity(mts: pd.DataFrame) -> Dict:
+    mouse = one_encode(mts["mouse"])
+    age = (
+        mts.groupby(mouse, sort=True)["age"]
+        .first()
+        .map({"adult": 1, "old": 2}.get)
+    )
+    big_vessel_types = ["pial_artery", "pa", "pial_vein", "av"]
+    vessel_type_is_big = [
+        int(vt in big_vessel_types) 
+        for vt in mts["vessel_type"].cat.categories
+    ]
+    return {
+        "N": len(mts),
+        "N_age": mts["age"].nunique(),
+        "N_mouse": mts["mouse"].nunique(),
+        "N_vessel_type": mts["vessel_type"].nunique(),
+        "N_train": len(mts),
+        "N_test": len(mts),
+        "age": age,
+        "mouse": mouse,
+        "vessel_type": one_encode(mts["vessel_type"]),
+        "vessel_type_is_big": vessel_type_is_big,
+        "ix_train": [i + 1 for i in range(len(mts))],
+        "ix_test": [i + 1 for i in range(len(mts))],
+        "y": mts["tortuosity"],
+    }

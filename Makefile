@@ -44,6 +44,7 @@ analysis: $(ENV_MARKER)
 	  jupyter execute $(SRC)/pulsatility.ipynb || exit 1; \
 	  jupyter execute $(SRC)/flow.ipynb || exit 1; \
 	  jupyter execute $(SRC)/hypertension.ipynb || exit 1; \
+	  jupyter execute $(SRC)/tortuosity.ipynb || exit 1; \
 	)
 
 clean-docs:
