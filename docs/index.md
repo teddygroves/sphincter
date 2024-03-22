@@ -11,3 +11,4 @@ author: Teddy Groves
 {{< include flow.md >}}
 {{< include hypertension.md >}}
 {{< include density.md >}}
+{{< include tortuosity.md >}}

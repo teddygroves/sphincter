@@ -150,3 +150,22 @@ type.
 
 :::
 
+## Vessel tortuosity
+
+We also fit a smoothed regression model to measurements of vessel tortuosity
+from the angio-architecture dataset. See @sec-tortuosity-model for details about
+this model.
+
+As shown in @fig-tortuosity-effects, our analysis showed a clear difference
+between the adult and old mice in the upper vasculature, with the old mice
+tending to have substantially more tortuous pial arteries and penetrating
+arterioles. Other vessels were similarly tortuous for both age categories.
+
+::: {#fig-tortuosity-effects}
+
+![](../plots/tortuosity-effects.png)
+
+Posterior distributions of differences in age-dependent tortuosity effects by
+vessel type
+
+:::

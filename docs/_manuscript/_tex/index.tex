@@ -203,7 +203,7 @@
 This project aimed to model brain blood vessel measurements of mice
 during a treatment protocol designed to elicit stress responses.
 
-Measurements included:
+Measurement types included:
 
 \begin{itemize}
 \tightlist
@@ -219,6 +219,8 @@ Measurements included:
   and diameter under different pressure conditions)
 \item
   Capillary density
+\item
+  Vessel tortuosity
 \end{itemize}
 
 We believed that the mechanisms underlying each kind of measurement were
@@ -244,8 +246,8 @@ it straightforward to implement smoothing of adjacent capillary orders.
 
 After verification of computational results, our analyses aimed to
 evaluate whether each of our models adequately captured the information
-contained in the available data and information, and then to interpret
-and present the results of the best models.
+contained in the available data, and then to interpret and present the
+results of the best models.
 
 \section{Overall strategy}\label{overall-strategy}
 
@@ -253,10 +255,14 @@ Although our project involved several statistical analyses, we used a
 similar overall strategy in each case. This section describes the
 aspects of this strategy that were common to all of our analyses.
 
-\subsection{Features}\label{features}
+\subsection{Data}\label{data}
 
-Several of our analyses involved a common data structure, with
-real-valued measurements each with multiple categorical features, namely
+This analysis involved three raw datasets, which we call the
+``ablation'' dataset, the ``hypertension'' dataset and the
+``angio-architecture'' dataset.
+
+The ablation and hypertension datasets consist of real-valued
+measurements each with multiple categorical features, namely
 
 \begin{itemize}
 \tightlist
@@ -270,6 +276,16 @@ real-valued measurements each with multiple categorical features, namely
   measured vessel type (penetrating artery, sphincter, bulb, first order
   capilary, etc)
 \end{itemize}
+
+The ablation and hypertension datasets contain different types of
+measurement. The ablation dataset includes measurements of whisker
+stimulation response, pulsatility and blood flow at various points of
+the treatment protocol. The hypertension dataset includes measurements
+of pressure to diameter correlation before and after two rounds of
+induced hypertension.
+
+The angio-architecture dataset consists of real-valued measurements of
+vessel density and tortuosity.
 
 \subsection{Data processing}\label{data-processing}
 
@@ -591,6 +607,31 @@ in figure Figure~\ref{fig-density-effects}.
 
 \caption{\label{fig-density-effects}Posterior distributions of
 differences in age-dependent parameters by vessel type.}
+
+\end{figure}%
+
+\subsection{Vessel tortuosity}\label{vessel-tortuosity}
+
+We also fit a smoothed regression model to measurements of vessel
+tortuosity from the angio-architecture dataset. See
+Section~\ref{sec-tortuosity-model} for details about this model.
+
+As shown in Figure~\ref{fig-tortuosity-effects}, our analysis showed a
+clear difference between the adult and old mice in the upper
+vasculature, with the old mice tending to have substantially more
+tortuous pial arteries and penetrating arterioles. Other vessels were
+similarly tortuous for both age categories.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../plots/tortuosity-effects.png}
+
+}
+
+\caption{\label{fig-tortuosity-effects}Posterior distributions of
+differences in age-dependent tortuosity effects by vessel type}
 
 \end{figure}%
 
@@ -1550,6 +1591,110 @@ analysis: old and adult mice have different vessel density patterns.}
 
 There is a clear trend, with four low order capillary types separated
 from zero on the left and two high order types separated on the right.
+
+\section{Details of the tortuosity
+analysis}\label{sec-tortuosity-details}
+
+Like the density analysis, the tortuosity analysis modelled the
+architecture dataset.
+
+\subsection{Dependent variable}\label{dependent-variable-5}
+
+The dependent variable in this case was vessel tortuosity, measured as
+total vessel length divided by straight-line length.
+
+The raw measurements are shown in
+Figure~\ref{fig-tortuosity-measurements}.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../plots/tortuosity-raw-measurements.png}
+
+}
+
+\caption{\label{fig-tortuosity-measurements}Vessel tortuosity
+measurements}
+
+\end{figure}%
+
+There is a clear outlier for mouse 270220 at the 4th capillary: we
+excluded this measurement but kept other measurements from this mouse as
+they did not seem particularly anomalous.
+
+Otherwise, we observed a similar pattern of smoothness between adjacent
+vessel as with the density measurements, motivating the use of a model
+with smoothed latent parameters. Unlike with the density measurements,
+however, there is some variety in the size of the jumps from vessel type
+to vessel type. In particular, the adult mice show a sharp upward jump
+from vessel pa to the first capillary, and both the adult and old mice
+show a downward jump in tortuosity at the ascending venule.
+
+\subsection{Statistical model}\label{sec-tortuosity-model}
+
+As with the density dataset, we used a regression model with random-walk
+priors to smooth adjacent vessel type effects within age categories and
+measurement errors for adjacent vessel types. In order to appropriately
+capture the heterogeneity in jump sizes, we used a student-t
+distribution rather than a normal distribution for the random walk in
+vessel type effects, with the degrees of freedom parameter modelled
+hierarchically.
+
+The model specification is as follows, with :
+
+\begin{align}
+p(y\mid\alpha, \sigma) &= Normal(\ln{y}^{std}\mid \alpha, \sigma) \label{eq:measurement-model-tortuosity} \\
+\alpha_{a,v} &\sim ST(\nu, \alpha_{a,v-1}, \lambda^{\alpha}_a) \nonumber \\
+\ln\sigma^{std}_{v} &\sim N(\ln\sigma^{std}_{v-1}, \lambda^s) \nonumber \\
+\nu &\sim \Gamma(2, 0.1) \nonumber \\
+\alpha_{,0} &\sim N(0, 1) \nonumber \\
+\ln\sigma^{std}_{0} &\sim N(-1.5, 0.8) \nonumber \\ 
+\lambda &\sim N(0, 0.2) \nonumber \\
+\lambda^{s} &\sim N(0, 0.2) \nonumber 
+\end{align}
+
+\subsection{Results}\label{results-5}
+
+Figure~\ref{fig-tortuosity-ppc} shows this model's posterior predictive
+distribution alongside the retained measurements, indicating a
+reasonably good fit.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../plots/tortuosity-ppc.png}
+
+}
+
+\caption{\label{fig-tortuosity-ppc}Marginal posterior predictive
+distributions alongside tortuosity measurements}
+
+\end{figure}%
+
+The posterior predictive distributions for upper vessels ``pial artery''
+and ``pa'' appear different for old and adult mice. To ascertain the
+extent and certainty of this contrast we plotted the differences between
+vessel type effects for old and adult mice in
+Figure~\ref{fig-tortuosity-effects-detail}. From this plot it is clear
+that, according to our model there is a pronounced and robust
+difference, with over 97\% probability of each effect being greater for
+old mice.
+
+\begin{figure}
+
+\centering{
+
+\includegraphics{../plots/tortuosity-effects.png}
+
+}
+
+\caption{\label{fig-tortuosity-effects-detail}Main result of our
+tortuosity analysis: the vessel type effect for tortuosity is greater
+for old mice than for adult mice.}
+
+\end{figure}%
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}

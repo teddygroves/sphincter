@@ -36,7 +36,6 @@ transformed data {
 }
 parameters {
   real<lower=1> nu;
-  real<lower=1> nu_std;
   array[N_age, N_vessel_type] real a_age_vessel_type;
   array[2] real<lower=0> lambda;
   real<lower=0> lambda_s;
@@ -47,11 +46,10 @@ transformed parameters {
 }
 model {
   nu ~ gamma(2, 0.1);
-  nu_std ~ gamma(2, 0.1);
   a_age_vessel_type[:,1] ~ normal(0, 1);
   log_sigma_std[1] ~ normal(-1.5, 0.8);
   for (v in 2:N_vessel_type){
-   log_sigma_std[v] ~ student_t(nu_std, log_sigma_std[v-1], lambda_s);
+   log_sigma_std[v] ~ normal(log_sigma_std[v-1], lambda_s);
    for (a in 1:N_age){
      a_age_vessel_type[a, v] ~ student_t(nu, a_age_vessel_type[a, v-1], lambda[a]);
    }

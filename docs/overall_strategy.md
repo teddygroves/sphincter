@@ -4,15 +4,26 @@ Although our project involved several statistical analyses, we used a similar
 overall strategy in each case. This section describes the aspects of this
 strategy that were common to all of our analyses.
 
-## Features
+## Data
 
-Several of our analyses involved a common data structure, with real-valued
-measurements each with multiple categorical features, namely
+This analysis involved three raw datasets, which we call the "ablation" dataset, the "hypertension" dataset and the "angio-architecture" dataset.
+
+The ablation and hypertension datasets consist of real-valued measurements each
+with multiple categorical features, namely
 
 - age of the measured mouse (adult or young)
 - identity of the measured mouse
 - stage of the treatment protocol when measured
 - measured vessel type (penetrating artery, sphincter, bulb, first order capilary, etc)
+
+The ablation and hypertension datasets contain different types of measurement.
+The ablation dataset includes measurements of whisker stimulation response,
+pulsatility and blood flow at various points of the treatment protocol. The
+hypertension dataset includes measurements of pressure to diameter correlation
+before and after two rounds of induced hypertension.
+
+The angio-architecture dataset consists of real-valued measurements of vessel
+density and tortuosity.
 
 ## Data processing
 
