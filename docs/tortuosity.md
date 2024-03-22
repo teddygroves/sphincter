@@ -39,7 +39,8 @@ heterogeneity in jump sizes, we used a student-t distribution rather than a
 normal distribution for the random walk in vessel type effects, with the degrees
 of freedom parameter modelled hierarchically.
 
-The model specification is as follows, with :
+The model specification is as follows, with $\ln{y}^{std}$ representing the
+log-transformed and then standardised tortuosity measurements:
 
 \begin{align}
 p(y\mid\alpha, \sigma) &= Normal(\ln{y}^{std}\mid \alpha, \sigma) \label{eq:measurement-model-tortuosity} \\
@@ -69,7 +70,7 @@ The posterior predictive distributions for upper vessels "pial artery" and "pa"
 appear different for old and adult mice. To ascertain the extent and certainty
 of this contrast we plotted the differences between vessel type effects for old
 and adult mice in @fig-tortuosity-effects-detail. From this plot it is clear
-that, according to our model there is a pronounced and robust difference, with
+that, according to our model, there is a pronounced and robust difference, with
 over 97% probability of each effect being greater for old mice.
 
 :::{#fig-tortuosity-effects-detail}
