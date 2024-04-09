@@ -1,3 +1,5 @@
+from pathlib import Path
+import matplotlib.figure
 import matplotlib.pyplot as plt
 import matplotlib.colors as cl
 import numpy as np
@@ -5,6 +7,7 @@ import pandas as pd
 import xarray as xr
 
 DEFAULT_CMAP = plt.get_cmap("Set2")
+PLOTS_DIR = Path(__file__).parent.parent / "plots"
 
 
 def plot_obs(
@@ -62,3 +65,9 @@ def plot_predictive(
             **vlines_kwargs,
         )
     return lines
+
+
+def save_figure(
+    f: matplotlib.figure.Figure, filename: str, format: str = "svg"
+) -> None:
+    f.savefig(PLOTS_DIR / f"{filename}.{format}", bbox_inches="tight")
