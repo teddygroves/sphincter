@@ -11,7 +11,7 @@ in length of vessel per unit of volume. These measurements are shown in
 
 :::{#fig-density-measurements}
 
-![](../plots/density-measurements.png)
+![](../plots/density-measurements.svg)
 
 Vessel density measurements
 
@@ -82,7 +82,7 @@ the higher dispersion at higher capillary orders.
 
 :::{#fig-density-ppc}
 
-![](../plots/density-ppc.png)
+![](../plots/density-ppc.svg)
 
 Posterior predictive check for our final vessel density model, shown on natural
 and logarithmic scale.
@@ -96,7 +96,7 @@ adult mice for each vessel type.
 
 :::{#fig-density-effects-detail}
 
-![](../plots/density-effects.png)
+![](../plots/density-effects.svg)
 
 Main result of our density analysis: old and adult mice have different vessel
 density patterns.

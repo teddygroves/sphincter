@@ -12,7 +12,7 @@ The raw measurements are shown in @fig-tortuosity-measurements.
 
 :::{#fig-tortuosity-measurements}
 
-![](../plots/tortuosity-raw-measurements.png)
+![](../plots/tortuosity-raw-measurements.svg)
 
 Vessel tortuosity measurements
 
@@ -60,7 +60,7 @@ alongside the retained measurements, indicating a reasonably good fit.
 
 :::{#fig-tortuosity-ppc}
 
-![](../plots/tortuosity-ppc.png)
+![](../plots/tortuosity-ppc.svg)
 
 Marginal posterior predictive distributions alongside tortuosity measurements
 
@@ -75,7 +75,7 @@ over 97% probability of each effect being greater for old mice.
 
 :::{#fig-tortuosity-effects-detail}
 
-![](../plots/tortuosity-effects.png)
+![](../plots/tortuosity-effects.svg)
 
 Main result of our tortuosity analysis: the vessel type effect for tortuosity is greater for old mice than for adult mice.
 

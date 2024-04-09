@@ -96,7 +96,7 @@ the need for a model with distributional effects.
 
 ::: {#fig-whisker-measurements layout-ncol=1}
 
-![](../plots/whisker-measurements-faceted.png)
+![](../plots/whisker-measurements-faceted.svg)
 
 Raw measurements
 
@@ -111,7 +111,7 @@ disregard it.
 
 ::: {#fig-whisker-posterior-check layout-ncol=1}
 
-![](../plots/whisker-posterior-check-ind.png)
+![](../plots/whisker-posterior-check-ind.svg)
 
 Graphical posterior predictive check
 :::
@@ -123,7 +123,7 @@ shown below in figure @fig-whisker-loo-compare:
 
 ::: {#fig-whisker-loo-compare layout-ncol=1}
 
-![](../plots/whisker-loo-compare.png)
+![](../plots/whisker-loo-compare.svg)
 
 Comparison of estimated leave-one-oout log predictive density between the final
 model `whisker-ind` and the best performing interaction model `whisker-big`.

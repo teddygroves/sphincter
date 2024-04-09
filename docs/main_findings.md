@@ -14,7 +14,7 @@ from our best whisker stimulation model.
 
 ::: {#fig-whisker-treatment-effects layout-ncol=1}
 
-![](../plots/whisker-treatment-effects.png)
+![](../plots/whisker-treatment-effects.svg)
 
 Marginal posterior histograms for treatment effects, relative to the baseline
 treatment. 
@@ -29,7 +29,7 @@ both of these.
 
 ::: {#fig-whisker-small-effects layout-ncol=1}
 
-![](../plots/whisker-protocol-effects.png)
+![](../plots/whisker-protocol-effects.svg)
 
 Marginal 2.5%-97.5% posterior intervals for protocol effects
 
@@ -41,7 +41,7 @@ the smallest. Figure @fig-whisker-vessel-type-effects shows these.
 
 ::: {#fig-whisker-vessel-type-effects layout-ncol=1}
 
-![](../plots/whisker-vessel-type-effects.png)
+![](../plots/whisker-vessel-type-effects.svg)
 
 Marginal 2.5%-97.5% posterior intervals for vessel type effects
 
@@ -68,7 +68,7 @@ for centre pulsatility measurements, but it is not clearly separated from zero,
 indicating that the direction of the effect is not fully settled.
 
 ::: {#fig-pulsatility-age-effects}
-![](../plots/pulsatility-age-effects.png)
+![](../plots/pulsatility-age-effects.svg)
 
 Posterior distribution of age effect differences for each measurement type.
 
@@ -81,7 +81,7 @@ after hypertension/diameter parameter in 98% of posterior samples, whereas there
 is no clear effect on centre pulsatility.
 
 ::: {#fig-pulsatility-treatment-effects}
-![](../plots/pulsatility-treatment-effects.png)
+![](../plots/pulsatility-treatment-effects.svg)
 
 Posterior distribution of treatment effect differences for each measurement type.
 
@@ -95,7 +95,7 @@ flux were higher in the adult mice compared with the old mice. Figure
 posterior histograms.
 
 ::: {#fig-flow-age-effects}
-![](../plots/flow-age-effects.png)
+![](../plots/flow-age-effects.svg)
 
 Posterior distributions of age effects on red blood cell speed and flux.
 
@@ -105,7 +105,7 @@ We also quantified treatment effects on red blood cell flow, as shown in
 @fig-flow-treatment-effects:
 
 ::: {#fig-flow-treatment-effects}
-![](../plots/flow-treatment-effects.png)
+![](../plots/flow-treatment-effects.svg)
 
 Posterior distributions of treatment effects on red blood cell speed and flux.
 The nearest baseline for treatment `hyper` is `baseline`, and for treatments
@@ -122,7 +122,7 @@ correlated, and that the `hyper2` treatment was associated with increased
 pressure-diameter correlation compared with the `hyper1` treatment.
 
 ::: {#fig-hypertension-effects}
-![](../plots/hypertension-age-and-treatment.png)
+![](../plots/hypertension-age-and-treatment.svg)
 
 Posterior distributions of relative age and treatment effects for hypertensive
 challenge data.
@@ -143,7 +143,7 @@ capillaries of order 10 to 12, and for ascending venules, as shown in figure
 @fig-density-effects.
 
 ::: {#fig-density-effects}
-![](../plots/density-effects.png)
+![](../plots/density-effects.svg)
 
 Posterior distributions of differences in age-dependent parameters by vessel
 type.
@@ -163,7 +163,7 @@ arterioles. Other vessels were similarly tortuous for both age categories.
 
 ::: {#fig-tortuosity-effects}
 
-![](../plots/tortuosity-effects.png)
+![](../plots/tortuosity-effects.svg)
 
 Posterior distributions of differences in age-dependent tortuosity effects by
 vessel type

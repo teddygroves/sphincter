@@ -25,9 +25,9 @@ The resulting measurements are shown in figure @fig-flow-data.
 
 :::{#fig-flow-data nrow=2}
 
-![](../plots/flow-speed-measurements.png)
+![](../plots/flow-speed-measurements.svg)
 
-![](../plots/flow-flux-measurements.png)
+![](../plots/flow-flux-measurements.svg)
 
 Red blood cell speed and flux data
 
@@ -83,9 +83,9 @@ from figure @fig-flow-ppc
 
 :::{#fig-flow-ppc nrow=2}
 
-![](../plots/flow-basic-speed-posterior-predictive.png)
+![](../plots/flow-basic-speed-posterior-predictive.svg)
 
-![](../plots/flow-basic-flux-posterior-predictive.png)
+![](../plots/flow-basic-flux-posterior-predictive.svg)
 
 Posterior predictive checks for flow models
 :::
@@ -105,7 +105,7 @@ but the highest flux.
 
 :::{#fig-flow-shared}
 
-![](../plots/flow-shared-parameters.png)
+![](../plots/flow-shared-parameters.svg)
 
 Posterior distributions of parameters that appear in both our flow and speed
 models. 
@@ -119,7 +119,7 @@ type:treatment interaction parameters. This model achieved marginally worse
 loo elpd scores as shown in figure @fig-flow-loo. 
 
 :::{#fig-flow-loo}
-![](../plots/flow-loo.png)
+![](../plots/flow-loo.svg)
 
 Out of sample predictive performance comparison for red blood cell flow models.
 
@@ -134,7 +134,7 @@ possible to resolve this effect, but were unsuccessful. From this we conclude
 that any real effect is too small to be easily detected in our dataset.
 
 :::{#fig-flow-interaction}
-![](../plots/flow-interaction-parameters.png)
+![](../plots/flow-interaction-parameters.svg)
 
 Interaction effects on red blood cell flow.
 

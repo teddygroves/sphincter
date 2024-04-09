@@ -1,8 +1,10 @@
-resource_path: ["../"]
+resource_path: ["..", "plots"]
 bibliography: bibliography.bib
 citestyle: ieee.csl
 reference-location: margin
 toc: true
+pdf-engine-opts:
+    - '--shell-escape'
 
 crossref:
   thm-prefix: "Question"
@@ -10,10 +12,10 @@ crossref:
   thm-labels: alpha a
 
 format:
+  pdf: default
   html:
     embed-resources: true
     include-in-header: mathjax.html
-  pdf: default
 
 project:
   type: manuscript

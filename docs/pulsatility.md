@@ -38,9 +38,9 @@ pulsatility, calculated as described above. These measurements are shown in
 @fig-pulsatility-dataset.
 
 ::: {#fig-pulsatility-dataset layout-nrow=2}
-![](../plots/pulsatility-diameter-measurements.png)
+![](../plots/pulsatility-diameter-measurements.svg)
 
-![](../plots/pulsatility-center-measurements.png)
+![](../plots/pulsatility-center-measurements.svg)
 
 The modelled measurements, shown in order of the coloured categories. 
 :::
@@ -50,7 +50,7 @@ in our dataset for both age categories. The light dots show raw measurements and
 the darker dots show averages within evenly sized bins.
 
 ::: {#fig-pressure-data}
-![](../plots/pressure-data.png)
+![](../plots/pressure-data.svg)
 
 Pulsatility measurements plotted against the corresponding pressure measurements
 and coloured according to age. Darker dots indicate averages within evenly sized
@@ -66,7 +66,7 @@ pulsatility, and it is approximately the same for all vessel types.
 
 
 ::: {#fig-diameter-data}
-![](../plots/pulsatility-diameter-data.png)
+![](../plots/pulsatility-diameter-data.svg)
 
 Pulsatility measurements plotted against the corresponding diameter measurements
 and coloured according to vessel type. Darker dots indicate averages within
@@ -170,7 +170,7 @@ the method described in @vehtariPracticalBayesianModel2017 and implemented in
 @fig-pulsatility-elpd-comparison.
 
 ::: {#fig-pulsatility-elpd-comparison}
-![](../plots/pulsatility-elpd-comparison.png)
+![](../plots/pulsatility-elpd-comparison.svg)
 
 Comparison of estimated leave-one-out log predictive density (ELPD) for our
 pulsatility models. The main result is that the pressure-no-age and interaction
@@ -184,13 +184,13 @@ checking, with the results for the pressure model shown in @fig-pressure-ppc.
 
 ::: {#fig-pressure-ppc layout-nrow=4}
 
-![](../plots/pulsatility-prior-check-diameter.png)
+![](../plots/pulsatility-prior-check-diameter.svg)
 
-![](../plots/pulsatility-posterior-check-diameter.png)
+![](../plots/pulsatility-posterior-check-diameter.svg)
 
-![](../plots/pulsatility-prior-check-center.png)
+![](../plots/pulsatility-prior-check-center.svg)
 
-![](../plots/pulsatility-posterior-check-center.png)
+![](../plots/pulsatility-posterior-check-center.svg)
 
 Prior and posterior predictive checks for the pressure model.
 :::
@@ -200,7 +200,7 @@ effect parameters that differed substantially from zero, as can be seen in
 @fig-pulsatility-interaction-effects.
 
 ::: {#fig-pulsatility-interaction-effects}
-![](../plots/pulsatility-interaction-effects.png)
+![](../plots/pulsatility-interaction-effects.svg)
 
 Marginal posterior quantiles for the unique effects in the interaction model.
 :::
@@ -219,7 +219,7 @@ type trend for centre pulsatility.
 
 ::: {#fig-pulsatility-effects}
 
-![](../plots/pulsatility-effects.png)
+![](../plots/pulsatility-effects.svg)
 
 Marginal posterior quantiles for shared model effects.
 :::
@@ -245,7 +245,7 @@ pulsatility and correlates with reduced centre pulsatility for adult mice but
 not for old mice.
 
 ::: {#fig-pulsatility-pressure-effects}
-![](../plots/pulsatility-pressure-effects.png)
+![](../plots/pulsatility-pressure-effects.svg)
 
 Posterior distribution of pressure effect differences for each measurement type.
 
@@ -259,7 +259,7 @@ effects of hypertension on diameter pulsatility or of either treatment on centre
 pulsatility.
 
 ::: {#fig-pulsatility-treatment-effects}
-![](../plots/pulsatility-treatment-effects.png)
+![](../plots/pulsatility-treatment-effects.svg)
 
 Posterior distribution of treatment effect differences for each measurement type.
 
@@ -274,7 +274,7 @@ effects on diameter pulsatility. Interestingly there is no clear effect from the
 second hypertension treatment.
 
 ::: {#fig-pulsatility-treatment-effects-full}
-![](../plots/pulsatility-treatment-effects-full.png)
+![](../plots/pulsatility-treatment-effects-full.svg)
 
 Treatment effect distributions relative to baseline in the basic model when fit
 to the full dataset including all treatments.

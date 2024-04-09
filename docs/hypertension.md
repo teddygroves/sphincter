@@ -14,7 +14,7 @@ standard modelling techniques ought to be able to describe them.
 
 :::{#fig-hypertension-data}
 
-![](../plots/hypertension-data.png)
+![](../plots/hypertension-data.svg)
 
 :::
 
@@ -65,7 +65,7 @@ itself, indicating that the ranking is robust.
 
 :::{#fig-hypertension-loo}
 
-![](../plots/hypertension-loo.png)
+![](../plots/hypertension-loo.svg)
 
 Comparison of out-of-sample predictive performance of our hypertension models,
 as measured by estimated leave-one-out expected log predictive density. The
@@ -86,7 +86,7 @@ measurements were more dispersed.
 
 :::{#fig-hypertension-parameters}
 
-![](../plots/hypertension-parameters.png)
+![](../plots/hypertension-parameters.svg)
 
 1%-99% posterior intervals for parameters in our final hypertension model.
 
@@ -99,8 +99,8 @@ the plotted intervals than might be expected.
 
 :::{#fig-hypertension-predictions}
 
-![](../plots/hypertension-prior-predictive.png)
+![](../plots/hypertension-prior-predictive.svg)
 
-![](../plots/hypertension-posterior-predictive.png)
+![](../plots/hypertension-posterior-predictive.svg)
 
 :::
