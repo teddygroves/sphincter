@@ -1,4 +1,6 @@
 inferences/**/idata/**
+docs/_manuscript/plots
+docs/_manuscript/_tex
 
 
 .venv/
