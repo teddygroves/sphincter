@@ -4,6 +4,7 @@ These functions should take in a dataframe of measurements and return a
 PreparedData object.
 
 """
+
 import json
 import os
 from io import StringIO
@@ -30,6 +31,8 @@ from sphincter.stan_input_functions import (
     get_stan_input_hypertension,
     get_stan_input_density,
     get_stan_input_tortuosity,
+    get_stan_input_pressure,
+    get_stan_input_diameter,
 )
 
 NAME_FILE = "name.txt"
@@ -45,7 +48,8 @@ RAW_DATA_FILES = {
     "measurements_hypertension": os.path.join(RAW_DIR, "hyper_challenge.csv"),
     "measurements_density": os.path.join(
         RAW_DIR, "angio-architecture", "CapillarySummary_Allcount3.xlsx"
-    )
+    ),
+    "measurements_pressure": os.path.join(RAW_DIR, "pressure_data.csv"),
 }
 BAD_MICE = [310321]
 
@@ -64,6 +68,10 @@ TreatmentFlow = pd.CategoricalDtype(
 )
 TreatmentHypertension = pd.CategoricalDtype(
     categories=["hyper1", "hyper2"], ordered=True
+)
+TreatmentPressure = pd.CategoricalDtype(
+    categories=["baseline", "hyper1", "after_hyper1", "ablation", "hyper2"],
+    ordered=True,
 )
 VesselTypeWhisker = pd.CategoricalDtype(
     categories=["pen_art", "sphincter", "bulb", "cap1", "cap2"],
@@ -94,28 +102,31 @@ VesselTypeDensity = pd.CategoricalDtype(
         "cap10",
         "cap11",
         "cap12",
-    ], ordered=True
+    ],
+    ordered=True,
 )
 VesselTypeTortuosity = pd.CategoricalDtype(
     categories=[
-        'pial_artery',
-        'pa', 
-        'cap1', 
-        'cap2', 
-        'cap3',
-        'cap4',
-        'cap5',
-        'cap6',
-        'cap7',
-        'cap8',
-        'cap9',
-        'cap10',
-        'cap11',
-        'cap12',
-        'av',
-        'pial_vein',
-    ], ordered=True
+        "pial_artery",
+        "pa",
+        "cap1",
+        "cap2",
+        "cap3",
+        "cap4",
+        "cap5",
+        "cap6",
+        "cap7",
+        "cap8",
+        "cap9",
+        "cap10",
+        "cap11",
+        "cap12",
+        "av",
+        "pial_vein",
+    ],
+    ordered=True,
 )
+
 
 class WhiskerMeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer question 1
@@ -168,6 +179,23 @@ class PulsatilityMeasurementSchema(pa.DataFrameModel):
     speed: Series[float] = pa.Field(coerce=True, nullable=True)
 
 
+class DiameterMeasurementSchema(pa.DataFrameModel):
+    """A dataframe that can be used to answer questions about diameter.
+
+    Other columns are also allowed!
+    """
+
+    age: Series[Age] = pa.Field(coerce=True, nullable=False)
+    mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypePulsatility] = pa.Field(
+        coerce=True, nullable=False
+    )
+    treatment: Series[TreatmentPulsatility] = pa.Field(
+        coerce=True, nullable=False
+    )
+    diameter: Series[float] = pa.Field(coerce=True, gt=0, nullable=False)
+
+
 class FlowMeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer questions about flow."""
 
@@ -208,6 +236,7 @@ class DensityMeasurementSchema(pa.DataFrameModel):
     volume_mm3: Series[float]
     density_mm_per_mm3: Series[float]
 
+
 class TortuosityMeasurementSchema(pa.DataFrameModel):
     """A dataframe that can be used to answer questions about tortuosity."""
 
@@ -217,6 +246,17 @@ class TortuosityMeasurementSchema(pa.DataFrameModel):
         coerce=True, nullable=False
     )
     tortuosity: Series[float]
+
+
+class PressureMeasurementSchema(pa.DataFrameModel):
+    """A dataframe that can be used to answer questions about pressure."""
+
+    age: Series[Age] = pa.Field(coerce=True, nullable=False)
+    mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
+    treatment: Series[TreatmentPressure] = pa.Field(coerce=True, nullable=False)
+    map: Series[float]
+    pp: Series[float]
+    hr: Series[float]
 
 
 class WhiskerDataset(BaseModel):
@@ -261,6 +301,29 @@ class PulsatilityDataset(BaseModel):
     @field_serializer("measurements")
     def serialize_measurements(
         self, measurements: DataFrame[PulsatilityMeasurementSchema], _info
+    ):
+        return measurements.to_json()
+
+
+class DiameterDataset(BaseModel):
+    """A dataset that can answer questions about diameter."""
+
+    name: str
+    coords: util.CoordDict
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[DiameterMeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return DiameterMeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[DiameterMeasurementSchema], _info
     ):
         return measurements.to_json()
 
@@ -353,13 +416,36 @@ class TortuosityDataset(BaseModel):
         return measurements.to_json()
 
 
+class PressureDataset(BaseModel):
+    name: str
+    coords: util.CoordDict
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[PressureMeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return PressureMeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[PressureMeasurementSchema], _info
+    ):
+        return measurements.to_json()
+
+
 def prepare_data():
     """Run main function."""
     print("Reading raw data...")
     raw_data = {
-        k: pd.read_csv(v, index_col=None) 
-        if k not in ["measurements_density"]
-        else pd.read_excel(v)
+        k: (
+            pd.read_csv(v, index_col=None)
+            if k not in ["measurements_density"]
+            else pd.read_excel(v)
+        )
         for k, v in RAW_DATA_FILES.items()
     }
     data_preparation_functions_to_run = [
@@ -371,6 +457,8 @@ def prepare_data():
         (prepare_data_hypertension, raw_data["measurements_hypertension"]),
         (prepare_data_density, raw_data["measurements_density"]),
         (prepare_data_tortuosity, raw_data["measurements_density"]),
+        (prepare_data_pressure, raw_data["measurements_pressure"]),
+        (prepare_data_diameter, raw_data["measurements"]),
     ]
     print("Preparing data...")
     for dpf, raw in data_preparation_functions_to_run:
@@ -448,6 +536,27 @@ def prepare_data_pulsatility(raw: pd.DataFrame) -> PulsatilityDataset:
     stan_input = get_stan_input_pulsatility(measurements)
     return PulsatilityDataset(
         name="pulsatility",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "measurement_type": ["diameter", "center"],
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def prepare_data_diameter(raw: pd.DataFrame) -> PulsatilityDataset:
+    """Prepare data for questions about diameter."""
+    measurements = process_measurements_pulsatility(raw)
+    stan_input = get_stan_input_diameter(measurements)
+    return DiameterDataset(
+        name="diameter",
         measurements=measurements,
         coords=util.CoordDict(
             {
@@ -549,7 +658,8 @@ def prepare_data_hypertension(raw: pd.DataFrame) -> HypertensionDataset:
         ),
         stan_input=stan_input,
     )
-    
+
+
 def prepare_data_density(raw: pd.DataFrame) -> DensityDataset:
     """Prepare capillary density data."""
     measurements = process_measurements_density(raw)
@@ -581,6 +691,26 @@ def prepare_data_tortuosity(raw: pd.DataFrame) -> TortuosityDataset:
                 "mouse": measurements["mouse"].cat.categories,
                 "vessel_type": measurements["vessel_type"].cat.categories,
                 "age": measurements["age"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def prepare_data_pressure(raw: pd.DataFrame) -> PressureDataset:
+    """Prepare pressure data."""
+    measurements = process_measurements_pressure(raw)
+    stan_input = get_stan_input_pressure(measurements)
+    return PressureDataset(
+        name="pressure",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "mouse": measurements["mouse"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "treatment": measurements["treatment"].cat.categories,
+                "measurement_type": ["map", "pp", "hr"],
                 "observation": measurements.index.map(str).tolist(),
             }
         ),
@@ -682,7 +812,9 @@ def process_measurements_hypertension(
     return HypertensionMeasurementSchema.validate(out)
 
 
-def process_measurements_density(raw: pd.DataFrame) -> DataFrameBase[DensityMeasurementSchema]:
+def process_measurements_density(
+    raw: pd.DataFrame,
+) -> DataFrameBase[DensityMeasurementSchema]:
     """Process density data."""
     vessel_type_names = {
         "PialArtery": "pial_artery",
@@ -703,20 +835,23 @@ def process_measurements_density(raw: pd.DataFrame) -> DataFrameBase[DensityMeas
         "PialVein": "pial_vein",
     }
     filt = raw.loc[lambda df: df["CapOrder"].str.endswith("Cap")]
-    out = (
-        pd.DataFrame({
+    out = pd.DataFrame(
+        {
             "mouse": filt["MouseID"].astype(str),
             "age": filt["Condition"].str.lower(),
-            "vessel_type": filt["CapOrder"].map(vessel_type_names.get).astype(VesselTypeDensity),
+            "vessel_type": filt["CapOrder"]
+            .map(vessel_type_names.get)
+            .astype(VesselTypeDensity),
             "length_mm": filt["CapVesLL"] * 10e6,
             "volume_mm3": filt["Volume"] * 10e-9,
-        })
-        .assign(density_mm_per_mm3=lambda df: df["length_mm"] / df["volume_mm3"])
-    )
+        }
+    ).assign(density_mm_per_mm3=lambda df: df["length_mm"] / df["volume_mm3"])
     return DensityMeasurementSchema.validate(out)
 
 
-def process_measurements_tortuosity(raw: pd.DataFrame) -> DataFrameBase[TortuosityMeasurementSchema]:
+def process_measurements_tortuosity(
+    raw: pd.DataFrame,
+) -> DataFrameBase[TortuosityMeasurementSchema]:
     """Process tortuosity data."""
     vessel_type_names = {
         "PialArtery": "pial_artery",
@@ -736,29 +871,52 @@ def process_measurements_tortuosity(raw: pd.DataFrame) -> DataFrameBase[Tortuosi
         "AscVenule": "av",
         "PialVein": "pial_vein",
     }
-    filt = raw.loc[lambda df:
-        ~(df["MouseID"].eq(270220) & df["CapOrder"].eq("4thCap"))  # outlier
+    filt = raw.loc[
+        lambda df: ~(
+            df["MouseID"].eq(270220) & df["CapOrder"].eq("4thCap")
+        )  # outlier
     ]
-    out = (
-        pd.DataFrame({
+    out = pd.DataFrame(
+        {
             "mouse": filt["MouseID"].astype(str),
             "age": filt["Condition"].str.lower(),
-            "vessel_type": filt["CapOrder"].map(vessel_type_names.get).astype(VesselTypeTortuosity),
+            "vessel_type": filt["CapOrder"]
+            .map(vessel_type_names.get)
+            .astype(VesselTypeTortuosity),
             "tortuosity": filt["CapVesTortous"],
-        })
+        }
     )
     return TortuosityMeasurementSchema.validate(out)
-    
+
+
+def process_measurements_pressure(
+    raw: pd.DataFrame,
+) -> DataFrameBase[PressureMeasurementSchema]:
+    """Process pressure data."""
+    filt = raw.dropna(how="any")
+    out = pd.DataFrame(
+        {
+            "mouse": filt["mouse"].astype(str),
+            "age": filt["age"].str.lower(),
+            "treatment": filt["treatment"].astype(TreatmentPressure),
+            "map": filt["MAP"],
+            "pp": filt["PP"],
+            "hr": filt["HR"],
+        }
+    )
+    return PressureMeasurementSchema.validate(out)
+
 
 def load_prepared_data(
     path_to_data: str,
 ) -> Union[
-    WhiskerDataset, 
+    WhiskerDataset,
     PulsatilityDataset,
     FlowDataset,
     HypertensionDataset,
     DensityDataset,
     TortuosityDataset,
+    PressureDataset,
 ]:
     with open(path_to_data) as f:
         raw = json.load(f)
@@ -774,5 +932,9 @@ def load_prepared_data(
         return DensityDataset(**raw)
     elif raw["name"].startswith("tortuosity"):
         return TortuosityDataset(**raw)
+    elif raw["name"].startswith("pressure"):
+        return PressureDataset(**raw)
+    elif raw["name"].startswith("diameter"):
+        return DiameterDataset(**raw)
     else:
         raise ValueError(f"Unexpected name {raw['name']}.")

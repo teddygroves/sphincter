@@ -1,6 +1,5 @@
 """Functions for generating input to Stan from prepared data."""
 
-
 from typing import Any, Callable, Dict
 
 import pandas as pd
@@ -39,6 +38,34 @@ def get_stan_input_whisker(mts: pd.DataFrame) -> Dict:
         "y": mts["diam_log_ratio"],
     }
 
+
+@returns_stan_input
+def get_stan_input_diameter(mts: pd.DataFrame) -> Dict:
+    mouse = one_encode(mts["mouse"])
+    age = (
+        mts.groupby(mouse, sort=True)["age"]
+        .first()
+        .map({"adult": 1, "old": 2}.get)
+    )
+    return {
+        "N": len(mts),
+        "N_age": mts["age"].nunique(),
+        "N_mouse": mts["mouse"].nunique(),
+        "N_treatment": mts["treatment"].nunique(),
+        "N_vessel_type": mts["vessel_type"].nunique(),
+        "N_train": len(mts),
+        "N_test": len(mts),
+        "age": age,
+        "mouse": mouse,
+        "treatment": one_encode(mts["treatment"]),
+        "hyper": mts["treatment"].isin(["hyper", "hyper2"]).astype(int),
+        "vessel_type": one_encode(mts["vessel_type"]),
+        "ix_train": [i + 1 for i in range(len(mts))],
+        "ix_test": [i + 1 for i in range(len(mts))],
+        "y": mts["diameter"],
+        "pressure": mts["pressure_norm"],
+        "diameter": mts["diameter"],
+    }
 
 @returns_stan_input
 def get_stan_input_pulsatility(mts: pd.DataFrame) -> Dict:
@@ -193,8 +220,7 @@ def get_stan_input_tortuosity(mts: pd.DataFrame) -> Dict:
     )
     big_vessel_types = ["pial_artery", "pa", "pial_vein", "av"]
     vessel_type_is_big = [
-        int(vt in big_vessel_types) 
-        for vt in mts["vessel_type"].cat.categories
+        int(vt in big_vessel_types) for vt in mts["vessel_type"].cat.categories
     ]
     return {
         "N": len(mts),
@@ -210,4 +236,25 @@ def get_stan_input_tortuosity(mts: pd.DataFrame) -> Dict:
         "ix_train": [i + 1 for i in range(len(mts))],
         "ix_test": [i + 1 for i in range(len(mts))],
         "y": mts["tortuosity"],
+    }
+
+
+@returns_stan_input
+def get_stan_input_pressure(mts: pd.DataFrame) -> Dict:
+    mouse = one_encode(mts["mouse"])
+    treatment = pd.factorize(mts["treatment"], sort=True)[0] + 1
+    age = mts["age"].map({"adult": 1, "old": 2}.get)
+    return {
+        "N": len(mts),
+        "N_age": mts["age"].nunique(),
+        "N_mouse": mts["mouse"].nunique(),
+        "N_treatment": mts["treatment"].nunique(),
+        "N_train": len(mts),
+        "N_test": len(mts),
+        "age": age,
+        "mouse": mouse,
+        "treatment": treatment,
+        "ix_train": [i + 1 for i in range(len(mts))],
+        "ix_test": [i + 1 for i in range(len(mts))],
+        "y": mts[["map", "pp", "hr"]].T,
     }

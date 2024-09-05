@@ -1,0 +1,27 @@
+name = "diameter"
+notes = "First diameter model"
+stan_file = "diameter.stan"
+prepared_data_dir = "diameter"
+stan_input_function = "get_stan_input_diameter"
+modes = ["prior", "posterior"]
+
+[dims]
+mu = ["age"]
+a_vessel_type = ["vessel_type"]
+a_treatment = ["treatment"]
+a_age_vessel_type = ["age", "vessel_type"]
+a_vessel_type_treatment = ["vessel_type", "treatment"]
+lambda_a_age_vessel_type = ["age"]
+yrep = ["observation"]
+y = ["observation"]
+yhat = ["observation"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 1000
+iter_sampling = 1000
+adapt_delta = 0.99
+show_progress = true

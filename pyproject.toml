@@ -25,6 +25,7 @@ dependencies = [
     "scikit-learn",
     "toml",
     "zarr",
+    "seaborn>=0.13.2",
 ]
 license = {text = "MIT"}
 
@@ -71,3 +72,7 @@ max-line-length = "80"
 
 [tool.pdm]
 distribution = true
+
+[tool.mypy]
+plugins = ["pandera.mypy"]
+

@@ -1,0 +1,26 @@
+name = "pressure"
+stan_file = "pressure.stan"
+prepared_data_dir = "pressure"
+stan_input_function = "get_stan_input_pressure"
+modes = ["prior", "posterior"]
+
+[dims]
+a_age = ["measurement_type", "age"]
+a_treatment = ["measurement_type", "treatment"]
+sigma_std = ["measurement_type"]
+sigma = ["measurement_type"]
+yrep = ["measurement_type", "observation"]
+tau_treatment_mouse = ["measurement_type", "treatment"]
+a_treatment_mouse = ["measurement_type", "treatment", "mouse"]
+a_age_treatment = ["measurement_type", "age", "treatment"]
+
+[stanc_options]
+warn-pedantic = true
+
+[sample_kwargs]
+save_warmup = false
+iter_warmup = 3000
+iter_sampling = 1000
+adapt_delta = 0.99
+
+

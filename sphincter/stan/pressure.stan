@@ -8,72 +8,61 @@ data {
   int<lower=1> N_age;
   int<lower=1> N_mouse;
   int<lower=1> N_treatment;
-  int<lower=1> N_vessel_type;
   int<lower=1> N_train;
   int<lower=1> N_test;
-  array[N_mouse] int<lower=1,upper=N_age> age;
+  array[N] int<lower=1,upper=N_age> age;
   array[N] int<lower=1,upper=N_mouse> mouse;
   array[N] int<lower=1,upper=N_treatment> treatment;
-  array[N] int<lower=1,upper=N_vessel_type> vessel_type;
-  array[2, N] real<lower=0> y;
-  vector<lower=0>[N] pressure;
-  vector<lower=0,upper=1>[N] hyper;
+  array[3] vector<lower=0>[N] y;
   array[N_train] int<lower=1,upper=N> ix_train;
   array[N_test] int<lower=1,upper=N> ix_test;
   int<lower=0,upper=1> likelihood;
 }
 transformed data {
-  vector[N] log_pressure_std = 
-    standardise_vector(log(pressure), mean(log(pressure)), sd(log(pressure)));
+  array[3, N] real log_y_std; 
+  for (j in 1:3)
+    for (n in 1:N)
+      log_y_std[j, n] = (log(y[j, n]) - mean(log(y[j]))) / sd(log(y[j]));
 }
 parameters {
-  real mu_lambda;
-  real mu_delta;
-  real<lower=0> tau_lambda;
-  real<lower=0> tau_delta;
-  real<lower=0> sigma;
-  array[N_age] real a_age;
-  array[N_mouse] real lambda_z;
-  array[N_mouse] real delta_z;
-}
-transformed parameters {
-  array[N_mouse] real lambda;  // baseline pressure
-  array[N_mouse] real delta;   // effect of hypertensive drug
-  array[N] real log_pressure_std_hat;
-  for (m in 1:N_mouse){
-   lambda[m] = mu_lambda + a_age[age[m]]  + lambda_z[m] * tau_lambda;
-   delta[m] = mu_delta + delta_z[m] * tau_delta;
-  }
-  for (n in 1:N){
-    log_pressure_std_hat[n] = lambda[mouse[n]] + hyper[n] * delta[mouse[n]];
-   }
+  array[3, N_age] real a_age;
+  array[3, N_treatment] real a_treatment;
+  array[3, N_age, N_treatment] real a_age_treatment;
+  array[3, N_treatment] real<lower=0> sigma_std;
 }
 model {
   if (likelihood){
-    for (n in 1:N_train) 
-      log_pressure_std[ix_train[n]] ~ student_t(4, log_pressure_std_hat[ix_train[n]], sigma);
+    for (j in 1:3){
+      for (n in 1:N_train){
+        int ix = ix_train[n];
+        real etaj_std = a_age[j, age[ix]] + a_treatment[j, treatment[ix]] + a_age_treatment[j, age[ix], treatment[ix]];
+        log_y_std[j][ix_train[ix]] ~ normal(etaj_std, sigma_std[j, treatment[ix]]);
+      }
+    }
   }
-  mu_lambda ~ normal(0, 1);
-  mu_delta ~ normal(0, 1);
-  tau_lambda ~ normal(0, 1);
-  tau_delta ~ normal(0, 1);
-  sigma ~ normal(0, 1);
-  a_age ~ normal(0, 1);
-  lambda_z ~ normal(0, 1);
-  delta_z ~ normal(0, 1);
+  for (j in 1:3){
+    a_age[j] ~ normal(0, 0.3);
+    a_treatment[j] ~ normal(0, 0.3);
+    for (t in 1:N_treatment){
+      for (a in 1:N_age){
+        a_age_treatment[j, a, t] ~ normal(0, 0.2);
+      }
+      a_age_treatment[j, t] ~ normal(0, 0.2);
+      sigma_std[j, t] ~ normal(0, 0.5);
+    }
+  }
 }
 generated quantities {
-  array[N_test] real yrep;
+  array[3, N_test] real yrep;
   vector[N_test] llik;
-  vector[N] pressure_hat;
-  for (n in 1:N){
-   pressure_hat[n] = exp(mean(log(pressure)) + log_pressure_std_hat[n] * sd(log(pressure)));
-  }
-  for (n in 1:N_test){
-    yrep[n] = exp(mean(log(pressure)) + student_t_rng(4, log_pressure_std_hat[ix_test[n]], sigma) * sd(log(pressure)));
-    llik[n] = student_t_lpdf(log_pressure_std[ix_test[n]] | 4, log_pressure_std_hat[ix_test[n]], sigma);
+  for (j in 1:3){
+    for (n in 1:N_test){
+      int ix = ix_train[n];
+      real etaj_std = a_age[j, age[ix]] + a_treatment[j, treatment[ix]] + a_age_treatment[j, age[ix], treatment[ix]];
+      real etaj = mean(log(y[j])) + etaj_std * sd(log(y[j]));
+      real sigmaj = sigma_std[j, treatment[ix]] * sd(log(y[j]));
+      yrep[j, n] = exp(normal_rng(etaj, sigmaj));
+      llik[n] += normal_lpdf(log(y[j, ix_test[n]]) | etaj, sigmaj); 
+    }
   }
 }
-
-
-
