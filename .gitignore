@@ -1,3 +1,10 @@
+*.fdb*
+*.fls
+*.log
+*.aux
+**/*_files/*
+
+
 inferences/**/idata/**
 docs/_manuscript/plots
 docs/_manuscript/_tex
