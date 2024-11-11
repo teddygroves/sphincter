@@ -12,7 +12,7 @@ description = "Models of measurements of brain blood vessel sphincters"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "arviz@git+https://github.com/OriolAbril/arviz.git@ci",
+    "arviz",
     "cmdstanpy",
     "jupyter",
     "numpy",
@@ -26,6 +26,8 @@ dependencies = [
     "toml",
     "zarr",
     "seaborn>=0.13.2",
+    "pyarrow>=18.0.0",
+    "bambi>=0.14.0",
 ]
 license = {text = "MIT"}
 
