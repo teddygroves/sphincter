@@ -78,3 +78,5 @@ distribution = true
 [tool.mypy]
 plugins = ["pandera.mypy"]
 
+[tool.ruff]
+line-length = 80

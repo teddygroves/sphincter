@@ -40,6 +40,8 @@ analysis: $(ENV_MARKER)
 	. $(ACTIVATE_VENV) && (\
 	  python $(SRC)/prepare_data.py || exit 1; \
 	  python $(SRC)/sample.py || exit 1; \
+	  python $(SRC)/collaterals.py || exit 1; \
+	  python $(SRC)/branchpoints.py || exit 1; \
 	  jupyter execute $(SRC)/whisker.ipynb || exit 1; \
 	  jupyter execute $(SRC)/pulsatility.ipynb || exit 1; \
 	  jupyter execute $(SRC)/flow.ipynb || exit 1; \
