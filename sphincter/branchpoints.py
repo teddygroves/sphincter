@@ -10,14 +10,18 @@ from scipy.special import logit
 ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
-IDATA_DIR = ROOT_DIR / "inferences" / "collaterals"
+IDATA_DIR = ROOT_DIR / "inferences" / "branchpoints"
 PREPARED_DIR = DATA_DIR / "prepared"
 RAW_DATA_FILE = (
     RAW_DIR / "angio-architecture" / "PA branch diameters 020323.xlsx"
 )
 
 YCOLS = ["is_sphincter", "is_bulb"]
-FORMULA = "{y}[True] ~ age + branch_number + depth + logit_firstorder_per_pa"
+FORMULAE = {
+    "is_sphincter": "is_sphincter['True'] ~ age + branch_number + ln_depth",
+    "is_bulb": "is_bulb['True'] ~ age + branch_number + ln_depth + logit_firstorder_per_pa",
+}
+FORMULA_BULB = ()
 
 Age = pd.CategoricalDtype(categories=["adult", "old"], ordered=True)
 
@@ -45,6 +49,7 @@ class BranchpointData(pa.DataFrameModel):
     mouse_id: str
     pa_id: str
     branch_id: str
+    branch_number: float
     depth: float
     pa_diam: float
     sphincter_diameter: float
@@ -90,7 +95,8 @@ def prepare_data(
     branchpoints["mouse_id"] = branchpoints["date"].astype(str)
     branchpoints["age"] = branchpoints["age"].str.lower().astype(Age)
     branchpoints["pa_number"] = branchpoints["pa_number"].astype(str)
-    branchpoints["branch_number"] = branchpoints["branch_number"].astype(str)
+    branchpoints["branch_id"] = branchpoints["branch_number"].astype(str)
+    branchpoints["branch_number"] = branchpoints["branch_number"].astype(float)
     branchpoints["depth"] = branchpoints["depth"].astype(float)
     branchpoints["is_sphincter"] = (
         branchpoints["sphincter_diameter"] / branchpoints["firstorder_diameter"]
@@ -99,6 +105,9 @@ def prepare_data(
     branchpoints["is_bulb"] = (
         branchpoints["bulb_diameter"] / branchpoints["firstorder_diameter"]
         > 1.25
+    )
+    branchpoints["firstorder_per_pa"] = branchpoints["firstorder_per_pa"].clip(
+        upper=0.98
     )
     for ln_col in ln_cols:
         branchpoints[f"ln_{ln_col}"] = np.log1p(branchpoints[ln_col])
@@ -114,11 +123,14 @@ def main():
     branchpoints.to_csv(PREPARED_DIR / "branchpoints.csv")
     for ycol in YCOLS:
         model = bmb.Model(
-            FORMULA.format(y=ycol),
+            FORMULAE[ycol],
             data=branchpoints,
             family="bernoulli",
         )
-        idata = model.fit(max_num_doublings=12)
+        idata = model.fit(
+            idata_kwargs={"log_likelihood": True},
+            nuts={"max_treedepth": 10},
+        )
         model.predict(idata, kind="response", inplace=True)
         model.predict(idata, kind="response_params", inplace=True)
         idata.to_netcdf(IDATA_DIR / f"{ycol}.nc")
