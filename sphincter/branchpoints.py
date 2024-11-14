@@ -21,7 +21,6 @@ FORMULAE = {
     "is_sphincter": "is_sphincter['True'] ~ age + branch_number + ln_depth",
     "is_bulb": "is_bulb['True'] ~ age + branch_number + ln_depth + logit_firstorder_per_pa",
 }
-FORMULA_BULB = ()
 
 Age = pd.CategoricalDtype(categories=["adult", "old"], ordered=True)
 

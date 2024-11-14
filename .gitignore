@@ -5,6 +5,7 @@
 **/*_files/*
 
 
+inferences/**/*.nc
 inferences/**/idata/**
 docs/_manuscript/plots
 docs/_manuscript/_tex
