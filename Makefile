@@ -28,7 +28,7 @@ $(QUARTO_EXTENSIONS_FOLDER):
 
 docs: $(ENV_MARKER) $(QUARTO_EXTENSIONS_FOLDER)
 	. $(ACTIVATE_VENV) && (\
-		quarto render $(REPORT_STEM).qmd; \
+		quarto render $(DOCS_DIR); \
 	)
 
 $(ENV_MARKER): $(ACTIVATE_VENV) $(CMDSTAN)
