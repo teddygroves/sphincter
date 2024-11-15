@@ -169,3 +169,38 @@ Posterior distributions of differences in age-dependent tortuosity effects by
 vessel type
 
 :::
+
+## Collaterals
+
+We modelled the density of collateral vessels in adult and old mice, finding that old mice tended to have fewer collaterals, as shown in @fig-collaterals-effects.
+
+::: {#fig-collaterals-effects}
+
+![](../plots/collaterals-age-effect.svg)
+
+Posterior distribution of differences in age effects on collateral density.
+
+:::
+
+Applying a similar analysis to measurements of collateral diameters, lengths and tortuosities, we found negligible age effects: see @fig-collaterals-non-effects
+
+::: {#fig-collaterals-non-effects}
+
+![](../plots/collaterals-age-non-effects.svg)
+
+Posterior distribution of differences in age effects on collateral density.
+
+:::
+
+## Branchpoints
+
+Our models of whether a branchpoint contained a bulb or sphincter indicated no particular age effect for sphincters, and a clear tendency for branchpoints in old mice to have more bulbs. These results are shown in @fig-branchpoint-effects.  
+
+::: {#fig-branchpoint-effects}
+
+![](../plots/branchpoint-effects.svg)
+
+Posterior distribution of differences in age effects on branchpoint sphincter and bulb probability.
+
+:::
+

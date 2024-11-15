@@ -63,7 +63,7 @@ def prepare_data(
     # filtering
     collaterals = (
         raw.dropna(subset=dropna_cols)
-        .loc[lambda df: df["Distance"].le(df["CurvedLength"])]
+        .loc[lambda df: df["Distance"].lt(df["CurvedLength"])]
         .copy()
     )
     # new columns
@@ -78,8 +78,16 @@ def prepare_data(
     collaterals["diameter_sd"] = collaterals["SD"]
     collaterals["curved_length"] = collaterals["CurvedLength"]
     collaterals["straight_line_distance"] = collaterals["Distance"]
-    collaterals["tortuosity"] = collaterals["CurvedLength"] / collaterals["Distance"]
-    for ln_col in ["diameter_mean", "curved_length", "tortuosity"]:
+    collaterals["tortuosity"] = (
+        collaterals["CurvedLength"] / collaterals["Distance"]
+    )
+    collaterals["m1_tortuosity"] = collaterals["tortuosity"] - 1
+    for ln_col in [
+        "diameter_mean",
+        "curved_length",
+        "tortuosity",
+        "m1_tortuosity",
+    ]:
         collaterals[f"ln_{ln_col}"] = np.log(collaterals[ln_col])
     gmice = collaterals.groupby("Date")
     mice = pd.DataFrame(
@@ -117,7 +125,7 @@ def main():
         inplace=True,
     )
     idata_ctls_per_area.to_netcdf(IDATA_DIR / "ctls_per_area.nc")
-    for ycol in ["ln_diameter_mean", "ln_curved_length", "ln_tortuosity"]:
+    for ycol in ["ln_diameter_mean", "ln_curved_length", "ln_m1_tortuosity"]:
         model = bmb.Model(FORMULA_AGE.format(y=ycol), data=collaterals)
         idata = model.fit()
         model.predict(idata, kind="response", inplace=True)

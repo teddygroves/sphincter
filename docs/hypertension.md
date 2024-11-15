@@ -8,17 +8,17 @@ blood pressure and vessel diameter, which are constrained to lie on the $[-1,
 hyperbolic tangent function for use in modelling. The dependent variables then
 had support on the entire real number line.
 
-The resulting dataset is shown in figure @fig-hypertension-data. The transformed
+The resulting dataset is shown in @fig-hypertension-data. The transformed
 correlation coefficients do not appear extremely dispersed, indicating that
 standard modelling techniques ought to be able to describe them.
 
-:::{#fig-hypertension-data}
+::: {#fig-hypertension-data}
 
 ![](../plots/hypertension-data.svg)
 
 :::
 
-### Statistical model
+## Statistical model
 
 Our final statistical model had the following form.
 
@@ -63,7 +63,7 @@ for the interaction model `hypertension-big`. Furthermore, the standard error
 for the difference in these two quantities is much smaller than the difference
 itself, indicating that the ranking is robust.
 
-:::{#fig-hypertension-loo}
+::: {#fig-hypertension-loo}
 
 ![](../plots/hypertension-loo.svg)
 
@@ -84,7 +84,7 @@ the fact that the penetrating arterioles had lower pressure vs diameter
 correlation coefficients than other vessels, and that the penetrating arteriole
 measurements were more dispersed.
 
-:::{#fig-hypertension-parameters}
+::: {#fig-hypertension-parameters}
 
 ![](../plots/hypertension-parameters.svg)
 
@@ -92,15 +92,18 @@ measurements were more dispersed.
 
 :::
 
-@fig-hypertension-predictions shows graphical prior and posterior predictive
+@fig-hypertension-prior-predictions and @fig-hypertension-posterior-predictions show graphical prior and posterior predictive
 checks for our final hypertension model. The fit is fairly good, with no obvious
 systematic pattern in the errors, though slightly more observations lie outside
 the plotted intervals than might be expected.
 
-:::{#fig-hypertension-predictions}
+::: {#fig-hypertension-prior-predictions}
 
 ![](../plots/hypertension-prior-predictive.svg)
 
+:::
+
+::: {#fig-hypertension-posterior-predictions}
 ![](../plots/hypertension-posterior-predictive.svg)
 
 :::

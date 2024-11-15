@@ -12,6 +12,8 @@ Measurement types included:
 diameter under different pressure conditions)
 - Capillary density
 - Vessel tortuosity
+- Counts and measurements of collateral vessels
+- Counts and measurements of vessel branchpoints
 
 We believed that the mechanisms underlying each kind of measurement were
 independent, and moreover each measurement required different data filtering

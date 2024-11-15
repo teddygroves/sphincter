@@ -39,7 +39,7 @@ there are treatment-related distributional effects, and that both speed and flux
 reduce as vessel order increases.
 
 
-### Statistical models
+## Statistical models
 
 As in the whisker case we investigated the results of fitting models with
 and without interaction effects. Again we found no large or fully resolved

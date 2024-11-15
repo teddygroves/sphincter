@@ -1,4 +1,5 @@
 from pathlib import Path
+from pdb import Pdb
 
 import bambi as bmb
 import numpy as np
@@ -17,10 +18,9 @@ RAW_DATA_FILE = (
 )
 
 YCOLS = ["is_sphincter", "is_bulb"]
-FORMULAE = {
-    "is_sphincter": "is_sphincter['True'] ~ age + branch_number + ln_depth",
-    "is_bulb": "is_bulb['True'] ~ age + branch_number + ln_depth + logit_firstorder_per_pa",
-}
+FORMULA = (
+    "{y}['True'] ~ age + branch_number + ln_depth + logit_firstorder_per_pa"
+)
 
 Age = pd.CategoricalDtype(categories=["adult", "old"], ordered=True)
 
@@ -87,6 +87,7 @@ def prepare_data(
         "sphincter_diameter",
         "firstorder_diameter",
         "logit_firstorder_per_pa",
+        "ln_depth",
     ]
     # filtering
     branchpoints = raw.pipe(normalise_column_names).copy()
@@ -109,10 +110,14 @@ def prepare_data(
         upper=0.98
     )
     for ln_col in ln_cols:
-        branchpoints[f"ln_{ln_col}"] = np.log1p(branchpoints[ln_col])
+        branchpoints[f"ln_{ln_col}"] = np.log(branchpoints[ln_col])
     for logit_col in logit_cols:
         branchpoints[f"logit_{logit_col}"] = logit(branchpoints[logit_col])
-    branchpoints = branchpoints.dropna(subset=dropna_cols).copy()
+    branchpoints = (
+        branchpoints.dropna(subset=dropna_cols)
+        .loc[lambda df: df["depth"].gt(0.0)]
+        .copy()
+    )
     return branchpoints  # type: ignore
 
 
@@ -122,7 +127,7 @@ def main():
     branchpoints.to_csv(PREPARED_DIR / "branchpoints.csv")
     for ycol in YCOLS:
         model = bmb.Model(
-            FORMULAE[ycol],
+            FORMULA.format(y=ycol),
             data=branchpoints,
             family="bernoulli",
         )

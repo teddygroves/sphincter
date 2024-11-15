@@ -42,8 +42,8 @@ to model the measurement removal process explicitly.
 
 All of our models had a common structure, with generalised linear models used
 to describe information from measurements and multi-level prior distributions
-used to describe non-experimental information. The modelling choices open to
-us concerned the following questions:
+used to describe non-experimental information. The modelling choices open to us
+concerned the following questions:
 
 1. What generalised linear model to use to model measurements? 
 
@@ -90,7 +90,7 @@ These models can be inspected at this url: <https://github.com/teddygroves/sphin
 
 Statistical computation was carried out using the probabilistic programming
 framework Stan [@carpenterStanProbabilisticProgramming2017] via the interface
-cmdstanpy [@standevelopmentteamCmdStanPy2022].
+cmdstanpy [@standevelopmentteamCmdStanPy2022]. For the analyses of collaterals and branchpoints, we used pymc [@abril-pla_pymc_2023] via the interface bambi [capretto_bambi_2022].
 
 Analysis and serialisation of posterior samples was carried out using the
 Bayesian inference library arviz [@kumarArviZUnifiedLibrary2019].

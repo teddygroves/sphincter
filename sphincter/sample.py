@@ -22,8 +22,7 @@ def main():
     if os.path.exists(INFERENCES_CONFIG_FILE):
         inferences_input = toml.load(INFERENCES_CONFIG_FILE)
         run_dirs = [
-            os.path.join(RUNS_DIR, i)
-            for i in inferences_input["inferences_to_run"]
+            os.path.join(RUNS_DIR, i) for i in inferences_input["inferences_to_run"]
         ]
     else:
         run_dirs = [
@@ -52,28 +51,26 @@ def main():
         }
         llik_outputs = {}
         for mode in ic.fitting_modes:
-            fit_kwargs = ic.sample_kwargs
-            if (
-                ic.mode_options is not None
-                and mode.name in ic.mode_options.keys()
-            ):
-                fit_kwargs |= ic.mode_options[mode.name]
-            output = mode.fit(model, stan_input_base, fit_kwargs)
-            if mode.idata_target in ["prior", "posterior"]:
-                idata_kwargs[mode.idata_target] = output
-                idata_kwargs[f"{mode.idata_target.value}_predictive"] = "yrep"
-            elif mode.idata_target == "log_likelihood":
-                llik_outputs[f"llik_{mode.name}"] = output
-            else:
-                raise ValueError(
-                    f"idata_target {mode.idata_target} is not yet supported"
-                )
-        idata = az.from_cmdstanpy(**idata_kwargs)
-        for varname, output in llik_outputs.items():
-            idata.log_likelihood[varname] = output
-        idata_zarr_dir = os.path.join(run_dir, "idata")
-        print(f"Saving idata to {idata_zarr_dir}")
-        idata.to_zarr(idata_zarr_dir)
+            idata_zarr_dir = os.path.join(run_dir, "idata")
+            if not os.path.exists(idata_zarr_dir):
+                fit_kwargs = ic.sample_kwargs
+                if ic.mode_options is not None and mode.name in ic.mode_options.keys():
+                    fit_kwargs |= ic.mode_options[mode.name]
+                output = mode.fit(model, stan_input_base, fit_kwargs)
+                if mode.idata_target in ["prior", "posterior"]:
+                    idata_kwargs[mode.idata_target] = output
+                    idata_kwargs[f"{mode.idata_target.value}_predictive"] = "yrep"
+                elif mode.idata_target == "log_likelihood":
+                    llik_outputs[f"llik_{mode.name}"] = output
+                else:
+                    raise ValueError(
+                        f"idata_target {mode.idata_target} is not yet supported"
+                    )
+                idata = az.from_cmdstanpy(**idata_kwargs)
+                for varname, output in llik_outputs.items():
+                    idata.log_likelihood[varname] = output
+                print(f"Saving idata to {idata_zarr_dir}")
+                idata.to_zarr(idata_zarr_dir)
 
 
 if __name__ == "__main__":
