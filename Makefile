@@ -4,6 +4,9 @@ ENV_MARKER = .venv/.bibat.marker
 ACTIVATE_VENV = .venv/bin/activate
 SRC = sphincter
 DOCS_DIR = docs
+PYTHON = uv run python
+JUPYTER = uv run --with jupyter jupyter
+PIP = uv pip
 
 REPORT_STEM = docs/report
 QUARTO_EXTENSIONS_FOLDER = $(DOCS_DIR)/_extensions
@@ -18,7 +21,7 @@ endif
 env: $(ENV_MARKER)
 
 $(ACTIVATE_VENV):
-	python -m venv .venv --prompt=sphincter
+	$(PYTHON) -m venv .venv --prompt=sphincter
 
 $(QUARTO_EXTENSIONS_FOLDER):
 	cd docs && quarto add quarto-ext/include-code-files && cd -
@@ -30,23 +33,23 @@ docs: $(ENV_MARKER) $(QUARTO_EXTENSIONS_FOLDER)
 
 $(ENV_MARKER): $(ACTIVATE_VENV) $(CMDSTAN)
 	. $(ACTIVATE_VENV) && (\
-	  python -m pip install --upgrade pip; \
-		python -m pip install -e .; \
+	  $(PIP) install --upgrade pip; \
+		$(PIP) install -e .; \
 	  install_cmdstan $(INSTALL_CMDSTAN_FLAGS); \
 		touch $@ ; \
 	)
 
 analysis: $(ENV_MARKER)
 	. $(ACTIVATE_VENV) && (\
-	  python $(SRC)/prepare_data.py || exit 1; \
-	  python $(SRC)/sample.py || exit 1; \
-	  python $(SRC)/collaterals.py || exit 1; \
-	  python $(SRC)/branchpoints.py || exit 1; \
-	  jupyter execute $(SRC)/whisker.ipynb || exit 1; \
-	  jupyter execute $(SRC)/pulsatility.ipynb || exit 1; \
-	  jupyter execute $(SRC)/flow.ipynb || exit 1; \
-	  jupyter execute $(SRC)/hypertension.ipynb || exit 1; \
-	  jupyter execute $(SRC)/tortuosity.ipynb || exit 1; \
+	  $(PYTHON) $(SRC)/prepare_data.py || exit 1; \
+	  $(PYTHON) $(SRC)/sample.py || exit 1; \
+	  $(PYTHON) $(SRC)/collaterals.py || exit 1; \
+	  $(PYTHON) $(SRC)/branchpoints.py || exit 1; \
+	  $(JUPYTER) execute $(SRC)/whisker.ipynb || exit 1; \
+	  $(JUPYTER) execute $(SRC)/pulsatility.ipynb || exit 1; \
+	  $(JUPYTER) execute $(SRC)/flow.ipynb || exit 1; \
+	  $(JUPYTER) execute $(SRC)/hypertension.ipynb || exit 1; \
+	  $(JUPYTER) execute $(SRC)/tortuosity.ipynb || exit 1; \
 	)
 
 clean-docs:
