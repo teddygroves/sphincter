@@ -47,7 +47,6 @@ model {
       for (a in 1:N_age){
         a_age_treatment[j, a, t] ~ normal(0, 0.2);
       }
-      a_age_treatment[j, t] ~ normal(0, 0.2);
       sigma_std[j, t] ~ normal(0, 0.5);
     }
   }

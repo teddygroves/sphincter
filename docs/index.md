@@ -12,5 +12,7 @@ author: Teddy Groves
 {{< include hypertension.md >}}
 {{< include density.md >}}
 {{< include tortuosity.md >}}
+{{< include pressure.md >}}
+{{< include diameter.md >}}
 {{< include collaterals.md >}}
 {{< include branchpoints.md >}}

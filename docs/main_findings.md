@@ -152,7 +152,7 @@ type.
 
 ## Vessel tortuosity
 
-We also fit a smoothed regression model to measurements of vessel tortuosity
+We fit a smoothed regression model to measurements of vessel tortuosity
 from the angio-architecture dataset. See @sec-tortuosity-model for details about
 this model.
 
@@ -167,6 +167,40 @@ arterioles. Other vessels were similarly tortuous for both age categories.
 
 Posterior distributions of differences in age-dependent tortuosity effects by
 vessel type
+
+:::
+
+## Pressure
+
+We modelled measurements of three variables related to blood pressure---mean arterial pressure (MAP), pulse pressure (PP) and heart rate (HR)---aiming to quantify any treatment and age effects.
+
+The main results of our model are shown in @fig-pressure-results.
+
+::: {#fig-pressure-results}
+
+![](../plots/pressure-results.svg)
+
+Posterior distributions of age and treatment effects in our models of blood pressure measurements.
+
+:::
+
+Compared with young mice, old mice tended to have lower mean arterial pressures, similar pulse pressures and higher heart rates.
+
+Our MAP model allocated clear positive effects to the treatments "hyper1" and "hyper2" relative to the baseline treatment whereas other treatment/measurement pairs were not clearly differentiated from the baseline.
+
+## Baseline Diameters
+
+We modelled measurements of baseline vessel diameters, aiming to quantify general and vessel-type specific age effects.
+
+Our results are shown in @fig-diam-age-effects: old mice showed smaller diameters of penetrating arterioles and first order capillaries, while other vessel types tended to have similar diameters in adult and old mice.
+
+::: {#fig-diam-age-effects}
+
+![](../plots/diameter_age_effects.svg)
+
+Marginal posterior distributions of aggregate age effects on modelled vessel diameters for the measured vessel types. Penetrating arterioles and first order capillaries tended to have smaller diameters in old mice.
+
+The aggregate effect was found by adding the general age-specific effect to the vessel-type specific age effect, then subtracting the adult value from the old value. See notebook "Diameter.ipynb" for details.
 
 :::
 
