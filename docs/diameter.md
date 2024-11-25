@@ -8,15 +8,13 @@ For the diameter analysis we used the same dataset and processing as for the pul
 
 We used a lognormal generalised linear model implemented in Stan: see the file [`sphincter/stan/diameter.stan`](https://github.com/teddygroves/sphincter/blob/main/sphincter/stan/diameter.stan). Our model's linear predictor $\eta_{avt}$ for a vessel with age $a$, vessel type $v$ and treatment $t$ is determined by the following sum:
 
-$$
-\begin{align*}
+\begin{align}
 \eta_{avt} &= \mu_a \\
            &+ \alpha^{treatment}_t \\
            &+ \alpha^{vessel\ type}_v \\
            &+ \alpha^{vessel\ type:treatment}_{vt} \\
            &+ \alpha^{age:vessel\ type}_{av}
-\end{align*}
-$$ {#eq-diameter-eta}
+\end{align}
 
 Our model's likelihood for a measurement $y_{avt}$ is given by
 
@@ -28,8 +26,7 @@ where $\sigma$ is a scalar parameter.
 
 The prior model is as follows:
 
-$$
-\begin{align*}
+\begin{align}
   \sigma &\sim N(0, 0.5) \\
   \mu &\sim N(2, 0.5) \\
   \alpha^{treatment} &\sim N(0, \tau^{treatment}) \\
@@ -40,8 +37,7 @@ $$
   tau^{treatment} &\sim N(0, 0.5) \\
   tau^{age:vessel\ type} &\sim N(0, 0.5) \\
   tau^{vessel\ type:treatment} &\sim N(0, 0.5)
-\end{align*}
-$$ {#eq-diameter-prior}
+\end{align}
 
 ## Results
 

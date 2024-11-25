@@ -40,7 +40,6 @@ We set informative priors for all of our model parameters based on our knowledge
 
 In tilde notation, the model for a measurement $i$ of a mouse with with age $a$ at treatment stage $t$ was as follows:
 
-$$
 \begin{align}
 \ln{y_{i}} &\sim N(\hat{y}_{at}, \sigma_{t}) \\
 \hat{y}_{at} &= \alpha^{age}_a + \alpha^{treatment}_{t} + 
@@ -50,7 +49,6 @@ $$
 \alpha^{age:treatment}_{at} &\sim N(0, 0.2) \\
 \sigma_t &\sim HN(0, 0.5)
 \end{align}
-$$
 
 ## Results
 
