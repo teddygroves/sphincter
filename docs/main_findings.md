@@ -8,7 +8,7 @@ stimulation response, as measured by log diameter change, compared with the
 baseline treatment. The effect from whisker stimulation is greater than from
 hypertension.
 
-Figure @fig-whisker-treatment-effects illustrates this finding by showing the
+@fig-whisker-treatment-effects illustrates this finding by showing the
 distribution of posterior samples for treatment effects relative to baseline
 from our best whisker stimulation model.
 
@@ -37,7 +37,7 @@ Marginal 2.5%-97.5% posterior intervals for protocol effects
 
 We found some difference between vessel type effects: sphincters had the
 greatest relative diameter change in response to whisker stimulation, and bulbs
-the smallest. Figure @fig-whisker-vessel-type-effects shows these.
+the smallest, as shown in @fig-whisker-vessel-type-effects. This was as expected from our raw data, which showed sphincters generally having the largest dilation after stimulation, the vessel type effect for sphincters is larger than the others. 
 
 ::: {#fig-whisker-vessel-type-effects layout-ncol=1}
 
@@ -90,8 +90,7 @@ Posterior distribution of treatment effect differences for each measurement type
 ## Red blood cell flow
 
 Our main result regarding red blood cell flow is that both RBC speed and
-flux were higher in the adult mice compared with the old mice. Figure
-@fig-flow-age-effects illustrates this finding by plotting the relevant marginal
+flux were higher in the adult mice compared with the old mice. @fig-flow-age-effects illustrates this finding by plotting the relevant marginal
 posterior histograms.
 
 ::: {#fig-flow-age-effects}
@@ -194,7 +193,7 @@ Posterior distribution of differences in age effects on collateral density.
 
 ## Branchpoints
 
-Our models of whether a branchpoint contained a bulb or sphincter indicated no particular age effect for sphincters, and a clear tendency for branchpoints in old mice to have more bulbs. These results are shown in @fig-branchpoint-effects.  
+Our model of whether a branchpoint contained a bulb or sphincter indicated no particular age effect for sphincters, and a clear tendency for branchpoints in old mice to have more bulbs. These results are shown in @fig-branchpoint-effects.  
 
 ::: {#fig-branchpoint-effects}
 
