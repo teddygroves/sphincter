@@ -1,7 +1,6 @@
 # Details of the tortuosity analysis {#sec-tortuosity-details}
 
-Like the density analysis, the tortuosity analysis modelled the architecture
-dataset.
+Like the density analysis, the tortuosity analysis modelled the architecture dataset.
 
 ## Dependent variable
 

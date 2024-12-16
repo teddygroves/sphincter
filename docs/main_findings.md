@@ -8,7 +8,7 @@ stimulation response, as measured by log diameter change, compared with the
 baseline treatment. The effect from whisker stimulation is greater than from
 hypertension.
 
-@fig-whisker-treatment-effects illustrates this finding by showing the
+Figure @fig-whisker-treatment-effects illustrates this finding by showing the
 distribution of posterior samples for treatment effects relative to baseline
 from our best whisker stimulation model.
 
@@ -37,7 +37,7 @@ Marginal 2.5%-97.5% posterior intervals for protocol effects
 
 We found some difference between vessel type effects: sphincters had the
 greatest relative diameter change in response to whisker stimulation, and bulbs
-the smallest, as shown in @fig-whisker-vessel-type-effects. This was as expected from our raw data, which showed sphincters generally having the largest dilation after stimulation, the vessel type effect for sphincters is larger than the others. 
+the smallest. Figure @fig-whisker-vessel-type-effects shows these.
 
 ::: {#fig-whisker-vessel-type-effects layout-ncol=1}
 
@@ -90,7 +90,8 @@ Posterior distribution of treatment effect differences for each measurement type
 ## Red blood cell flow
 
 Our main result regarding red blood cell flow is that both RBC speed and
-flux were higher in the adult mice compared with the old mice. @fig-flow-age-effects illustrates this finding by plotting the relevant marginal
+flux were higher in the adult mice compared with the old mice. Figure
+@fig-flow-age-effects illustrates this finding by plotting the relevant marginal
 posterior histograms.
 
 ::: {#fig-flow-age-effects}
@@ -151,7 +152,7 @@ type.
 
 ## Vessel tortuosity
 
-We also fit a smoothed regression model to measurements of vessel tortuosity
+We fit a smoothed regression model to measurements of vessel tortuosity
 from the angio-architecture dataset. See @sec-tortuosity-model for details about
 this model.
 
@@ -166,6 +167,40 @@ arterioles. Other vessels were similarly tortuous for both age categories.
 
 Posterior distributions of differences in age-dependent tortuosity effects by
 vessel type
+
+:::
+
+## Pressure
+
+We modelled measurements of three variables related to blood pressure---mean arterial pressure (MAP), pulse pressure (PP) and heart rate (HR)---aiming to quantify any treatment and age effects.
+
+The main results of our model are shown in @fig-pressure-results.
+
+::: {#fig-pressure-results}
+
+![](../plots/pressure-results.svg)
+
+Posterior distributions of age and treatment effects in our models of blood pressure measurements.
+
+:::
+
+Compared with young mice, old mice tended to have lower mean arterial pressures, similar pulse pressures and higher heart rates.
+
+Our MAP model allocated clear positive effects to the treatments "hyper1" and "hyper2" relative to the baseline treatment whereas other treatment/measurement pairs were not clearly differentiated from the baseline.
+
+## Baseline Diameters
+
+We modelled measurements of baseline vessel diameters, aiming to quantify general and vessel-type specific age effects.
+
+Our results are shown in @fig-diam-age-effects: old mice showed smaller diameters of penetrating arterioles and first order capillaries, while other vessel types tended to have similar diameters in adult and old mice.
+
+::: {#fig-diam-age-effects}
+
+![](../plots/diameter_age_effects.svg)
+
+Marginal posterior distributions of aggregate age effects on modelled vessel diameters for the measured vessel types. Penetrating arterioles and first order capillaries tended to have smaller diameters in old mice.
+
+The aggregate effect was found by adding the general age-specific effect to the vessel-type specific age effect, then subtracting the adult value from the old value. See notebook "Diameter.ipynb" for details.
 
 :::
 
@@ -193,7 +228,7 @@ Posterior distribution of differences in age effects on collateral density.
 
 ## Branchpoints
 
-Our model of whether a branchpoint contained a bulb or sphincter indicated no particular age effect for sphincters, and a clear tendency for branchpoints in old mice to have more bulbs. These results are shown in @fig-branchpoint-effects.  
+Our models of whether a branchpoint contained a bulb or sphincter indicated no particular age effect for sphincters, and a clear tendency for branchpoints in old mice to have more bulbs. These results are shown in @fig-branchpoint-effects.  
 
 ::: {#fig-branchpoint-effects}
 

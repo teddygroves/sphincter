@@ -1,8 +1,8 @@
-resource_path: ["..", "plots"]
 bibliography: bibliography.bib
 citestyle: ieee.csl
 reference-location: margin
 toc: true
+resource-path: ["..", "plots"]
 pdf-engine-opts:
     - '--shell-escape'
 
