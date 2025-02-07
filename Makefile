@@ -45,11 +45,8 @@ analysis: $(ENV_MARKER)
 	  $(PYTHON) $(SRC)/sample.py || exit 1; \
 	  $(PYTHON) $(SRC)/collaterals.py || exit 1; \
 	  $(PYTHON) $(SRC)/branchpoints.py || exit 1; \
-	  $(JUPYTER) execute $(SRC)/whisker.ipynb || exit 1; \
-	  $(JUPYTER) execute $(SRC)/pulsatility.ipynb || exit 1; \
-	  $(JUPYTER) execute $(SRC)/flow.ipynb || exit 1; \
-	  $(JUPYTER) execute $(SRC)/hypertension.ipynb || exit 1; \
-	  $(JUPYTER) execute $(SRC)/tortuosity.ipynb || exit 1; \
+	  $(JUPYTER) execute $(SRC)/Main\ text\ figures.ipynb || exit 1; \
+	  $(JUPYTER) execute $(SRC)/Supporting\ figures.ipynb || exit 1; \
 	)
 
 clean-docs:
