@@ -18,7 +18,7 @@ The resulting tables can be inspected at <https://github.com/teddygroves/sphinct
 
 ## Statistical model
 
-We used a linear regression model on natural logarithmic scale to model all collateral measurements, with effects for age. In bambi's formula language our model was written as `"{y} ~ age"`, where `"{y}"` can be sustituted with the name of a dependent variable representing log-scale collateral density, diameter, length or tortuosity minus the theoretical minimum value 1.
+We used a linear regression model on natural logarithmic scale to model all collateral measurements, with effects for age. In bambi's formula language our model was written as `"{y} ~ age"`, where `"{y}"` can be substituted with the name of a dependent variable representing log-scale collateral density, diameter, length or tortuosity minus the theoretical minimum value 1.
 
 The priors were the bambi defaults, which aim to be weakly informative while automatically scaling to match the predictors.
 
