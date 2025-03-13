@@ -95,11 +95,13 @@ def prepare_data(
             "mouse_id": gmice["Date"].first().astype(str),
             "age": gmice["age"].first(),
             "craniotomy_area": gmice["Craniotomy_area"].first() * 1e-6,
+            "craniotomy_diameter": gmice["Craniotomy_diameter"].first(),
             "collaterals": gmice.size(),
         }
     )
     mice["collaterals_per_area"] = mice["collaterals"] / mice["craniotomy_area"]
     mice["ln_collaterals_per_area"] = np.log(mice["collaterals_per_area"])
+    mice["ln_craniotomy_diameter"] = np.log(mice["craniotomy_diameter"])
     return collaterals, mice  # type: ignore
 
 
@@ -112,19 +114,15 @@ def main():
         FORMULA_AGE.format(y="ln_collaterals_per_area"),
         "sigma ~ age",
     )
-    model_ctls_per_area = bmb.Model(formula=formula_mice, data=mice)
-    idata_ctls_per_area = model_ctls_per_area.fit(target_accept=0.9)
-    model_ctls_per_area.predict(
-        idata_ctls_per_area,
-        kind="response",
-        inplace=True,
-    )
-    model_ctls_per_area.predict(
-        idata_ctls_per_area,
-        kind="response_params",
-        inplace=True,
-    )
-    idata_ctls_per_area.to_netcdf(IDATA_DIR / "ctls_per_area.nc")
+    # per-mouse models
+    for ycol in ["ln_collaterals_per_area", "ln_craniotomy_diameter"]:
+        formula = bmb.Formula(FORMULA_AGE.format(y=ycol), "sigma ~ age")
+        model = bmb.Model(formula=formula, data=mice)
+        idata = model.fit(target_accept=0.9)
+        model.predict(idata, kind="response", inplace=True)
+        model.predict(idata, kind="response_params", inplace=True)
+        idata.to_netcdf(IDATA_DIR / f"{ycol}.nc")
+    # whole dataset models
     for ycol in ["ln_diameter_mean", "ln_curved_length", "ln_m1_tortuosity"]:
         model = bmb.Model(FORMULA_AGE.format(y=ycol), data=collaterals)
         idata = model.fit()
