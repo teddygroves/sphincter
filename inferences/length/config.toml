@@ -1,8 +1,8 @@
-name = "tortuosity"
-notes = "First tortuosity model"
-stan_file = "tortuosity.stan"
-prepared_data_dir = "tortuosity"
-stan_input_function = "get_stan_input_capillary_tortuosity"
+name = "length"
+notes = "First length model"
+stan_file = "length.stan"
+prepared_data_dir = "length"
+stan_input_function = "get_stan_input_capillary_length"
 modes = ["prior", "posterior"]
 
 [dims]
@@ -24,4 +24,5 @@ iter_warmup = 3000
 iter_sampling = 1000
 adapt_delta = 0.99
 show_progress = true
+
 

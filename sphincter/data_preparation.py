@@ -29,8 +29,9 @@ from sphincter.stan_input_functions import (
     get_stan_input_flow_speed,
     get_stan_input_flow_flux,
     get_stan_input_hypertension,
-    get_stan_input_density,
-    get_stan_input_tortuosity,
+    get_stan_input_capillary_density,
+    get_stan_input_capillary_tortuosity,
+    get_stan_input_capillary_length,
     get_stan_input_pressure,
     get_stan_input_diameter,
 )
@@ -106,6 +107,29 @@ VesselTypeDensity = pd.CategoricalDtype(
     ordered=True,
 )
 VesselTypeTortuosity = pd.CategoricalDtype(
+    categories=[
+        "pial_artery",
+        "pa",
+        "cap1",
+        "cap2",
+        "cap3",
+        "cap4",
+        "cap5",
+        "cap6",
+        "cap7",
+        "cap8",
+        "cap9",
+        "cap10",
+        "cap11",
+        "cap12",
+        "av",
+        "pial_vein",
+    ],
+    ordered=True,
+)
+
+
+VesselTypeLength = pd.CategoricalDtype(
     categories=[
         "pial_artery",
         "pa",
@@ -246,6 +270,17 @@ class TortuosityMeasurementSchema(pa.DataFrameModel):
         coerce=True, nullable=False
     )
     tortuosity: Series[float]
+
+
+class CapillaryLengthMeasurementSchema(pa.DataFrameModel):
+    """A dataframe for questions about capillary length."""
+
+    age: Series[Age] = pa.Field(coerce=True, nullable=False)
+    mouse: Series[Category] = pa.Field(coerce=True, nullable=False)
+    vessel_type: Series[VesselTypeLength] = pa.Field(
+        coerce=True, nullable=False
+    )
+    length: Series[float] = pa.Field(gt=0)
 
 
 class PressureMeasurementSchema(pa.DataFrameModel):
@@ -416,6 +451,27 @@ class TortuosityDataset(BaseModel):
         return measurements.to_json()
 
 
+class LengthDataset(BaseModel):
+    name: str
+    coords: util.CoordDict
+    measurements: Any
+    stan_input: Dict
+
+    @field_validator("measurements")
+    def validate_measurements(
+        cls, v: Any
+    ) -> DataFrameBase[CapillaryLengthMeasurementSchema]:
+        if isinstance(v, str):
+            v = pd.read_json(StringIO(v))
+        return CapillaryLengthMeasurementSchema.validate(v)
+
+    @field_serializer("measurements")
+    def serialize_measurements(
+        self, measurements: DataFrame[CapillaryLengthMeasurementSchema], _info
+    ):
+        return measurements.to_json()
+
+
 class PressureDataset(BaseModel):
     name: str
     coords: util.CoordDict
@@ -457,6 +513,7 @@ def prepare_data():
         (prepare_data_hypertension, raw_data["measurements_hypertension"]),
         (prepare_data_density, raw_data["measurements_density"]),
         (prepare_data_tortuosity, raw_data["measurements_density"]),
+        (prepare_data_length, raw_data["measurements_density"]),
         (prepare_data_pressure, raw_data["measurements_pressure"]),
         (prepare_data_diameter, raw_data["measurements"]),
     ]
@@ -663,7 +720,7 @@ def prepare_data_hypertension(raw: pd.DataFrame) -> HypertensionDataset:
 def prepare_data_density(raw: pd.DataFrame) -> DensityDataset:
     """Prepare capillary density data."""
     measurements = process_measurements_density(raw)
-    stan_input = get_stan_input_density(measurements)
+    stan_input = get_stan_input_capillary_density(measurements)
     return DensityDataset(
         name="density",
         measurements=measurements,
@@ -682,9 +739,28 @@ def prepare_data_density(raw: pd.DataFrame) -> DensityDataset:
 def prepare_data_tortuosity(raw: pd.DataFrame) -> TortuosityDataset:
     """Prepare tortuosity data."""
     measurements = process_measurements_tortuosity(raw)
-    stan_input = get_stan_input_tortuosity(measurements)
+    stan_input = get_stan_input_capillary_tortuosity(measurements)
     return TortuosityDataset(
         name="tortuosity",
+        measurements=measurements,
+        coords=util.CoordDict(
+            {
+                "mouse": measurements["mouse"].cat.categories,
+                "vessel_type": measurements["vessel_type"].cat.categories,
+                "age": measurements["age"].cat.categories,
+                "observation": measurements.index.map(str).tolist(),
+            }
+        ),
+        stan_input=stan_input,
+    )
+
+
+def prepare_data_length(raw: pd.DataFrame) -> TortuosityDataset:
+    """Prepare tortuosity data."""
+    measurements = process_measurements_length(raw)
+    stan_input = get_stan_input_capillary_length(measurements)
+    return LengthDataset(
+        name="length",
         measurements=measurements,
         coords=util.CoordDict(
             {
@@ -889,6 +965,46 @@ def process_measurements_tortuosity(
     return TortuosityMeasurementSchema.validate(out)
 
 
+def process_measurements_length(
+    raw: pd.DataFrame,
+) -> DataFrameBase[CapillaryLengthMeasurementSchema]:
+    """Process tortuosity data."""
+    vessel_type_names = {
+        "PialArtery": "pial_artery",
+        "pa": "pa",
+        "1stCap": "cap1",
+        "2ndCap": "cap2",
+        "3rdCap": "cap3",
+        "4thCap": "cap4",
+        "5thCap": "cap5",
+        "6thCap": "cap6",
+        "7thCap": "cap7",
+        "8thCap": "cap8",
+        "9thCap": "cap9",
+        "10thCap": "cap10",
+        "11thCap": "cap11",
+        "12thCap": "cap12",
+        "AscVenule": "av",
+        "PialVein": "pial_vein",
+    }
+    filt = raw.loc[
+        lambda df: ~(
+            df["MouseID"].eq(270220) & df["CapOrder"].eq("4thCap")
+        )  # outlier
+    ]
+    out = pd.DataFrame(
+        {
+            "mouse": filt["MouseID"].astype(str),
+            "age": filt["Condition"].str.lower(),
+            "vessel_type": filt["CapOrder"]
+            .map(vessel_type_names.get)
+            .astype(VesselTypeTortuosity),
+            "length": filt["CapMeanVesLength"],
+        }
+    )
+    return CapillaryLengthMeasurementSchema.validate(out)
+
+
 def process_measurements_pressure(
     raw: pd.DataFrame,
 ) -> DataFrameBase[PressureMeasurementSchema]:
@@ -917,6 +1033,8 @@ def load_prepared_data(
     DensityDataset,
     TortuosityDataset,
     PressureDataset,
+    LengthDataset,
+    DiameterDataset,
 ]:
     with open(path_to_data) as f:
         raw = json.load(f)
@@ -932,6 +1050,8 @@ def load_prepared_data(
         return DensityDataset(**raw)
     elif raw["name"].startswith("tortuosity"):
         return TortuosityDataset(**raw)
+    elif raw["name"].startswith("length"):
+        return LengthDataset(**raw)
     elif raw["name"].startswith("pressure"):
         return PressureDataset(**raw)
     elif raw["name"].startswith("diameter"):

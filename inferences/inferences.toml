@@ -15,7 +15,8 @@ inferences_to_run = [
   "hypertension-big",
   "hypertension-basic",
   "density",
-  "diameter",
   "tortuosity",
-  "pressure"
+  "length",
+  "diameter",
+  "pressure",
 ]

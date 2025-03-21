@@ -2,7 +2,7 @@ name = "density"
 notes = "First density model"
 stan_file = "density.stan"
 prepared_data_dir = "density"
-stan_input_function = "get_stan_input_density"
+stan_input_function = "get_stan_input_capillary_density"
 modes = ["prior", "posterior"]
 
 [dims]
